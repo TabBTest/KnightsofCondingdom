@@ -10,6 +10,7 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'SBGWPyPfN8tcOXsIn4GTilsHxlpnhX3i',
+            'enableCsrfValidation'=>false,
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -26,8 +27,27 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
+            'viewPath' => '@app/mail',
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+        
+                'host' => 'mail.craneshit.com',
+                'username' => 'oshacc@craneshit.com',
+                'password' => 'OshaccPassword123',
+                'port' => '465',
+                'encryption' => 'ssl',
+                /*
+                 'host' => 'smtp.mandrillapp.com',
+        'username' => 'daniel_jao@yahoo.com',
+        'password' => 'hF4DajQJtB0q-v99JP8E4Q',
+        'port' => '587',
+        'encryption' => 'tls',
+        */
+        
+            ],
         ],
+        
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [

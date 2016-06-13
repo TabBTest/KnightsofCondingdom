@@ -2,4 +2,7 @@
 
 return [
     'adminEmail' => 'admin@example.com',
+    'salt' => '$2a$10$Q7qlnTFPwKq4D6csshB3n5',
+    'stripe_publishable_key' => 'pk_test_uo9IL1KuKzwNr7PvMdBYIYJh',
+    'stripe_secret_key' => 'sk_test_OvqUcK0wwCZqDJ0HzQVcaK9q',
 ];
