@@ -29,3 +29,5 @@ phpunit.phar
 
 config/db.php
 config/params.php
+
+web/menu-images/
