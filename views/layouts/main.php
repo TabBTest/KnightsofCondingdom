@@ -20,7 +20,7 @@ use app\models\User;
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-    
+
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -28,23 +28,23 @@ use app\models\User;
     <script src="/js/jquery.js"></script>
 
     <script src="/js/bootstrap.min.js"></script>
-  
+
     <script src="/js/jquery.maskedinput.min.js"></script>
     <script src="/js/jquery.flexslider-min.js"></script>
     <script src="/js/jquery.maskMoney.min.js"></script>
-    
+
     <script src="/js/app.js"></script>
-  	
+
 </head>
 <body>
 <?php $this->beginBody() ?>
 
 <div class="wrap">
     <?php
-    
-    
+
+
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'Foodzilla',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -56,11 +56,11 @@ use app\models\User;
             'items' => [
                 ['label' => 'Home', 'url' => ['/site/index']],
                 ['label' => 'About', 'url' => ['/site/about']],
-                ['label' => 'Products', 'url' => ['/site/products']],           
+                ['label' => 'Products', 'url' => ['/site/products']],
             ],
         ]);
     }else if(Yii::$app->session->get('role') == User::ROLE_VENDOR){
-        
+
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
@@ -97,7 +97,7 @@ use app\models\User;
             ],
         ]);
     }
-    
+
     NavBar::end();
     ?>
 
@@ -111,7 +111,7 @@ use app\models\User;
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>       
+        <p class="pull-left">&copy; Foodzilla <?= date('Y') ?></p>
     </div>
 </footer>
 
