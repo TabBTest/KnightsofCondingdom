@@ -17,6 +17,24 @@ class TenantHelper {
             return 'default';
         return $domainUrl;
     }
+    
+    static public function get_domain($url)
+    {
+        $pieces = parse_url('//'.$url);
+        //var_dump($pieces);
+        $domain = isset($pieces['host']) ? $pieces['host'] : '';
+        if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
+            return $regs['domain'];
+        }
+        return false;
+    }
+    
+    static public function getSubDomain(){
+        $domain = self::get_domain($_SERVER['SERVER_NAME']);
+        $fullUrl = $_SERVER['SERVER_NAME'];
+        $subdomain = str_replace('.'.$domain, '', $fullUrl);
+        return ($subdomain);
+    }
     /*
     static public function getTenantDataInfo($tenantId = false){
         

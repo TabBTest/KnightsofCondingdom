@@ -30,12 +30,46 @@ class NotificationHelper {
         return false;
     }
     
+    static public function notifyUserOfAccount($user, $randomPassword){
+        $params = [];
+        $params['name'] = $user->name;
+        $params['tempPassword'] = $randomPassword;
+        $params['loginUrl'] = self::getContextUrl().'/site/login';
+        $message = \Yii::$app->mailer->compose('customer-register-success',$params)
+        ->setTo($user->email)
+        ->setFrom(\Yii::$app->params['adminEmail'])
+        ->setSubject('Successful Registration');
+    
+        $email = $message->send();
+        if($email){
+            return true;
+        }
+        return false;
+    }
+    
     static public function notifyVendorOfAccountReset($user, $randomPassword){
         $params = [];
         $params['name'] = $user->name;
         $params['tempPassword'] = $randomPassword;
         $params['loginUrl'] = self::getContextUrl().'/site/login';
         $message = \Yii::$app->mailer->compose('vendor-reset-success',$params)
+        ->setTo($user->email)
+        ->setFrom(\Yii::$app->params['adminEmail'])
+        ->setSubject('Account Reset');
+    
+        $email = $message->send();
+        if($email){
+            return true;
+        }
+        return false;
+    }
+    
+    static public function notifyUserOfAccountReset($user, $randomPassword){
+        $params = [];
+        $params['name'] = $user->name;
+        $params['tempPassword'] = $randomPassword;
+        $params['loginUrl'] = self::getContextUrl().'/site/login';
+        $message = \Yii::$app->mailer->compose('customer-reset-success',$params)
         ->setTo($user->email)
         ->setFrom(\Yii::$app->params['adminEmail'])
         ->setSubject('Account Reset');

@@ -9,6 +9,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\User;
+use app\helpers\TenantHelper;
 
 ?>
 <?php $this->beginPage() ?>
@@ -25,15 +26,7 @@ use app\models\User;
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 
-    <script src="/js/jquery.js"></script>
 
-    <script src="/js/bootstrap.min.js"></script>
-
-    <script src="/js/jquery.maskedinput.min.js"></script>
-    <script src="/js/jquery.flexslider-min.js"></script>
-    <script src="/js/jquery.maskMoney.min.js"></script>
-
-    <script src="/js/app.js"></script>
 
 </head>
 <body>
@@ -65,21 +58,45 @@ use app\models\User;
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
                 ['label' => 'Dashboard', 'url' => ['/dashboard']],
-                ['label' => 'Menu Management', 'url' => ['/menu']],
-                ['label' => 'Customer Management', 'url' => ['/customer']],
-                ['label' => 'Order Management', 'url' => ['/order']],
-                ['label' => 'Promotion Management', 'url' => ['/promotion']],
+                ['label' => 'Menu', 'url' => ['/menu']],
+                ['label' => 'Customer', 'url' => ['/customer']],
+                ['label' => 'Order', 'url' => ['/order']],
+                ['label' => 'Promotion', 'url' => ['/promotion']],
+                ['label' => 'Profile', 'url' => ['/vendor']],
+            ],
+        ]);
+    }else if(Yii::$app->session->get('role') == User::ROLE_CUSTOMER){
+
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-left'],
+            'items' => [
+                ['label' => 'Dashboard', 'url' => ['/dashboard']],                
+                ['label' => 'New Order', 'url' => ['/ordering']],
+                ['label' => 'Order History', 'url' => ['/ordering/history']],
+                //['label' => 'Profile', 'url' => ['/vendor']],
             ],
         ]);
     }
     if(Yii::$app->user->isGuest){
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-                ['label' => 'Register', 'url' => ['/site/register']],
-                ['label' => 'Login', 'url' => ['/site/login']],
-            ],
-        ]);
+        
+        if(TenantHelper::isDefaultTenant()){
+        
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'items' => [
+                    ['label' => 'Register', 'url' => ['/site/reg-vendor']],
+                    ['label' => 'Login', 'url' => ['/site/login']],
+                ],
+            ]);
+        }else{
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'items' => [
+                    ['label' => 'Register', 'url' => ['/site/reg-customer']],
+                    ['label' => 'Login', 'url' => ['/site/login']],
+                ],
+            ]);
+        }
     }else{
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
@@ -132,6 +149,14 @@ use app\models\User;
 
 <?php $this->endBody() ?>
 </body>
+    <script src="/js/jquery.js"></script>
+
+    <script src="/js/bootstrap.min.js"></script>
+
+    <script src="/js/jquery.flexslider-min.js"></script>
+    <script src="/js/jquery.bootpag.min.js"></script>
+
+    <script src="/js/app.js"></script>
 <style>
 body > .wrap > .container {
     min-height: 500px;

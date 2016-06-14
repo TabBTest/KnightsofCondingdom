@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use app\helpers\TenantHelper;
 
 /**
  * LoginForm is the model behind the login form.
@@ -77,8 +78,25 @@ class LoginForm extends Model
      */
     public function getUser()
     {
+        
+        $isDefaultTenant = TenantHelper::isDefaultTenant();
+        
+        
         if ($this->_user === false) {
-            $this->_user = User::findOne(['email' => $this->email, 'role' => User::ROLE_VENDOR]);
+            if($isDefaultTenant){
+                $this->_user = User::findOne(['email' => $this->email, 'role' => User::ROLE_VENDOR]);
+            }else{
+                $tenantInfo = TenantInfo::isValidSubDomain(TenantHelper::getSubDomain());
+                if($tenantInfo !== false){
+                    $vendorId = $tenantInfo->userId;
+                    $tempUser = User::findOne(['email' => $this->email, 'role' => User::ROLE_VENDOR]);
+                    if($tempUser === null){
+                        //we get the customer user
+                        $tempUser = User::findOne(['email' => $this->email, 'role' => User::ROLE_CUSTOMER, 'vendorId' => $vendorId]);
+                    }
+                    $this->_user = $tempUser;
+                }
+            }
         }
 
         return $this->_user;

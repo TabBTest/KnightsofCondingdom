@@ -11,8 +11,10 @@ use app\models\ContactForm;
 use app\models\User;
 use app\helpers\UtilityHelper;
 use app\helpers\NotificationHelper;
+use app\helpers\TenantHelper;
+use app\models\TenantInfo;
 
-class SiteController extends Controller
+class SiteController extends CController
 {
     public function behaviors()
     {
@@ -52,6 +54,7 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+//         var_dump(TenantHelper::get_domain($_SERVER['SERVER_NAME']));
         return $this->render('index');
     }
 
@@ -109,7 +112,7 @@ class SiteController extends Controller
         ]);
     }
     
-    public function actionRegister(){
+    public function actionRegVendor(){
         $model = new User();
         
        
@@ -134,7 +137,8 @@ class SiteController extends Controller
                 $user->role = User::ROLE_VENDOR;
                 $user->isPasswordReset = 1;
                 if($user->save()){
-                
+                    TenantInfo::addCustomSubdomain($user);
+                    
                     \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
                     
                     // Get the credit card details submitted by the form
@@ -159,6 +163,63 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+    
+    public function actionRegCustomer(){
+        $model = new User();
+    
+         
+        if(count($_POST) > 0){
+    
+            $userData = $_POST['User'];
+            $user = User::findOne(['email' => $userData['email'], 'role' => User::ROLE_VENDOR]);
+            $tenantInfo = TenantInfo::isValidSubDomain(TenantHelper::getSubDomain());
+            
+            $customers = User::findOne(['email' => $userData['email'], 'role' => User::ROLE_CUSTOMER, 'vendorId' => $tenantInfo->userId]);
+            if($user || $customers){
+                \Yii::$app->getSession()->setFlash('error', 'Email should be unique');
+            }else{
+                //we register it already
+                
+                $randomPassword = UtilityHelper::generateRandomPassword();
+                $user = new User();
+                $user->name = $userData['name'];
+                $user->address = $userData['address'];
+                $user->email = $userData['email'];
+                $user->phoneNumber = $userData['phoneNumber'];
+                $user->billingName = $userData['billingName'];
+                $user->billingAddress = $userData['billingAddress'];
+                $user->password = $randomPassword;
+                $user->confirmPassword = $randomPassword;
+                $user->role = User::ROLE_CUSTOMER;
+                $user->vendorId = $tenantInfo->userId;
+                $user->isPasswordReset = 1;
+                if($user->save()){
+                    
+                    \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
+    
+                    // Get the credit card details submitted by the form
+                    $token = $_POST['stripeToken'];
+    
+                    // Create a Customer
+                    $customer = \Stripe\Customer::create(array(
+                        "source" => $token,
+                        "description" => "Customer ID: ".$user->id)
+                    );
+                    $user->stripeId = $customer->id;
+                    $user->save();
+    
+                    NotificationHelper::notifyUserOfAccount($user, $randomPassword);
+    
+                    return $this->redirect('/site/login');
+                }
+                var_dump($user->errors);
+            }
+        }
+        return $this->render('register-customer', [
+            'model' => $model,
+        ]);
+    }
+    
     
     public function actionForgetPassword(){
         if(count($_POST) > 0){

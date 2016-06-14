@@ -13,11 +13,12 @@ use yii\base\ViewContextInterface;
 use app\models\ApplicationTypeFormSetup;
 use app\models\Candidates;
 use yii\base\Application;
+use app\models\User;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
  */
-class CustomerController extends Controller
+class CustomerController extends CController
 {
    
     public function behaviors()
@@ -27,7 +28,7 @@ class CustomerController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'viewpage'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -50,5 +51,11 @@ class CustomerController extends Controller
     {
         
         return $this->render('index');
+    }
+    public function actionViewpage(){
+        $page = $_REQUEST['page'];
+        $userId = $_REQUEST['userId'];
+        $customers = User::getVendorCustomers($userId, 20, $page);    
+        return $this->renderPartial('_list', ['customers' => $customers, 'currentPage' => $page]);
     }
 }

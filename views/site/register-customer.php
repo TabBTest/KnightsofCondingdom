@@ -20,21 +20,22 @@ $(document).ready(function() {
  </div>
 <?php } ?>
 
-<form action='/site/reg-vendor' method='POST' id='register-form'>
+<form action='/site/reg-customer' method='POST' id='register-form'>
 <div class='row fieldset'>
     <div class='col-xs-12 form-group text-center'>
     <h1>REGISTER</h1>
     <h3>Step 1 - Account Information</h3>
     </div>
     <div class='col-xs-12 form-group'>
-        <input type='text' class='form-control' name='User[name]' placeholder='Company Name'/>
+        <input type='text' class='form-control' name='User[name]' placeholder='Name'/>
     </div>
     <div class='col-xs-12 form-group'>
-        <input type='text' class='form-control' name='User[address]'  placeholder='Company Address'/>
+        <input type='text' class='form-control' name='User[address]'  placeholder='Address'/>
     </div>
     <div class='col-xs-12 form-group'>
-<!--         <input type='text' class='form-control' name='User[phoneNumber]' id='phone' placeholder='Company Phone Number'/> -->
-         <?php 
+<!--         <input type='text' class='form-control' name='' id='phone' placeholder='Phone Number'/> -->
+        
+        <?php 
         echo MaskedInput::widget([
             'name' => 'User[phoneNumber]',   
             'mask' => '999-999-9999',
@@ -42,14 +43,14 @@ $(document).ready(function() {
         
         
         ?>
-        
+     
     </div>
     
     <div class='col-xs-6 form-group'>
-        <input type='text' class='form-control' name='User[email]' id='email'  placeholder='Company Email'/>
+        <input type='text' class='form-control' name='User[email]' id='email'  placeholder='Email'/>
     </div>
     <div class='col-xs-6 form-group'>
-        <input type='text' class='form-control' name='confirmEmail' id='confirmEmail'  placeholder='Confirm Email'/>
+        <input type='text' class='form-control' name='confirmEmail' id='confirmEmail'  placeholder='Email'/>
     </div>
     <div class='col-xs-12 form-group text-center'>
         <button type='button' class='btn btn-success btn-next'>NEXT</button>

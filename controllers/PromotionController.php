@@ -17,7 +17,7 @@ use yii\base\Application;
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
  */
-class PromotionController extends Controller
+class PromotionController extends CController
 {
    
     public function behaviors()

@@ -21,7 +21,7 @@ use app\helpers\UtilityHelper;
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
  */
-class MenuController extends Controller
+class MenuController extends CController
 {
    
     public function behaviors()

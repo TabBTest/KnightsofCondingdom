@@ -106,8 +106,114 @@ $(document).ready(function() {
     	}
     	
     });
+    $('.btn-submit-order').on('click', function(){
+    	var hasOrder = false;
+    	$('.order-quantity').each(function(){
+    		if($(this).val() > 0){
+    			hasOrder = true;
+    		}
+    	});
+    	if(hasOrder){    	
+	    	$.post('/ordering/summary', $('#customer-order-form').serialize(), function(html){
+	    		$('#custom-modal .modal-title').html('Order Summary');
+	    		$('#custom-modal .modal-body').html(html);
+	    		$('#custom-modal').modal('show');	
+	    	});
+    	}else{
+    		alert('Please add your order');
+    	}
+    });
+    setupUi();
     
 });
+var Order = {
+	init : false,
+	timeLimit : 30000, //30000
+	loadCustomer : function(){
+		$.get('/ordering/viewpage', 'page=1&userId='+$('.customer-order-history-pagination').data('user-id'), function(html){
+       	 	$('.customer-order-body').html(html);
+       	 	setupUi();
+        })
+		
+	},
+	loadVendor : function(){
+		$.get('/order/viewpage', 'page=1&userId='+$('.vendor-order-history-pagination').data('user-id'), function(html){
+       	 $('.vendor-order-body').html(html);
+       	 setupUi();
+        })
+        
+	},
+	confirm : function(orderId){
+		$.post('/order/confirm', 'id='+orderId, function(){
+			Order.loadVendor();	
+		})
+		
+	},
+	start : function(orderId){
+		$.post('/order/start', 'id='+orderId, function(){
+			Order.loadVendor();	
+		})
+	},
+	pickup : function(orderId){
+		$.post('/order/pickup', 'id='+orderId, function(){
+			Order.loadVendor();	
+		})
+	}
+
+}
+var setupUi = function(){
+	if( $('.customer-order-history-pagination').length != 0){
+	    // init bootpag
+	    	$('.customer-order-history-pagination').bootpag({
+		        total: $('.customer-order-history-pagination').data('total-pages'),
+		        page: $('.customer-order-history-pagination').data('current-page'),
+                maxVisible: 10
+		    }).on("page", function(event, /* page number here */ num){
+		         $.get('/ordering/viewpage', 'page='+num+'&userId='+$('.customer-order-history-pagination').data('user-id'), function(html){
+		        	 $('.customer-order-body').html(html);
+		        	 setupUi();
+		         })
+		    });
+	    	if(Order.init == false){
+	    		setInterval(Order.loadCustomer, Order.timeLimit); // it will call the function autoload() after each 30 seconds.	
+	    		Order.init = true;
+	    	}
+	    	      
+	}
+	if( $('.vendor-order-history-pagination').length != 0){
+	    // init bootpag
+	    	$('.vendor-order-history-pagination').bootpag({
+		        total: $('.vendor-order-history-pagination').data('total-pages'),
+		        page: $('.vendor-order-history-pagination').data('current-page'),
+                maxVisible: 10
+		    }).on("page", function(event, /* page number here */ num){
+		         $.get('/order/viewpage', 'page='+num+'&userId='+$('.vendor-order-history-pagination').data('user-id'), function(html){
+		        	 $('.vendor-order-body').html(html);
+		        	 setupUi();
+		         })
+		    });
+	    	if(Order.init == false){
+	    		setInterval(Order.loadVendor, Order.timeLimit); // it will call the function autoload() after each 30 seconds.	
+	    		Order.init = true;
+	    	}
+	}
+	
+	if( $('.vendor-customer-pagination').length != 0){
+	    // init bootpag
+	    	$('.vendor-customer-pagination').bootpag({
+		        total: $('.vendor-customer-pagination').data('total-pages'),
+		        page: $('.vendor-customer-pagination').data('current-page'),
+                maxVisible: 10
+		    }).on("page", function(event, /* page number here */ num){
+		         $.get('/customer/viewpage', 'page='+num+'&userId='+$('.vendor-customer-pagination').data('user-id'), function(html){
+		        	 $('.vendor-customer-body').html(html);
+		        	 setupUi();
+		         })
+		    });
+	}
+};
+
+
 
 function validateEmailFormat(sEmail){
 	var str=sEmail
@@ -157,7 +263,20 @@ var VendorMenu = {
 			if($('#menu-item-form .has-error').length == 0){
 				$('#menu-item-form').submit();
 			}
+		},
+		openMenuDetails : function(menuId){
+			$('.menu-details-'+menuId).toggle();
 		}
+}
+
+var Customer = {
+	viewOrder : function(orderId){
+		$.get('/ordering/details', 'id='+orderId, function(html){
+    		$('#custom-modal .modal-title').html('Order Details');
+    		$('#custom-modal .modal-body').html(html);
+    		$('#custom-modal').modal('show');	
+    	});
+	}
 }
 
 var Messages = {

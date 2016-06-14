@@ -140,4 +140,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             return $vendorMenu;
         return false;   
     }
+    
+    public static function getVendorCustomers($userId, $resultsPerPage, $page){
+        $resp = array();
+        $resp['list'] = User::find()->where('vendorId = '.$userId.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = User::find()->where('vendorId = '.$userId)->count();
+        return $resp;
+    }
 }

@@ -13,11 +13,12 @@ use yii\base\ViewContextInterface;
 use app\models\ApplicationTypeFormSetup;
 use app\models\Candidates;
 use yii\base\Application;
+use app\models\TenantInfo;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
  */
-class DashboardController extends CController
+class VendorController extends CController
 {
    
     public function behaviors()
@@ -27,7 +28,7 @@ class DashboardController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'save-settings'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -50,5 +51,26 @@ class DashboardController extends CController
     {
         
         return $this->render('index');
+    }
+    
+    public function actionSaveSettings(){
+        $userId = \Yii::$app->user->id;
+        if(count($_POST) > 0){
+            $codes = $_POST['TenantCode'];
+            foreach($codes as $code => $val){
+                $tenantInfo = TenantInfo::findOne(['userId' => $userId, 'code' => $code]);
+                if($tenantInfo == null){
+                    $tenantInfo = new TenantInfo();
+                    
+                }
+                
+                $tenantInfo->code = $code;
+                $tenantInfo->userId = $userId;
+                $tenantInfo->val = $val;
+                $tenantInfo->save();
+            }
+            \Yii::$app->getSession()->setFlash('success', 'Vendor Settings Saved Successfully');
+        }
+        return $this->redirect('/vendor');
     }
 }
