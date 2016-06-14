@@ -12,7 +12,7 @@ class m160613_133523_add_admin_user extends Migration
         $user->role = User::ROLE_ADMIN;
         $user->email = 'admin';
         $user->password = UtilityHelper::cryptPass('adminpassword');
-        $user->save();
+        $user->save(false);
     }
 
     public function down()
