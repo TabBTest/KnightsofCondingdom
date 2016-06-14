@@ -6,12 +6,14 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_publishable_key'] . '\');', $this::POS_READY);
 ?>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
 <?php if(\Yii::$app->getSession()->hasFlash('error')){?>
- <div class="">
+<div class="">
 <div class="alert alert-danger">
     <?php echo \Yii::$app->getSession()->getFlash('error'); ?>
 </div>
 </div>
+<?php } ?>
 
 <form action='/site/reg-vendor' method='POST' id='register-form'>
 <div class='row fieldset'>
