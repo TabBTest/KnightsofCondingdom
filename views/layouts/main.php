@@ -70,7 +70,7 @@ use app\helpers\TenantHelper;
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
-                ['label' => 'Dashboard', 'url' => ['/dashboard']],                
+                ['label' => 'Dashboard', 'url' => ['/dashboard']],
                 ['label' => 'New Order', 'url' => ['/ordering']],
                 ['label' => 'Order History', 'url' => ['/ordering/history']],
                 //['label' => 'Profile', 'url' => ['/vendor']],
@@ -78,9 +78,9 @@ use app\helpers\TenantHelper;
         ]);
     }
     if(Yii::$app->user->isGuest){
-        
+
         if(TenantHelper::isDefaultTenant()){
-        
+
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
@@ -149,13 +149,8 @@ use app\helpers\TenantHelper;
 
 <?php $this->endBody() ?>
 </body>
-    <script src="/js/jquery.js"></script>
-
-    <script src="/js/bootstrap.min.js"></script>
-
     <script src="/js/jquery.flexslider-min.js"></script>
     <script src="/js/jquery.bootpag.min.js"></script>
-
     <script src="/js/app.js"></script>
 <style>
 body > .wrap > .container {

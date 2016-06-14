@@ -1,24 +1,17 @@
-<?php 
+<?php
 
 use yii\widgets\MaskedInput;
 $this->title = 'Register';
 $this->params['breadcrumbs'][] = $this->title;
+$this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_publishable_key'] . '\');', $this::POS_READY);
 ?>
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<script>
-$(document).ready(function() {
-	Stripe.setPublishableKey('<?php echo \Yii::$app->params['stripe_publishable_key']?>');	
-});
-
-</script>
-
 <?php if(\Yii::$app->getSession()->hasFlash('error')){?>
  <div class="">
 <div class="alert alert-danger">
     <?php echo \Yii::$app->getSession()->getFlash('error'); ?>
 </div>
- </div>
-<?php } ?>
+</div>
 
 <form action='/site/reg-vendor' method='POST' id='register-form'>
 <div class='row fieldset'>
@@ -34,17 +27,17 @@ $(document).ready(function() {
     </div>
     <div class='col-xs-12 form-group'>
 <!--         <input type='text' class='form-control' name='User[phoneNumber]' id='phone' placeholder='Company Phone Number'/> -->
-         <?php 
+         <?php
         echo MaskedInput::widget([
-            'name' => 'User[phoneNumber]',   
+            'name' => 'User[phoneNumber]',
             'mask' => '999-999-9999',
         ]);
-        
-        
+
+
         ?>
-        
+
     </div>
-    
+
     <div class='col-xs-6 form-group'>
         <input type='text' class='form-control' name='User[email]' id='email'  placeholder='Company Email'/>
     </div>
@@ -72,7 +65,7 @@ $(document).ready(function() {
     <div class='col-xs-1 form-group'>
         <input type='text' class='form-control card-cvv'    placeholder='CVV'/>
     </div>
-    
+
     <div class='col-xs-2 form-group'>
           <select  class="form-control card-expiry-month">
 		    	<?php for($index = 1 ; $index < 13; $index++){
@@ -84,14 +77,14 @@ $(document).ready(function() {
     </div>
     <div class='col-xs-2 form-group'>
              <select  class="form-control card-expiry-year">
-		    	<?php 
-		    	$curYear = date('Y'); 
+		    	<?php
+		    	$curYear = date('Y');
 		    	for($index = $curYear ; $index < $curYear + 20; $index++){?>
 		    	<option value="<?php echo $index?>"><?php echo $index?></option>
 		    	<?php }?>
 		    </select>
     </div>
-    
+
     <div class='col-xs-12 form-group text-center'>
         <button type='button' class='btn btn-success btn-next btn-register' data-is-last='1'>SUBMIT</button>
     </div>
