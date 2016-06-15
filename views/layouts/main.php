@@ -62,7 +62,7 @@ use app\helpers\TenantHelper;
                 ['label' => 'Customer', 'url' => ['/customer']],
                 ['label' => 'Order', 'url' => ['/order']],
                 ['label' => 'Promotion', 'url' => ['/promotion']],
-                ['label' => 'Profile', 'url' => ['/vendor']],
+                ['label' => 'Settings', 'url' => ['/vendor']],
             ],
         ]);
     }else if(Yii::$app->session->get('role') == User::ROLE_CUSTOMER){

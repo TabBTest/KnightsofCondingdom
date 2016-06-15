@@ -39,12 +39,23 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 <?php foreach(TenantInfo::getTenantCodes() as $codeKey => $codeDescription){       
     ?>
+    <?php if($codeKey == TenantInfo::CODE_SUBDOMAIN_REDIRECT){?>
+    
+    <div class='row form-group'>
+        <div class='col-xs-12'>
+            <label class='form-label'><?php echo $codeDescription?></label>
+            <input type='hidden' value='0' name='TenantCode[<?php echo $codeKey?>]'/>
+            <input type='checkbox' style='margin-left: 10px' class='' value='1' name='TenantCode[<?php echo $codeKey?>]' <?php echo TenantInfo::getTenantValue($userId, $codeKey) == 1 ? 'checked' : ''?>/>
+        </div>
+    </div>
+    <?php }else{?>
     <div class='row form-group'>
         <div class='col-xs-12'>
             <label class='form-label'><?php echo $codeDescription?></label>
             <input class='form-control' type='text' name='TenantCode[<?php echo $codeKey?>]' value="<?php echo TenantInfo::getTenantValue($userId, $codeKey)?>"/>
         </div>
     </div>
+    <?php }?>
   <?php }?>
   
     <div class='row form-group'>

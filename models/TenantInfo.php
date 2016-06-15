@@ -16,6 +16,8 @@ use Yii;
 class TenantInfo extends \yii\db\ActiveRecord
 {
     const CODE_SUBDOMAIN = 'SUBDOMAIN';
+    const CODE_SUBDOMAIN_REDIRECT = 'SUBDOMAIN_REDIRECT';
+    const CODE_REDIRECT_URL = 'REDIRECT_URL';
     /**
      * @inheritdoc
      */
@@ -41,6 +43,8 @@ class TenantInfo extends \yii\db\ActiveRecord
     public static function getTenantCodes(){
         $tenantCustom = [];
         $tenantCustom[self::CODE_SUBDOMAIN] = 'Sub-domain';
+        $tenantCustom[self::CODE_SUBDOMAIN_REDIRECT] = 'Sub-domain Redirect';
+        $tenantCustom[self::CODE_REDIRECT_URL] = 'Redirect URL';
         
         return $tenantCustom;
     }
