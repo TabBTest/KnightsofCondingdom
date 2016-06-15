@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class='row'>
     <div class='col-xs-12 text-center'>
-        <h1>Profile</h1>
+        <h1>Settings</h1>
     </div>
 </div>
 

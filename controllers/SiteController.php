@@ -119,7 +119,8 @@ class SiteController extends CController
         if(count($_POST) > 0){
             
             $userData = $_POST['User'];
-            $user = User::findOne(['email' => $userData['email'], 'role' => User::ROLE_VENDOR]);
+            $user = User::findOne(['email' => $userData['email']]);
+            
             if($user){
                  \Yii::$app->getSession()->setFlash('error', 'Email should be unique');
             }else{

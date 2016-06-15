@@ -94,7 +94,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             if($this->password != '' && UtilityHelper::cryptPass($this->password) == UtilityHelper::cryptPass($this->confirmPassword)){
                 $this->password=UtilityHelper::cryptPass($this->password);
             }
-            $this->date_created=date('Y-m-d H:i:s', strtotime('now'));
+            if($this->isNewRecord)
+                $this->date_created=date('Y-m-d H:i:s', strtotime('now'));
             return true;
         }else{
             return false;

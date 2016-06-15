@@ -28,7 +28,7 @@ class VendorController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'save-settings'],
+                        'actions' => ['settings', 'save-settings', 'profile'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -47,10 +47,10 @@ class VendorController extends CController
      * Lists all ApplicationType models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionSettings()
     {
         
-        return $this->render('index');
+        return $this->render('settings');
     }
     
     public function actionSaveSettings(){
@@ -72,5 +72,11 @@ class VendorController extends CController
             \Yii::$app->getSession()->setFlash('success', 'Vendor Settings Saved Successfully');
         }
         return $this->redirect('/vendor');
+    }
+    
+    public function actionProfile()
+    {
+    
+        return $this->render('profile');
     }
 }
