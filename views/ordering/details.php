@@ -1,5 +1,6 @@
 <?php
 use app\models\VendorMenuItem; 
+use app\helpers\UtilityHelper;
 ?>
 
 <div class='row form-group'>
@@ -21,14 +22,14 @@ use app\models\VendorMenuItem;
             ?>
             <tr>
                 <td><?php echo $detail->name?></td>
-                <td>$<?php echo $detail->amount?></td>
+                <td>$<?php echo UtilityHelper::formatAmountForDisplay($detail->amount)?></td>
                 <td><?php echo $detail->quantity?></td>
-                <td>$<?php echo $detail->totalAmount?></td>
+                <td>$<?php echo UtilityHelper::formatAmountForDisplay($detail->totalAmount)?></td>
             </tr>
             <?php }?>
             <tr>
                 <td colspan='3'><label class='pull-right'>Final Total Amount</label></td>
-                <td><label>$<?php echo $finalTotalAmount?></label></td>
+                <td><label>$<?php echo UtilityHelper::formatAmountForDisplay($finalTotalAmount)?></label></td>
             </tr>
         </tbody>
         </table>
