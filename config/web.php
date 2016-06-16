@@ -31,23 +31,14 @@ $config = [
             'viewPath' => '@app/mail',
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-        
-                'host' => 'mail.craneshit.com',
-                'username' => 'oshacc@craneshit.com',
-                'password' => 'OshaccPassword123',
+                'host' => $params['smtp_host'],
+                'username' => $params['smtp_username'],
+                'password' => $params['smtp_password'],
                 'port' => '465',
                 'encryption' => 'ssl',
-                /*
-                 'host' => 'smtp.mandrillapp.com',
-        'username' => 'daniel_jao@yahoo.com',
-        'password' => 'hF4DajQJtB0q-v99JP8E4Q',
-        'port' => '587',
-        'encryption' => 'tls',
-        */
-        
             ],
         ],
-        
+
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
@@ -73,7 +64,7 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-        'allowedIPs' => ['192.168.99.1', '127.0.0.1', '::1', 'localhost']
+        'allowedIPs' => [getenv('DEV_IP_1'), '192.168.99.1', '127.0.0.1', '::1', 'localhost']
     ];
 
     $config['bootstrap'][] = 'gii';
