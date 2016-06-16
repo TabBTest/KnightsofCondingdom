@@ -71,7 +71,7 @@ class VendorController extends CController
             }
             \Yii::$app->getSession()->setFlash('success', 'Vendor Settings Saved Successfully');
         }
-        return $this->redirect('/vendor');
+        return $this->redirect('/vendor/settings');
     }
     
     public function actionProfile()
