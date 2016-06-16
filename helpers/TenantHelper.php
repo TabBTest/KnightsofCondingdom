@@ -3,6 +3,7 @@
 namespace app\helpers;
 
 use app\models\User;
+use app\models\TenantInfo;
 class TenantHelper {
     
     static public function isDefaultTenant(){
@@ -34,6 +35,11 @@ class TenantHelper {
         $fullUrl = $_SERVER['SERVER_NAME'];
         $subdomain = str_replace('.'.$domain, '', $fullUrl);
         return ($subdomain);
+    }
+    
+    static public function getVendorSubdomain($userId){
+        $subdomain = TenantInfo::getTenantValue($userId, TenantInfo::CODE_SUBDOMAIN);
+        return $subdomain.'.'.self::get_domain($_SERVER['SERVER_NAME']);
     }
     /*
     static public function getTenantDataInfo($tenantId = false){
