@@ -18,6 +18,8 @@ use app\models\Orders;
 use app\models\OrderDetails;
 use app\models\VendorMenuItem;
 use app\helpers\UtilityHelper;
+use app\helpers\TenantHelper;
+use app\models\TenantInfo;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -31,6 +33,11 @@ class OrderingController extends CController
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
+                    [
+                    'actions' => ['menu', 'summary'],
+                    'allow' => true,
+                    'roles' => ['?'],
+                    ],
                     [
                         'actions' => ['index', 'summary', 'save', 'history', 'viewpage', 'details'],
                         'allow' => true,
@@ -60,11 +67,25 @@ class OrderingController extends CController
         return $this->render('index', ['menu' => $vendorMenu]);
     }
     
+    public function actionMenu()
+    {
+        $subdomain = TenantHelper::getSubDomain();
+        $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
+        
+        $userVendor = User::findOne($tenantInfo->userId);
+        $vendorMenu = User::getVendorDefaultMenu($userVendor);
+    
+        return $this->render('index', ['menu' => $vendorMenu]);
+    }
+    
+    
+    
     public function actionSummary(){
         
         $orders = [];
         foreach($_POST['Orders'] as $menuItemId => $quantity){
-            $orders[] = ['menuItemId' => $menuItemId, 'quantity' => $quantity];
+            if($quantity > 0)
+                $orders[] = ['menuItemId' => $menuItemId, 'quantity' => $quantity];
         }
         
         return $this->renderPartial('summary', ['orders' => $orders]);
