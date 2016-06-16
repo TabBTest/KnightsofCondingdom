@@ -1,5 +1,6 @@
 <?php
 use app\models\VendorMenuItem; 
+use app\helpers\UtilityHelper;
 ?>
 <form action='/ordering/save' method='POST'>
 
@@ -25,14 +26,14 @@ use app\models\VendorMenuItem;
             <input type='hidden' name='Orders[<?php echo $detail['menuItemId']?>]' value='<?php echo $detail['quantity']?>' />
             <tr>
                 <td><?php echo $vendorMenuItem->name?></td>
-                <td>$<?php echo $vendorMenuItem->amount?></td>
+                <td>$<?php echo UtilityHelper::formatAmountForDisplay($vendorMenuItem->amount)?></td>
                 <td><?php echo $detail['quantity']?></td>
-                <td>$<?php echo $totalAmount?></td>
+                <td>$<?php echo UtilityHelper::formatAmountForDisplay($totalAmount)?></td>
             </tr>
             <?php }?>
             <tr>
                 <td colspan='3'><label class='pull-right'>Final Total Amount</label></td>
-                <td><label>$<?php echo $finalTotalAmount?></label></td>
+                <td><label>$<?php echo UtilityHelper::formatAmountForDisplay($finalTotalAmount)?></label></td>
             </tr>
         </tbody>
         </table>

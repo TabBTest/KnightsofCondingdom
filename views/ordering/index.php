@@ -2,6 +2,7 @@
 
 use app\models\VendorMenuItem;
 use yii\widgets\MaskedInput;
+use app\helpers\UtilityHelper;
 $this->title = 'Menu';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -59,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                  <label class='form-label'><?php echo $item->description?></label>
                 </div>
             </td>
-            <td>$<?php echo $item->amount?></td>
+            <td>$<?php echo UtilityHelper::formatAmountForDisplay($item->amount)?></td>
             <td><input class='form-control order-quantity' type='number' name='Orders[<?php echo $item->id?>]' value='0' min='0'/>
             
           

@@ -12,6 +12,7 @@ $totalCount = $orders['count'];
             <th>Order Details</th>
             <th>Total Amount</th>
             <th>Time</th>
+            <th>Transaction ID</th>
             <th>Status</th>            
         </tr>
     </thead>
@@ -21,6 +22,7 @@ $totalCount = $orders['count'];
             <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)">See Order</a></td>
             <td>$<?php echo $orderInfo->getTotalAmount()?></td>
             <td><?php echo date('m-d-Y H:i', strtotime($orderInfo->date_created));?></td>
+            <td><?php echo  $orderInfo->transactionId;?></td>
             <td>           
                 <?php if($orderInfo->status == Orders::STATUS_PROCESSED){?>
                 <i class="fa fa-check alert-success" aria-hidden="true"></i>                

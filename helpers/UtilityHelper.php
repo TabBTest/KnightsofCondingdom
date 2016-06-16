@@ -20,4 +20,8 @@ class UtilityHelper {
         $return = self::createPath($prev_path);
         return ($return && is_writable($prev_path)) ? mkdir($path) : false;
     }
+    
+    static public function formatAmountForDisplay($amount){
+        return number_format($amount, 2, '.', ',');
+    }
 }
