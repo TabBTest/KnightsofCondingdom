@@ -39,13 +39,13 @@ class TenantInfo extends \yii\db\ActiveRecord
             [['val'], 'string', 'max' => 500],
         ];
     }
-    
+
     public static function getTenantCodes(){
         $tenantCustom = [];
-        $tenantCustom[self::CODE_SUBDOMAIN] = 'Sub-domain';
-        $tenantCustom[self::CODE_SUBDOMAIN_REDIRECT] = 'Sub-domain Redirect';
+        $tenantCustom[self::CODE_SUBDOMAIN] = 'Subdomain';
+        $tenantCustom[self::CODE_SUBDOMAIN_REDIRECT] = 'Subdomain Redirect';
         $tenantCustom[self::CODE_REDIRECT_URL] = 'Redirect URL';
-        
+
         return $tenantCustom;
     }
 
@@ -62,7 +62,7 @@ class TenantInfo extends \yii\db\ActiveRecord
             'date_created' => 'Date Created',
         ];
     }
-    
+
     public static function getTenantValue($userId, $code){
         $tenantInfo = TenantInfo::findOne(['userId' => $userId, 'code' => $code]);
         if($tenantInfo){
@@ -70,7 +70,7 @@ class TenantInfo extends \yii\db\ActiveRecord
         }
         return '';
     }
-    
+
     public static function addCustomSubdomain($user){
         $tenantInfo = TenantInfo::findOne(['userId' => $user->id, 'code' => self::CODE_SUBDOMAIN]);
         if($tenantInfo == null){
@@ -81,12 +81,24 @@ class TenantInfo extends \yii\db\ActiveRecord
             $tenantInfo->save();
         }
     }
-    
+
     public static function isValidSubDomain($subDomain){
         $tenantInfo = TenantInfo::findOne(['code' => self::CODE_SUBDOMAIN, 'val' => $subDomain]);
         if($tenantInfo){
             return $tenantInfo;
         }
         return false;
+    }
+
+    public static function findOrCreate($userId, $code)
+    {
+        $tenantInfo = TenantInfo::findOne(['userId' => $userId, 'code' => $code]);
+        return ($tenantInfo ? $tenantInfo : new TenantInfo());
+    }
+
+    public static function isUniqueSubdomain($userId, $subdomain)
+    {
+        $tenantInfo = TenantInfo::find()->where(['code' => self::CODE_SUBDOMAIN, 'val' => $subdomain])->andWhere(['not', ['userId' => $userId]])->one();
+        return ($tenantInfo ? false : true);
     }
 }

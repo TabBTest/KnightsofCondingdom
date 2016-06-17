@@ -14,13 +14,14 @@ use app\models\ApplicationTypeFormSetup;
 use app\models\Candidates;
 use yii\base\Application;
 use app\models\TenantInfo;
+use yii\helpers\VarDumper;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
  */
 class VendorController extends CController
 {
-   
+
     public function behaviors()
     {
         return [
@@ -49,34 +50,35 @@ class VendorController extends CController
      */
     public function actionSettings()
     {
-        
+
         return $this->render('settings');
     }
-    
+
     public function actionSaveSettings(){
         $userId = \Yii::$app->user->id;
+
         if(count($_POST) > 0){
             $codes = $_POST['TenantCode'];
-            foreach($codes as $code => $val){
-                $tenantInfo = TenantInfo::findOne(['userId' => $userId, 'code' => $code]);
-                if($tenantInfo == null){
-                    $tenantInfo = new TenantInfo();
-                    
+
+            if (TenantInfo::isUniqueSubdomain($userId, $codes['SUBDOMAIN'])) {
+                foreach($codes as $code => $val){
+                    $tenantInfo = TenantInfo::findOrCreate($userId, $code);
+                    $tenantInfo->code = $code;
+                    $tenantInfo->userId = $userId;
+                    $tenantInfo->val = $val;
+                    $tenantInfo->save();
+                    \Yii::$app->getSession()->setFlash('success', 'Vendor Settings Saved Successfully');
                 }
-                
-                $tenantInfo->code = $code;
-                $tenantInfo->userId = $userId;
-                $tenantInfo->val = $val;
-                $tenantInfo->save();
+            } else {
+                \Yii::$app->getSession()->setFlash('error', 'Subdomain is already taken. Please select a different subdomain.');
             }
-            \Yii::$app->getSession()->setFlash('success', 'Vendor Settings Saved Successfully');
         }
         return $this->redirect('/vendor/settings');
     }
-    
+
     public function actionProfile()
     {
-    
+
         return $this->render('profile');
     }
 }
