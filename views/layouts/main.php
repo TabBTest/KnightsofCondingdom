@@ -37,7 +37,7 @@ use app\helpers\TenantHelper;
 
 
     NavBar::begin([
-        'brandLabel' => 'Foodzilla',
+        'brandLabel' => 'Restalutions',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -63,7 +63,7 @@ use app\helpers\TenantHelper;
                 ['label' => 'Order', 'url' => ['/order']],
                 ['label' => 'Promotion', 'url' => ['/promotion']],
                 ['label' => 'Settings', 'url' => ['/vendor/settings']],
-                
+
             ],
         ]);
     }else if(Yii::$app->session->get('role') == User::ROLE_CUSTOMER){
@@ -130,7 +130,7 @@ use app\helpers\TenantHelper;
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; Foodzilla <?= date('Y') ?></p>
+        <p class="pull-left">&copy; Restalutions <?= date('Y') ?></p>
     </div>
 </footer>
 

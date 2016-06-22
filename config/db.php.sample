@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=foodzilla',
+    'dsn' => 'mysql:host=localhost;dbname=restalutions',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',

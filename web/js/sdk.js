@@ -29,16 +29,16 @@ var FoodApp = {
 			iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(html);
 			document.body.appendChild(iframe);
 			*/
-			FoodApp.jquery('.foodzilla-widget-button').on('click', function(){
-				FoodApp.jquery('.foodzilla-widget').toggle();
-				if(FoodApp.jquery('.foodzilla-widget').is(':visible')){
-					FoodApp.jquery('.foodzilla-widget-button').html('Hide Menu');
+			FoodApp.jquery('.restalutions-widget-button').on('click', function(){
+				FoodApp.jquery('.restalutions-widget').toggle();
+				if(FoodApp.jquery('.restalutions-widget').is(':visible')){
+					FoodApp.jquery('.restalutions-widget-button').html('Hide Menu');
 				}else{
-					FoodApp.jquery('.foodzilla-widget-button').html('Show Menu');
+					FoodApp.jquery('.restalutions-widget-button').html('Show Menu');
 				}
 			});
-			var subdomain = FoodApp.jquery('.foodzilla-widget').data('subdomain');
-			FoodApp.jquery('<iframe id="foodapp-iframe" height="'+(window.innerHeight-100)+'" name="myFrame" src="http://'+subdomain+'/ordering/menu">').appendTo('.foodzilla-widget');
+			var subdomain = FoodApp.jquery('.restalutions-widget').data('subdomain');
+			FoodApp.jquery('<iframe id="foodapp-iframe" height="'+(window.innerHeight-100)+'" name="myFrame" src="http://'+subdomain+'/ordering/menu">').appendTo('.restalutions-widget');
 			
 			
 			
