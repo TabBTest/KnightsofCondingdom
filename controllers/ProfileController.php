@@ -21,7 +21,7 @@ use app\models\User;
  */
 class ProfileController extends CController
 {
-   
+
     public function behaviors()
     {
         return [
@@ -53,40 +53,42 @@ class ProfileController extends CController
         $model = User::findOne(\Yii::$app->user->id);
         return $this->render('profile', ['model' => $model]);
     }
-    
+
     public function actionSave(){
         $userId = \Yii::$app->user->id;
         $model = User::findOne(\Yii::$app->user->id);
         if(count($_POST) > 0){
-            
+
             $userData = $_POST['User'];
             $hasDuplicate = false;
-            
+
             if($model->role == User::ROLE_VENDOR){
                 $user = User::findOne(['email' => $userData['email']]);
                 if($user && $user->id != $userId){
                     $hasDuplicate = true;
-                }       
+                }
             }else{
                 $user = User::findOne(['email' => $userData['email'], 'role' => User::ROLE_VENDOR]);
-                
+
                 $customers = User::findOne(['email' => $userData['email'], 'role' => User::ROLE_CUSTOMER, 'vendorId' => $model->vendorId]);
                 if($user || ($customers && $customers->id != $userId)){
                     $hasDuplicate = true;
                 }
             }
-           
-            
+
+
             if($hasDuplicate){
                  \Yii::$app->getSession()->setFlash('error', 'Email should be unique');
             }else{
                 //we register it already
                 $model->name = $userData['name'];
-                $model->address = $userData['address'];
+                $model->streetAddress = $userData['streetAddress'];
+                $model->city = $userData['city'];
+                $model->state = $userData['state'];
                 $model->email = $userData['email'];
                 $model->phoneNumber = $userData['phoneNumber'];
                 $message = 'Profile Saved Successfully';
-                
+
                 if($_POST['password'] != ''){
                     if($_POST['password'] == $_POST['confirmPassword']){
                         $model->password = $_POST['password'];
@@ -95,15 +97,15 @@ class ProfileController extends CController
                         \Yii::$app->getSession()->setFlash('warning', 'Password did not matched');
                     }
                 }
-                
+
                 if($model->save()){
-                    
+
                     \Yii::$app->getSession()->setFlash('success', $message);
                     return $this->redirect('/profile');
                 }
             }
-        
-            
+
+
         }
         return $this->redirect('/profile');
     }

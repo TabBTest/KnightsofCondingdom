@@ -111,16 +111,16 @@ class SiteController extends CController
             'model' => $model,
         ]);
     }
-    
+
     public function actionRegVendor(){
         $model = new User();
-        
-       
+
+
         if(count($_POST) > 0){
-            
+
             $userData = $_POST['User'];
             $user = User::findOne(['email' => $userData['email']]);
-            
+
             if($user){
                  \Yii::$app->getSession()->setFlash('error', 'Email should be unique');
             }else{
@@ -128,23 +128,28 @@ class SiteController extends CController
                 $randomPassword = UtilityHelper::generateRandomPassword();
                 $user = new User();
                 $user->name = $userData['name'];
-                $user->address = $userData['address'];
+                $user->streetAddress = $userData['streetAddress'];
+                $user->city = $userData['city'];
+                $user->state = $userData['state'];
                 $user->email = $userData['email'];
                 $user->phoneNumber = $userData['phoneNumber'];
                 $user->billingName = $userData['billingName'];
-                $user->billingAddress = $userData['billingAddress'];
+                $user->billingStreetAddress = $userData['billingStreetAddress'];
+                $user->billingCity = $userData['billingCity'];
+                $user->billingState = $userData['billingState'];
+                $user->billingPhoneNumber = $userData['billingPhoneNumber'];
                 $user->password = $randomPassword;
                 $user->confirmPassword = $randomPassword;
                 $user->role = User::ROLE_VENDOR;
                 $user->isPasswordReset = 1;
                 if($user->save()){
                     TenantInfo::addCustomSubdomain($user);
-                    
+
                     \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
-                    
+
                     // Get the credit card details submitted by the form
                     $token = $_POST['stripeToken'];
-                    
+
                     // Create a Customer
                     $customer = \Stripe\Customer::create(array(
                       "source" => $token,
@@ -152,9 +157,9 @@ class SiteController extends CController
                     );
                     $user->stripeId = $customer->id;
                     $user->save();
-                    
+
                     NotificationHelper::notifyVendorOfAccount($user, $randomPassword);
-                    
+
                     return $this->redirect('/site/login');
                 }
                 var_dump($user->errors);
@@ -164,43 +169,48 @@ class SiteController extends CController
             'model' => $model,
         ]);
     }
-    
+
     public function actionRegCustomer(){
         $model = new User();
-    
-         
+
+
         if(count($_POST) > 0){
-    
+
             $userData = $_POST['User'];
             $user = User::findOne(['email' => $userData['email'], 'role' => User::ROLE_VENDOR]);
             $tenantInfo = TenantInfo::isValidSubDomain(TenantHelper::getSubDomain());
-            
+
             $customers = User::findOne(['email' => $userData['email'], 'role' => User::ROLE_CUSTOMER, 'vendorId' => $tenantInfo->userId]);
             if($user || $customers){
                 \Yii::$app->getSession()->setFlash('error', 'Email should be unique');
             }else{
                 //we register it already
-                
+
                 $randomPassword = UtilityHelper::generateRandomPassword();
                 $user = new User();
                 $user->name = $userData['name'];
-                $user->address = $userData['address'];
+                $user->streetAddress = $userData['streetAddress'];
+                $user->city = $userData['city'];
+                $user->state = $userData['state'];
                 $user->email = $userData['email'];
                 $user->phoneNumber = $userData['phoneNumber'];
                 $user->billingName = $userData['billingName'];
-                $user->billingAddress = $userData['billingAddress'];
+                $user->billingStreetAddress = $userData['billingStreetAddress'];
+                $user->billingCity = $userData['billingCity'];
+                $user->billingState = $userData['billingState'];
+                $user->billingPhoneNumber = $userData['billingPhoneNumber'];
                 $user->password = $randomPassword;
                 $user->confirmPassword = $randomPassword;
                 $user->role = User::ROLE_CUSTOMER;
                 $user->vendorId = $tenantInfo->userId;
                 $user->isPasswordReset = 1;
                 if($user->save()){
-                    
+
                     \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
-    
+
                     // Get the credit card details submitted by the form
                     $token = $_POST['stripeToken'];
-    
+
                     // Create a Customer
                     $customer = \Stripe\Customer::create(array(
                         "source" => $token,
@@ -208,9 +218,9 @@ class SiteController extends CController
                     );
                     $user->stripeId = $customer->id;
                     $user->save();
-    
+
                     NotificationHelper::notifyUserOfAccount($user, $randomPassword);
-    
+
                     return $this->redirect('/site/login');
                 }
                 var_dump($user->errors);
@@ -220,8 +230,8 @@ class SiteController extends CController
             'model' => $model,
         ]);
     }
-    
-    
+
+
     public function actionForgetPassword(){
         if(count($_POST) > 0){
             $email = $_POST['email'];
@@ -238,13 +248,13 @@ class SiteController extends CController
             }
         }
         return $this->render('forget-password', [
-            
+
         ]);
     }
-    
+
     public function actionProducts(){
         return $this->render('products', [
-            
+
         ]);
     }
 

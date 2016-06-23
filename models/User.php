@@ -13,10 +13,15 @@ use app\helpers\UtilityHelper;
  * @property string $password
  * @property integer $role
  * @property string $name
- * @property string $address
+ * @property string $streetAddress
+ * @property string $city
+ * @property string $state
  * @property string $phoneNumber
  * @property string $billingName
- * @property string $billingAddress
+ * @property string $billingStreetAddress
+ * @property string $billingCity
+ * @property string $billingState
+ * @property string $billingPhoneNumber
  * @property integer $vendorId
  * @property string $date_created
  * @property string $date_updated
@@ -24,11 +29,11 @@ use app\helpers\UtilityHelper;
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
     const ROLE_ADMIN = 0; //superadmin
-    const ROLE_VENDOR = 1; 
+    const ROLE_VENDOR = 1;
     const ROLE_CUSTOMER= 2;
-    
+
     public $confirmPassword;
-    
+
     /**
      * @inheritdoc
      */
@@ -46,7 +51,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
             [['date_created', 'date_updated', 'isPasswordReset'], 'safe'],
-            [['email', 'password', 'name', 'address', 'phoneNumber', 'billingName', 'billingAddress', 'stripeId'], 'string', 'max' => 250],
+            [['email', 'password', 'name', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId'], 'string', 'max' => 250],
+            [['state', 'billingState'], 'string', 'max' => 2]
         ];
     }
 
@@ -61,16 +67,20 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'password' => 'Password',
             'role' => 'Role',
             'name' => 'Name',
-            'address' => 'Address',
+            'streetAddress' => 'Street Address',
+            'city' => 'City',
+            'state' => 'State',
             'phoneNumber' => 'Phone Number',
             'billingName' => 'Billing Name',
-            'billingAddress' => 'Billing Address',
+            'billingAddress' => 'Billing Street Address',
+            'billingAddress' => 'Billing City',
+            'billingAddress' => 'Billing State',
             'vendorId' => 'Vendor ID',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -78,14 +88,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return User::findOne(['id' => $id]);
     }
-    
+
     /**
      * @inheritdoc
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-    
-    
+
+
         return null;
     }
     public function beforeSave($insert)
@@ -108,7 +118,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->id;
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -116,7 +126,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return "";
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -134,14 +144,14 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->password === UtilityHelper::cryptPass($password);
     }
-    
+
     public static function getVendorDefaultMenu($user){
         $vendorMenu = VendorMenu::findOne(['vendorId' => $user->id, 'isDefault' => 1]);
         if($vendorMenu)
             return $vendorMenu;
-        return false;   
+        return false;
     }
-    
+
     public static function getVendorCustomers($userId, $resultsPerPage, $page){
         $resp = array();
         $resp['list'] = User::find()->where('vendorId = '.$userId.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
