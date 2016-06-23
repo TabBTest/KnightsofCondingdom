@@ -262,4 +262,9 @@ class SiteController extends CController
     {
         return $this->render('about');
     }
+
+    public function actionLearnMore()
+    {
+        return $this->render('learn-more');
+    }
 }

@@ -24,7 +24,7 @@ $this->title = 'Restalutions';
                     ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
                     fugiat nulla pariatur.</p>
 
-                <p><a class="btn btn-default" href="#">Learn More</a></p>
+                <p><a class="btn btn-default" href="/site/learn-more">Learn More</a></p>
             </div>
             <div class="col-lg-4">
                 <img src="/images/food-02.jpg" class="img-circle img-responsive center-block">
@@ -35,7 +35,7 @@ $this->title = 'Restalutions';
                     ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
                     fugiat nulla pariatur.</p>
 
-                <p><a class="btn btn-default" href="#">Learn More</a></p>
+                <p><a class="btn btn-default" href="/site/learn-more">Learn More</a></p>
             </div>
             <div class="col-lg-4">
                 <img src="/images/food-03.jpg" class="img-circle img-responsive center-block">
@@ -46,7 +46,7 @@ $this->title = 'Restalutions';
                     ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
                     fugiat nulla pariatur.</p>
 
-                <p><a class="btn btn-default" href="#">Learn More</a></p>
+                <p><a class="btn btn-default" href="/site/learn-more">Learn More</a></p>
                 <br>
                 <br>
             </div>

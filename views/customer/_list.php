@@ -1,4 +1,4 @@
-<?php 
+<?php
 use app\models\Orders;
 $list = $customers['list'];
 $totalCount = $customers['count'];
@@ -12,17 +12,20 @@ $totalCount = $customers['count'];
             <th>Name</th>
             <th>Phone</th>
             <th>Email</th>
-            <th>Address</th>          
+            <th>Street Address</th>
+            <th>City</th>
+            <th>State</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach($list as $customer){?>
-        <tr class="" data-id="<?php echo $customer->id?>">
-            <td><?php echo $customer->name?></td>
-            <td><?php echo $customer->phoneNumber?></td>
-            <td><?php echo $customer->email?></td>
-            <td><?php echo $customer->address?></td>            
-           
+        <tr class="" data-id="<?= $customer->id ?>">
+            <td><?= $customer->name ?></td>
+            <td><?= $customer->phoneNumber?></td>
+            <td><?= $customer->email ?></td>
+            <td><?= $customer->streetAddress?></td>
+            <td><?= $customer->city ?></td>
+            <td><?= $customer->state ?></td>
         </tr>
         <?php }?>
     </tbody>
