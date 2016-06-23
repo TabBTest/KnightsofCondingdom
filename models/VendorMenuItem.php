@@ -36,7 +36,7 @@ class VendorMenuItem extends \yii\db\ActiveRecord
             [['vendorMenuId'], 'integer'],
             [['description', 'photo'], 'string'],
             [['amount'], 'number'],
-            [['date_created', 'date_updated','isArchived'], 'safe'],
+            [['date_created', 'date_updated','isArchived', 'menuCategoryId', 'sorting'], 'safe'],
             [['name'], 'string', 'max' => 250],
         ];
     }

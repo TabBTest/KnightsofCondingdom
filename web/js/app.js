@@ -81,9 +81,31 @@ $(document).ready(function() {
     	});
     	
     });
+    if($('.add-category-item').length != 0){
+    	VendorMenu.setupUI();	
+    }
     
+    $('.add-category-item').on('click', function(){
+    	var sorting = $('.vendor-menu-categories').length + 1;
+    	$.get('/menu/add-category', 'sorting='+sorting, function(html){
+    		$('#custom-modal .modal-title').html('Add Category');
+    		$('#custom-modal .modal-body').html(html);
+    		$('#custom-modal').modal('show');	
+    	})
+    	
+    });
+    $('.edit-category-item').on('click', function(){
+    	
+    	$.get('/menu/edit-category', 'id='+$(this).data('id'), function(html){
+    		$('#custom-modal .modal-title').html('Edit Category');
+    		$('#custom-modal .modal-body').html(html);
+    		$('#custom-modal').modal('show');	
+    	})
+    	
+    });
     $('.add-menu-item').on('click', function(){
-    	$.get('/menu/add-item', 'id='+$(this).data('id'), function(html){
+    	var sorting = $('.vendor-menu-category-item-'+$(this).data('category-id')).length + 1;
+    	$.get('/menu/add-item', 'id='+$(this).data('id')+'&categoryId='+$(this).data('category-id')+'&sorting='+sorting, function(html){
     		$('#custom-modal .modal-title').html('Add Menu Item');
     		$('#custom-modal .modal-body').html(html);
     		$('#custom-modal').modal('show');	
@@ -266,6 +288,54 @@ var VendorMenu = {
 		},
 		openMenuDetails : function(menuId){
 			$('.menu-details-'+menuId).toggle();
+		},
+		saveCategory : function(){
+			$('#category-item-form .has-error').removeClass('has-error');
+			$('#category-item-form input[type="text"]').each(function(){
+				if($(this).val() == ''){
+					$(this).parent().addClass('has-error');
+				}
+			});
+			
+			if($('#category-item-form .has-error').length == 0){
+				$('#category-item-form').submit();
+			}
+		},
+		updateCategorySort : function(sort){
+			$.post('/menu/save-category-sort', 'sort='+sort, function(){
+				
+			})
+		},
+		updateMenuSort : function(sort){
+			$.post('/menu/save-menu-sort', 'sort='+sort, function(){
+				
+			})
+		},
+		setupUI : function(){
+			
+			$('.categories-main-panel').sortable( { update: function( event, ui ) {
+				var sortNums = '';
+				ui.item.parent().find('.categories-panel').each(function(index){
+					if(sortNums != ''){
+						sortNums +=',';
+					}
+					sortNums += $(this).data('category-id') + ':' + index;
+				});
+				if(sortNums != '')
+					VendorMenu.updateCategorySort(sortNums);
+			} });
+			$('.categories-menu-panel').sortable(
+					{ update: function( event, ui ) {
+						var sortNums = '';
+						ui.item.parent().find('.menu-panel').each(function(index){
+							if(sortNums != ''){
+								sortNums +=',';
+							}
+							sortNums += $(this).data('menu-id') + ':' + index;
+						});
+						if(sortNums != '')
+							VendorMenu.updateMenuSort(sortNums);
+					} });
 		}
 }
 

@@ -20,6 +20,7 @@ use app\models\VendorMenuItem;
 use app\helpers\UtilityHelper;
 use app\helpers\TenantHelper;
 use app\models\TenantInfo;
+use app\models\MenuCategories;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -64,7 +65,9 @@ class OrderingController extends CController
         $userVendor = User::findOne($user->vendorId);
         $vendorMenu = User::getVendorDefaultMenu($userVendor);
         
-        return $this->render('index', ['menu' => $vendorMenu]);
+        $vendorCategories = MenuCategories::find()->where('vendorId = '.$user->vendorId.' order by sorting asc')->all();
+        
+        return $this->render('index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
     }
     
     public function actionMenu()
@@ -75,7 +78,9 @@ class OrderingController extends CController
         $userVendor = User::findOne($tenantInfo->userId);
         $vendorMenu = User::getVendorDefaultMenu($userVendor);
     
-        return $this->render('index', ['menu' => $vendorMenu]);
+        $vendorCategories = MenuCategories::find()->where('vendorId = '.$tenantInfo->userId.' order by sorting asc')->all();
+        
+        return $this->render('index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
     }
     
     

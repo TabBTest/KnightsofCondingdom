@@ -1,6 +1,8 @@
 <form action='/menu/save-item' method='POST' enctype="multipart/form-data" id='menu-item-form'>
     <input type='hidden' name='vendorMenuId' value='<?php echo $menuItem->vendorMenuId?>'/>
     <input type='hidden' name='id' value='<?php echo $menuItem->id?>'/>
+    <input type='hidden' name='menuCategoryId' value='<?php echo $menuItem->menuCategoryId?>'/>
+    <input type='hidden' name='sorting' value='<?php echo $menuItem->sorting?>'/>
     <div class='row'>
         <div class='col-xs-12 form-group'>
             <label class='form-label'>Menu Name</label>
