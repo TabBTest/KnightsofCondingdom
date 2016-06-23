@@ -9,7 +9,8 @@ $this->title = 'Restalutions';
 
     <div class="jumbotron">
         <h1>Restalutions</h1>
-        <p class="lead">Add jumbotron here</p>
+        <p class="lead">Restaurant Solutions</p>
+        <img src="/images/jumbotron-bg.jpg">
     </div>
 
     <div class="body-content">

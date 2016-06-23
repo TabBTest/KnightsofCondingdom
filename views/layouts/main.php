@@ -23,8 +23,8 @@ use app\helpers\TenantHelper;
     <?php $this->head() ?>
     <link href="/css/jquery-ui.min.css" rel="stylesheet">
     <link href="/css/font-awesome.min.css" rel="stylesheet">
-    
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/site.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 
@@ -153,11 +153,11 @@ use app\helpers\TenantHelper;
 
 <?php $this->endBody() ?>
 </body>
-        
+
     <!--  -->
     <script src="/js/jquery.flexslider-min.js"></script>
-    <script src="/js/jquery.bootpag.min.js"></script>   
-    <script src="/js/jquery-ui.min.js"></script> 
+    <script src="/js/jquery.bootpag.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/app.js"></script>
 <style>
 body > .wrap > .container {

@@ -22,8 +22,30 @@ body {
 }
 
 .jumbotron {
-    text-align: center;
-    background-color: transparent;
+    position: relative;
+    background-color: black;
+    overflow: hidden;
+}
+
+.jumbotron h1 {
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+.jumbotron p {
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+.jumbotron img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    opacity: 0.5;
 }
 
 .jumbotron .btn {
