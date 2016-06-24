@@ -49,6 +49,7 @@ $this->registerJs($jsValidateSubdomain, $this::POS_READY);
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#tab-settings">Settings</a></li>
     <li><a data-toggle="tab" href="#tab-profile">Profile</a></li>
+    <li><a data-toggle="tab" href="#billing-info">Billing Info</a></li>
 </ul>
 
 <div class="tab-content">
@@ -158,22 +159,18 @@ $this->registerJs($jsValidateSubdomain, $this::POS_READY);
             </div>
 
         </form>
-
-
-        <div class='row'>
-            <div class='col-xs-12 text-center'>
-                <h2>Billing Info</h2>
-                <?php if(Yii::$app->session->get('role') == User::ROLE_VENDOR){?>
-                    <a class='btn btn-sm btn-info pull-right' href='/vendor/billing'>Billing History</a>
-                <?php }?>
-            </div>
-        </div>
-
+        
+    </div>
+    <div id="billing-info" class="tab-pane fade">
+        <br />
         <form action='/profile/save-billing' method='POST' id='billing-form'>
             <?php
             $userId = \Yii::$app->user->id;
             ?>
             <div class='col-xs-12 form-group'>
+                 <?php if(Yii::$app->session->get('role') == User::ROLE_VENDOR){?>
+                    <a class='btn btn-sm btn-info pull-right' href='/vendor/billing'>Billing History</a>
+                <?php }?>
                 <label>Current Card: <?php echo 'XXXX-XXXX-XXXX-'.$model->cardLast4?></label>
                 <br />
                 <label>Current Card Expires: <?php echo date('M Y', strtotime($model->cardExpiry))?></label>
