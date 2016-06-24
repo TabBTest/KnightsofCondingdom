@@ -37,7 +37,7 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['customerId', 'vendorId', 'status'], 'required'],
             [['customerId', 'vendorId', 'status'], 'integer'],
-            [['confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId'], 'safe'],
+            [['confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4'], 'safe'],
         ];
     }
 

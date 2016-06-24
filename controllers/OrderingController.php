@@ -72,6 +72,7 @@ class OrderingController extends CController
     
     public function actionMenu()
     {
+        
         $subdomain = TenantHelper::getSubDomain();
         $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
         
@@ -145,6 +146,7 @@ class OrderingController extends CController
                     $order->status = Orders::STATUS_NEW;
                     $order->customerId = \Yii::$app->user->id;
                     $order->vendorId = $user->vendorId;
+                    $order->cardLast4 = $user->cardLast4;
                     if($order->save()){
                         
                         $ch = \Stripe\Charge::retrieve($order->transactionId);

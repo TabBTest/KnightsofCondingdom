@@ -140,7 +140,7 @@ class SiteController extends CController
                 $user->billingPhoneNumber = $userData['billingPhoneNumber'];
                 $user->password = $randomPassword;
                 $user->confirmPassword = $randomPassword;
-                $user->role = User::ROLE_VENDOR;
+                $user->role = \User::ROLE_VENDOR;
                 $user->isPasswordReset = 1;
                 if($user->save()){
                     TenantInfo::addCustomSubdomain($user);
@@ -156,8 +156,11 @@ class SiteController extends CController
                       "description" => "Vendor ID: ".$user->id)
                     );
                     $user->stripeId = $customer->id;
-                    $user->save();
 
+                    if($user->save()){
+                        $user->storeCCInfo();
+                    }
+                    
                     NotificationHelper::notifyVendorOfAccount($user, $randomPassword);
 
                     return $this->redirect('/site/login');
@@ -217,8 +220,11 @@ class SiteController extends CController
                         "description" => "Customer ID: ".$user->id)
                     );
                     $user->stripeId = $customer->id;
-                    $user->save();
 
+                    if($user->save()){
+                        $user->storeCCInfo();
+                    }
+    
                     NotificationHelper::notifyUserOfAccount($user, $randomPassword);
 
                     return $this->redirect('/site/login');

@@ -42,6 +42,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return 'user';
     }
 
+    
     /**
      * @inheritdoc
      */
@@ -50,7 +51,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
-            [['date_created', 'date_updated', 'isPasswordReset'], 'safe'],
+            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry'], 'safe'],
             [['email', 'password', 'name', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId'], 'string', 'max' => 250],
             [['state', 'billingState'], 'string', 'max' => 2]
         ];
@@ -157,5 +158,28 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $resp['list'] = User::find()->where('vendorId = '.$userId.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
         $resp['count'] = User::find()->where('vendorId = '.$userId)->count();
         return $resp;
+    }
+    
+    public function storeCCInfo(){
+        \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
+        $customer = \Stripe\Customer::retrieve($this->stripeId);
+        
+        $customInfo = $customer->__toArray(true);
+        if($customInfo['object'] == 'customer'){
+            //we get the card info to store
+            $cardInfo = $customInfo['sources']['data'][0];
+            $last4 = $cardInfo['last4'];
+            $expiry = $cardInfo['exp_year'].'-'.sprintf("%02d", $cardInfo['exp_month']).'-01';
+            $this->cardLast4 = $last4;
+            $this->cardExpiry = $expiry;
+            $this->save();
+        
+            $cardHistory = new UserCardHistory();
+            $cardHistory->userId = $this->id;
+            $cardHistory->cardLast4 = $last4;
+            $cardHistory->cardExpiry = $expiry;
+            $cardHistory->save();
+        }
+           
     }
 }
