@@ -47,6 +47,7 @@ $this->registerJs($jsValidateSubdomain, $this::POS_READY);
 <?php } ?>
 
 <ul class="nav nav-tabs">
+    
     <li class="active"><a data-toggle="tab" href="#tab-settings">Settings</a></li>
     <li><a data-toggle="tab" href="#tab-profile">Profile</a></li>
     <li><a data-toggle="tab" href="#billing-info">Billing Info</a></li>

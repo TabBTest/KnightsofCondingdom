@@ -19,7 +19,7 @@ use app\models\User;
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
  */
-class ProfileController extends CController
+class MyController extends CController
 {
 
     public function behaviors()
@@ -29,7 +29,7 @@ class ProfileController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'save', 'save-billing'],
+                        'actions' => ['profile', 'index', 'save', 'save-billing'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -44,6 +44,11 @@ class ProfileController extends CController
         ];
     }
 
+    public function actionProfile(){
+        $model = User::findOne(\Yii::$app->user->id);
+        //reuse
+        return $this->render('profile', ['model' => $model]);
+    }
     /**
      * Lists all ApplicationType models.
      * @return mixed
@@ -52,11 +57,6 @@ class ProfileController extends CController
     public function actionSave(){
         $userId = \Yii::$app->user->id;
         $model = User::findOne(\Yii::$app->user->id);
-        $nextUrl = '/vendor/settings';
-        if($model->role == User::ROLE_CUSTOMER){
-            $nextUrl = '/my/profile';
-        }
-        
         if(count($_POST) > 0){
 
             $userData = $_POST['User'];
@@ -101,24 +101,18 @@ class ProfileController extends CController
                 if($model->save()){
 
                     \Yii::$app->getSession()->setFlash('success', $message);
-                    return $this->redirect($nextUrl);
+                    return $this->redirect('/vendor/settings');
                 }
             }
 
 
         }
-        return $this->redirect($nextUrl);
+        return $this->redirect('/vendor/settings');
     }
     
     public function actionSaveBilling(){
         $userId = \Yii::$app->user->id;
         $model = User::findOne(\Yii::$app->user->id);
-        
-        $nextUrl = '/vendor/settings';
-        if($model->role == User::ROLE_CUSTOMER){
-            $nextUrl = '/my/profile';
-        }
-        
         if(count($_POST) > 0){
     
             $userData = $_POST['User'];
@@ -168,11 +162,11 @@ class ProfileController extends CController
                 if($model->save()){
     
                     \Yii::$app->getSession()->setFlash('success', $message);
-                    return $this->redirect($nextUrl);
+                    return $this->redirect('/vendor/settings');
                 }
     
     
         }
-        return $this->redirect($nextUrl);
+        return $this->redirect('/vendor/settings');
     }
 }

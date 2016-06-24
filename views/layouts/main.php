@@ -76,6 +76,7 @@ use app\helpers\TenantHelper;
                 ['label' => 'Dashboard', 'url' => ['/dashboard']],
                 ['label' => 'New Order', 'url' => ['/ordering']],
                 ['label' => 'Order History', 'url' => ['/ordering/history']],
+                ['label' => 'Profile', 'url' => ['/my/profile']],
                 //['label' => 'Profile', 'url' => ['/vendor']],
             ],
         ]);
