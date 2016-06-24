@@ -2,6 +2,9 @@
 
 use yii\widgets\MaskedInput;
 use app\helpers\UtilityHelper;
+
+$params = require(\Yii::$app->basePath . '/config/params.php');
+
 $this->title = 'Register';
 $this->params['breadcrumbs'][] = $this->title;
 $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_publishable_key'] . '\');', $this::POS_READY);
@@ -52,6 +55,12 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
             <input type='text' class='form-control' name='confirmEmail' id='confirmEmail'  placeholder='Confirm Email'/>
+        </div>
+        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+            <div align="center" class="g-recaptcha" data-sitekey="<?= $params['recaptcha_site_key'] ?>"></div>
+            <script type="text/javascript"
+                    src="https://www.google.com/recaptcha/api.js?hl=en">
+            </script>
         </div>
         <div class='col-xs-12 form-group text-center'>
             <button type='button' class='btn btn-success btn-next'>NEXT</button>
