@@ -52,16 +52,24 @@ class SiteController extends CController
         ];
     }
 
+    public function actionWelcome()
+    {
+        return $this->render('index');
+    }
+
     public function actionIndex()
     {
-//         var_dump(TenantHelper::get_domain($_SERVER['SERVER_NAME']));
+        if (!Yii::$app->user->isGuest) {
+            return $this->redirect('/dashboard');
+        }
+
         return $this->render('index');
     }
 
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->redirect('/dashboard');
         }
 
         $model = new LoginForm();
