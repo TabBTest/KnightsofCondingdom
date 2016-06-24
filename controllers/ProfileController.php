@@ -48,11 +48,6 @@ class ProfileController extends CController
      * Lists all ApplicationType models.
      * @return mixed
      */
-    public function actionIndex()
-    {
-        $model = User::findOne(\Yii::$app->user->id);
-        return $this->render('profile', ['model' => $model]);
-    }
 
     public function actionSave(){
         $userId = \Yii::$app->user->id;
@@ -101,13 +96,13 @@ class ProfileController extends CController
                 if($model->save()){
 
                     \Yii::$app->getSession()->setFlash('success', $message);
-                    return $this->redirect('/profile');
+                    return $this->redirect('/vendor/settings');
                 }
             }
 
 
         }
-        return $this->redirect('/profile');
+        return $this->redirect('/vendor/settings');
     }
     
     public function actionSaveBilling(){
@@ -123,6 +118,7 @@ class ProfileController extends CController
                 $model->billingStreetAddress = $userData['billingStreetAddress'];
                 $model->billingCity = $userData['billingCity'];
                 $model->billingState = $userData['billingState'];
+                $model->billingPhoneNumber = $userData['billingPhoneNumber'];
 
 
                 \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
@@ -161,11 +157,11 @@ class ProfileController extends CController
                 if($model->save()){
     
                     \Yii::$app->getSession()->setFlash('success', $message);
-                    return $this->redirect('/profile');
+                    return $this->redirect('/vendor/settings');
                 }
     
     
         }
-        return $this->redirect('/profile');
+        return $this->redirect('/vendor/settings');
     }
 }

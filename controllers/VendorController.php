@@ -14,8 +14,8 @@ use app\models\ApplicationTypeFormSetup;
 use app\models\Candidates;
 use yii\base\Application;
 use app\models\TenantInfo;
-use yii\helpers\VarDumper;
 use app\models\VendorMembership;
+use app\models\User;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -51,8 +51,9 @@ class VendorController extends CController
      */
     public function actionSettings()
     {
+        $model = User::findOne(\Yii::$app->user->id);
 
-        return $this->render('settings');
+        return $this->render('settings', ['model' => $model]);
     }
 
     public function actionSaveSettings(){

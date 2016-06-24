@@ -104,7 +104,6 @@ use app\helpers\TenantHelper;
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
-                ['label' => 'Profile', 'url' => ['/profile']],
                (
                     '<li>'
                     . Html::beginForm(['/site/logout'], 'post', ['class' => 'navbar-form'])
