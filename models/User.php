@@ -32,6 +32,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     const ROLE_VENDOR = 1;
     const ROLE_CUSTOMER= 2;
 
+    
+    const CARD_STATE_NOT_EXISTING = 1;
+    const CARD_STATE_NEAR_EXPIRE = 2;
+    const CARD_STATE_EXPIRED = 3;
+    const CARD_STATE_VALID = 4;
+    
+    
     public $confirmPassword;
 
     /**
@@ -181,5 +188,40 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $cardHistory->save();
         }
            
+    }
+    public function testCardState(){
+        
+        $this->cardExpiry = '';
+        var_dump($this->getCardState());
+        
+        $this->cardExpiry = '2016-06-26';
+        var_dump($this->getCardState());
+        
+        $this->cardExpiry = '2016-06-20';
+        var_dump($this->getCardState());
+        
+        $this->cardExpiry = '2016-07-20';
+        var_dump($this->getCardState());
+    }
+    public function getCardState(){
+        
+        if($this->cardExpiry != ''){
+            $cardExpiryTime = strtotime($this->cardExpiry);
+            $nowTime = strtotime('now');
+            
+            if($nowTime > $cardExpiryTime){
+                return self::CARD_STATE_EXPIRED;
+            }
+            
+            $expireNotification = strtotime('-14 days', $cardExpiryTime);
+            //var_dump(date('Y-m-d', $expireNotification));
+            if($expireNotification < $nowTime){
+                return self::CARD_STATE_NEAR_EXPIRE;
+            }
+            
+            return self::CARD_STATE_VALID;            
+        }
+        return self::CARD_STATE_NOT_EXISTING;
+        
     }
 }

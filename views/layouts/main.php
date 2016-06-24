@@ -123,6 +123,7 @@ use app\helpers\TenantHelper;
     ?>
 
     <div class="container">
+      <?php echo $this->render('_card_warning', []);?>
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
