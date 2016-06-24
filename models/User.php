@@ -38,6 +38,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     const CARD_STATE_EXPIRED = 3;
     const CARD_STATE_VALID = 4;
     
+    const MEMBERSHIP_PRICE = 34.99;
+    
+    const MEMBERSHIP_EXPIRED = 1;
+    const MEMBERSHIP_NEAR_EXPIRE = 2;
+    const MEMBERSHIP_VALID = 3;
     
     public $confirmPassword;
 
@@ -221,7 +226,35 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             
             return self::CARD_STATE_VALID;            
         }
-        return self::CARD_STATE_NOT_EXISTING;
+        return self::CARD_STATE_NOT_EXISTING;        
+    }
+    
+    public function getVendorMembershipState(){
+        $membership = VendorMembership::getActiveMembership($this->id);
+        if($membership === false){
+            return self::MEMBERSHIP_EXPIRED;            
+        }
+            //has memberhsip
+            
+            $membershipEndTime = strtotime($membership->endDate);
+            $nowTime = strtotime('now');
+            
+            if($nowTime > $membershipEndTime){
+                return self::MEMBERSHIP_EXPIRED;
+            }
+            
+            $expireNotification = strtotime('-14 days', $membershipEndTime);
+            //var_dump(date('Y-m-d', $expireNotification));
+            if($expireNotification < $nowTime){
+                return self::MEMBERSHIP_NEAR_EXPIRE;
+            }
+            return self::MEMBERSHIP_VALID;            
         
+    }
+    
+    public function isMembershipExpired(){
+        if($this->getVendorMembershipState() == self::MEMBERSHIP_EXPIRED)
+            return true;
+        return false;
     }
 }

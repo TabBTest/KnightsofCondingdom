@@ -64,7 +64,7 @@ class LoginForm extends Model
             $user = $this->getUser();
             //$this->setState('role', $user->role);
             Yii::$app->session->set('role',$user->role);
-            Yii::$app->session->set('name',$user->name);
+            Yii::$app->session->set('name',$user->name);            
             
             return Yii::$app->user->login($user, $this->rememberMe ? 3600*24*30 : 0);
         }

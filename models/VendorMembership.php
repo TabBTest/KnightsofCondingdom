@@ -55,4 +55,23 @@ class VendorMembership extends \yii\db\ActiveRecord
             'cardLast4' => 'Card Last4',
         ];
     }
+    
+    public static function getActiveMembership($userId){
+    
+        $memberShips = VendorMembership::find()->where("vendorId = ".$userId." and startDate <= '".date('Y-m-d', strtotime('now'))."' and endDate >= '".date('Y-m-d', strtotime('now'))."'")->orderBy('id desc')->all();
+        if($memberShips != null){
+            return $memberShips[0];
+        }
+        return false;
+    
+    }
+    public static function getLastActiveMembership($userId){
+    
+        $memberShips = VendorMembership::find()->where("vendorId = ".$userId." and endDate >= '".date('Y-m-d', strtotime('now'))."'")->orderBy('id desc')->all();
+        if($memberShips != null){
+            return $memberShips[0];
+        }
+        return false;
+    
+    }
 }

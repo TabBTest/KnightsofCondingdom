@@ -4,6 +4,7 @@ namespace app\helpers;
 
 use app\models\User;
 use app\models\TenantInfo;
+use app\models\VendorMembership;
 class TenantHelper {
     
     static public function isDefaultTenant(){
@@ -40,6 +41,74 @@ class TenantHelper {
     static public function getVendorSubdomain($userId){
         $subdomain = TenantInfo::getTenantValue($userId, TenantInfo::CODE_SUBDOMAIN);
         return $subdomain.'.'.self::get_domain($_SERVER['SERVER_NAME']);
+    }
+    
+    static function doMembershipPayment($userId){
+        $respInfo = array();
+        $membershipPrice = User::MEMBERSHIP_PRICE;
+        $startDate = false;
+        $endDate = false;
+    
+        $user = User::findOne($userId);
+    
+        $lastActiveMembership = VendorMembership::getLastActiveMembership($user->id);
+        
+        
+        $newStartDateTime = strtotime('now');
+        if($lastActiveMembership !== false){
+            $newStartDateTime = strtotime('+1 day', strtotime($lastActiveMembership->endDate));            
+        }
+        
+        $startDate = date('Y-m-d', $newStartDateTime);
+        $endDate = date('Y-m-d', (strtotime('+1 month',$newStartDateTime)));
+        
+        $paymentInfo = array();
+        $error = false;
+        try{    
+            $totalCharge  = floatval($membershipPrice);
+            $amount = $totalCharge * 100;
+            $transactionId = '';
+            $isSuccess = false;
+            
+            \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
+
+            $charge = \Stripe\Charge::create(
+                array(
+                    "amount" => $amount,
+                    "currency" => "usd",
+                    "customer" => $user->stripeId, // obtained with Stripe.js
+                    "description" => "Vendor Membership - '.$startDate.' - '.$endDate.' : Charge for Vendor ID: ".$user->id,
+                )  );
+            
+            //echo $charge;
+            $chargeArray = $charge->__toArray(true);
+            if($chargeArray['status'] == 'succeeded'){
+                           
+                    $transactionId = $chargeArray['id'];
+                    $error = false;
+                    //for($x = 0 ; $x < 50 ; $x++)
+                
+                    $userMemberShip = new VendorMembership();
+                    $userMemberShip->vendorId = $user->id;
+                    $userMemberShip->startDate = $startDate;
+                    $userMemberShip->endDate = $endDate;
+                    $userMemberShip->transactionId = $transactionId;
+                    $userMemberShip->amount = $totalCharge;
+                    $userMemberShip->cardLast4 = $user->cardLast4;
+                
+                    if($userMemberShip->save()){
+                        return true;
+                        ;//NotificationHelper::sendAdminNotificationOfMembershipPurchase($userMemberShip, $totalCharge, $postParams['membershipType']);
+                    }                                    
+            }
+    
+            
+    
+    
+        }catch (\Stripe\Error\Card $e){
+            $error = $e->getJsonBody()['error']['message'];
+        }
+        return false;
     }
     /*
     static public function getTenantDataInfo($tenantId = false){

@@ -17,4 +17,15 @@ if(!Yii::$app->user->isGuest){
             <?php
         }
         
-    }?>
+        
+        if(Yii::$app->session->get('role') == User::ROLE_VENDOR){
+            //we check if membership is expired
+             if(Yii::$app->user->identity->isMembershipExpired()){
+                 ?>
+                 <div class='alert alert-danger'>Membership is expired</div>
+             <?php
+             }
+           
+        }
+        
+}?>
