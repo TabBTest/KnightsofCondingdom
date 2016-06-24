@@ -1,5 +1,6 @@
 <?php 
 use app\models\Orders;
+use app\helpers\UtilityHelper;
 $list = $transactions['list'];
 $totalCount = $transactions['count'];
 ?>
@@ -10,6 +11,7 @@ $totalCount = $transactions['count'];
     <thead>
         <tr>
             <th>Card Last 4</th>
+            <th>Amount</th>
             <th>Transaction Id</th>
             <th>Description</th>         
         </tr>
@@ -18,8 +20,9 @@ $totalCount = $transactions['count'];
         <?php foreach($list as $membershipInfo){
             $description = 'Membership Payment for '.date('M d, Y', strtotime($membershipInfo->startDate)).' to '. date('M d, Y', strtotime($membershipInfo->endDate));
         ?>
-        <tr class="" data-id="<?php echo $membershipInfo->id?>">
+        <tr class="" data-id="<?php echo $membershipInfo->id?>">        
             <td><?php echo $membershipInfo->cardLast4?></td>
+            <td>$<?php echo UtilityHelper::formatAmountForDisplay($membershipInfo->amount)?></td>
             <td><?php echo $membershipInfo->transactionId?></td>
            <td><?php echo $description?></td>
         </tr>
