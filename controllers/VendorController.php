@@ -15,6 +15,7 @@ use app\models\Candidates;
 use yii\base\Application;
 use app\models\TenantInfo;
 use yii\helpers\VarDumper;
+use app\models\VendorMembership;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -29,7 +30,7 @@ class VendorController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['settings', 'save-settings', 'profile'],
+                        'actions' => ['settings', 'save-settings', 'profile', 'billing', 'view-page'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -75,10 +76,22 @@ class VendorController extends CController
         }
         return $this->redirect('/vendor/settings');
     }
-
-    public function actionProfile()
-    {
-
-        return $this->render('profile');
+    
+    public function actionBilling(){
+        return $this->render('billing/index', []);
+        
     }
+    
+    public function actionViewpage(){
+        $page = $_REQUEST['page'];
+        $userId = $_REQUEST['userId'];
+        $transactions = VendorMembership::getVendorMemberships($userId, 20, $page);
+        return $this->renderPartial('billing/_list', ['transactions' => $transactions, 'currentPage' => $page]);
+    }
+
+//     public function actionProfile()
+//     {
+
+//         return $this->render('profile');
+//     }
 }

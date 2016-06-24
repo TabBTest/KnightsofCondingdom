@@ -65,6 +65,32 @@ $(document).ready(function() {
     	}
     	
     });
+    
+    
+	$('.btn-save-billing').on('click', function(){
+		$('#billing-form').find('input[type="text"],input[type="email"],input[type="tel"], select').each(function(){
+			if($(this).hasClass('not-required')){
+    			;
+    		}else if( $(this).val() == "" ) {
+    			
+    			$(this).parent().addClass('has-error');
+    		}
+    		else {
+    			$(this).parent().removeClass('has-error');
+    		}
+		});
+		
+		if($('#billing-form .has-error' ).length == 0){
+			//we 
+			//(this).attr('disabled', true);
+			Stripe.card.createToken({
+				  number: $('.card-number').val(),
+				  cvc: $('.card-cvv').val(),
+				  exp_month: $('.card-expiry-month').val(),
+				  exp_year: $('.card-expiry-year').val()
+			}, stripeResponseHandlerSaveBilling);
+		}
+	})
     // submit
     $('#register-form').on('submit', function(e) {
     	
@@ -219,6 +245,19 @@ var setupUi = function(){
 	    		Order.init = true;
 	    	}
 	}
+	if( $('.vendor-billing-pagination').length != 0){
+	    // init bootpag
+	    	$('.vendor-billing-pagination').bootpag({
+		        total: $('.vendor-billing-pagination').data('total-pages'),
+		        page: $('.vendor-billing-pagination').data('current-page'),
+                maxVisible: 10
+		    }).on("page", function(event, /* page number here */ num){
+		         $.get('/vendor/viewpage', 'page='+num+'&userId='+$('.vendor-billing-pagination').data('user-id'), function(html){
+		        	 $('.vendor-billing-body').html(html);
+		        	 setupUi();
+		         })
+		    });
+	}
 	
 	if( $('.vendor-customer-pagination').length != 0){
 	    // init bootpag
@@ -247,6 +286,27 @@ function validateEmailFormat(sEmail){
 	testresults=false
 	}
 	return (testresults)
+}
+function stripeResponseHandlerSaveBilling(status, response) {
+
+	  // Grab the form:
+	  var $form = $('#billing-form');
+
+	  if (response.error) { // Problem!
+
+	    // Show the errors on the form:
+	    Messages.showError(response.error.message);
+	    //$form.find('.btn-register').prop('disabled', false); // Re-enable submission
+
+	  } else { // Token created!
+
+	    // Get the token ID:
+	    var token = response.id;
+
+	    // Insert the token into the form so it gets submitted to the server:
+	    $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+	    $('form#billing-form').submit();
+	  }
 }
 function stripeResponseHandler(status, response) {
 

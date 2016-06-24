@@ -74,4 +74,11 @@ class VendorMembership extends \yii\db\ActiveRecord
         return false;
     
     }
+    
+    public static function getVendorMemberships($userId, $resultsPerPage, $page){
+        $resp = array();
+        $resp['list'] = VendorMembership::find()->where('vendorId = '.$userId.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = VendorMembership::find()->where('vendorId = '.$userId)->count();
+        return $resp;
+    }
 }

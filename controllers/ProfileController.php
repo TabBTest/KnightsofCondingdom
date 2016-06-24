@@ -29,7 +29,7 @@ class ProfileController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'save'],
+                        'actions' => ['index', 'save', 'save-billing'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -106,6 +106,65 @@ class ProfileController extends CController
             }
 
 
+        }
+        return $this->redirect('/profile');
+    }
+    
+    public function actionSaveBilling(){
+        $userId = \Yii::$app->user->id;
+        $model = User::findOne(\Yii::$app->user->id);
+        if(count($_POST) > 0){
+    
+            $userData = $_POST['User'];
+            $hasDuplicate = false;
+    
+                //we register it already
+                $model->billingName = $userData['billingName'];
+                $model->billingStreetAddress = $userData['billingStreetAddress'];
+                $model->billingCity = $userData['billingCity'];
+                $model->billingState = $userData['billingState'];
+
+
+                \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
+                
+                // Get the credit card details submitted by the form
+                $token = $_POST['stripeToken'];
+                
+                if($model->stripeId != null && $model->stripeId != ''){
+                    // Create a Customer
+                    $customer = \Stripe\Customer::retrieve($model->stripeId);
+                    $customer->source = $token; // obtained with Stripe.js
+                    $customer->save();
+                }else{
+                    //we create 
+                    \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
+                    $prefix = 'Vendor';
+                    if($model->role == User::ROLE_CUSTOMER){
+                        $prefix = 'Customer';
+                    }
+                    // Create a Customer
+                    $customer = \Stripe\Customer::create(array(
+                        "source" => $token,
+                        "description" => $prefix." ID: ".$user->id)
+                    );
+                    $model->stripeId = $customer->id;
+                    
+                }
+                
+                
+                if($model->save()){
+                    $model->storeCCInfo();
+                }
+                
+                $message = 'Billing Info Saved Successfully';
+    
+                if($model->save()){
+    
+                    \Yii::$app->getSession()->setFlash('success', $message);
+                    return $this->redirect('/profile');
+                }
+    
+    
         }
         return $this->redirect('/profile');
     }
