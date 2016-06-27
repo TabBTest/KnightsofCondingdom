@@ -63,7 +63,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
-            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry'], 'safe'],
+            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive'], 'safe'],
             [['email', 'password', 'name', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId'], 'string', 'max' => 250],
             [['state', 'billingState'], 'string', 'max' => 2]
         ];
@@ -256,5 +256,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         if($this->getVendorMembershipState() == self::MEMBERSHIP_EXPIRED)
             return true;
         return false;
+    }
+    
+    public function getVendorName(){
+        $vendor = User::findOne($this->vendorId);
+        return $vendor->name;
     }
 }

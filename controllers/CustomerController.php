@@ -50,7 +50,7 @@ class CustomerController extends CController
     public function actionIndex()
     {
         
-        return $this->render('index');
+        return $this->render('index', []);
     }
     public function actionViewpage(){
         $page = $_REQUEST['page'];

@@ -26,6 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<div class="col-xs-12 vendor-billing-body">
-    <?php echo $this->render('_list', ['transactions' => VendorMembership::getVendorMemberships(\Yii::$app->user->id, 20, 1)]);?>
+<div class="col-xs-12 vendor-billing-body" data-url='<?php echo $url?>'>
+    <?php echo $this->render('_list', ['transactions' => $transactions, 'userId' => $userId]);?>
 </div>

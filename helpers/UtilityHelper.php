@@ -1,6 +1,8 @@
 <?php
 namespace app\helpers;
 
+use yii\helpers\Html;
+use app\models\User;
 class UtilityHelper {
     static public function cryptPass($x){
         //$password =  hash("sha256",$x);
@@ -30,5 +32,56 @@ class UtilityHelper {
                 'FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH',
                 'NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'
             ];
+    }
+    
+    public static function getAllVendors(){
+        $vendors = User::findAll(['role' => User::ROLE_VENDOR]);
+        $vendorList = [];
+        foreach($vendors as $vendor){
+            $vendorList[$vendor->id] = $vendor->name;
+        }
+        return $vendorList;
+    }
+    
+    public static function buildActionWrapper($path, $linkID, $showDelete = true, $extraLinks = null, $extraHtmlLinks = false, $showView = true){
+    
+        $extra = '';
+    
+        if(is_array($extraLinks)){
+            foreach($extraLinks as $link ){
+                $elink = '<i class="fa '.$link['ico'].'" style="width:15px"></i><span style="font-size: 14px;"> ' . $link['label'] . '</span>';
+                $ehtml = Html::a($elink, $link['url'], ['class' => '']);
+                $extra .= '<li>' . $ehtml .'</li>';
+            }
+        }
+        if($extraHtmlLinks !== false){
+            $extra .= $extraHtmlLinks;
+        }
+        $linkView = '';
+        if($showView){
+            $linkViewHTML =     '<i class="fa fa-eye" style="width:15px"></i><span style="font-size: 14px;"> View</span>';
+            $linkView = Html::a($linkViewHTML, [$path.'/view', 'id'=>$linkID], ['class'=>'']);
+        }
+        $linkEdit = '';
+        if(false){
+            $linkEditHTML =     '<i class="fa fa-pencil" style="width:15px"></i><span style="font-size: 14px;"> Edit</span>';
+            $linkEdit = Html::a($linkEditHTML, [$path.'/update', 'id'=>$linkID], ['class'=>'']);
+        }
+        $linkDelHTML =     '<i class="fa fa-trash" style="width:15px"></i><span style="font-size: 14px;"> Delete</span>';
+        $linkDel = Html::a($linkDelHTML, [$path.'/delete', 'id'=>$linkID], ['class'=>'link-delete',/*'data-confirm' => "Are you sure you want to delete?", 'data-method'=>'post'*/]);
+    
+        $rest = '<a href="#" class="show-action"><i class="fa fa-cogs"></i> Actions</a>
+                    <div class="pop-content" style="display: none">
+                        <ul style="list-style-type: none; margin: 0; padding: 0;">
+                            <li>' . $linkView . '</li>
+                            <li>' . $linkEdit . '</li>
+                            '. $extra;
+    
+        if($showDelete){
+            $rest .=      '<li>' . $linkDel . '</li>';
+        }
+    
+        $rest .=    '</ul></div>';
+        return $rest;
     }
 }

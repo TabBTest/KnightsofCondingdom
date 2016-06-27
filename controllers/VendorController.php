@@ -57,11 +57,14 @@ class VendorController extends CController
     }
 
     public function actionSaveSettings(){
-        $userId = \Yii::$app->user->id;
-
+        
+        $nextUrl = '/vendor/settings';
         if(count($_POST) > 0){
+            $userId = $_POST['userId'];
             $codes = $_POST['TenantCode'];
-
+            if(Yii::$app->session->get('role') == User::ROLE_ADMIN){
+                $nextUrl = '/admin/vendors/settings?id='.$userId;
+            }
             if (TenantInfo::isUniqueSubdomain($userId, $codes['SUBDOMAIN'])) {
                 foreach($codes as $code => $val){
                     $tenantInfo = TenantInfo::findOrCreate($userId, $code);
@@ -75,11 +78,16 @@ class VendorController extends CController
                 \Yii::$app->getSession()->setFlash('error', 'Subdomain is already taken. Please select a different subdomain.');
             }
         }
-        return $this->redirect('/vendor/settings');
+       
+        
+        
+        
+        return $this->redirect($nextUrl);
     }
     
     public function actionBilling(){
-        return $this->render('billing/index', []);
+        $transactions = VendorMembership::getVendorMemberships(\Yii::$app->user->id, 20, 1);
+        return $this->render('billing/index', ['transactions' => $transactions, 'url' => '/vendor/viewpage', 'userId' => \Yii::$app->user->id]);
         
     }
     
@@ -87,7 +95,7 @@ class VendorController extends CController
         $page = $_REQUEST['page'];
         $userId = $_REQUEST['userId'];
         $transactions = VendorMembership::getVendorMemberships($userId, 20, $page);
-        return $this->renderPartial('billing/_list', ['transactions' => $transactions, 'currentPage' => $page]);
+        return $this->renderPartial('billing/_list', ['transactions' => $transactions, 'currentPage' => $page, 'userId' => $userId]);
     }
 
 //     public function actionProfile()

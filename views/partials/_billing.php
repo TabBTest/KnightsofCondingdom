@@ -7,8 +7,9 @@ use yii\widgets\MaskedInput;
         <br />
         <form action='/profile/save-billing' method='POST' id='billing-form'>
             <?php
-            $userId = \Yii::$app->user->id;
+            $userId = $model->id;
             ?>
+            <input type='hidden' value='<?php echo $userId?>' name='userId'/>
             <div class='col-xs-12 form-group'>
                  <?php if(Yii::$app->session->get('role') == User::ROLE_VENDOR){?>
                     <a class='btn btn-sm btn-info pull-right' href='/vendor/billing'>Billing History</a>

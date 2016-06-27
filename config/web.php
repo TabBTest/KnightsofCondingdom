@@ -74,4 +74,7 @@ if (YII_ENV_DEV) {
     ];
 }
 
+$config['bootstrap'][] = 'admin';
+$config['modules']['admin'] = 'app\modules\admin\Module';
+
 return $config;

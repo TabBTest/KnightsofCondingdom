@@ -69,13 +69,24 @@ class SiteController extends CController
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
+//             if(Yii::$app->user->identity->isActive == 0){
+//                 //Yii::$app->user->logout();
+//                 //\Yii::$app->getSession()->setFlash('error', 'Account is inactive');
+//                 return $this->redirect('/site/login');
+//             }
             return $this->redirect('/dashboard');
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             $user = User::findOne(Yii::$app->user->id);
-            var_dump($user->isPasswordReset);
+           
+            if( $user->isActive == 0){
+                Yii::$app->user->logout();
+                \Yii::$app->getSession()->setFlash('error', 'Account is inactive');
+                
+                return $this->redirect('/site/login');
+            }
             if($user->isPasswordReset == 1){
                 return $this->redirect('/site/change-password');
             }else

@@ -1,10 +1,11 @@
 <?php
 
-namespace app\models;
+namespace app\modules\admin\models;
 
 use Yii;
 use yii\base\Model;
 use app\helpers\TenantHelper;
+use app\models\User;
 
 /**
  * LoginForm is the model behind the login form.
@@ -62,14 +63,15 @@ class LoginForm extends Model
     {
         if ($this->validate()) {
             $user = $this->getUser();
-            
-            
             //$this->setState('role', $user->role);
             Yii::$app->session->set('role',$user->role);
             Yii::$app->session->set('name',$user->name);            
             
             return Yii::$app->user->login($user, $this->rememberMe ? 3600*24*30 : 0);
         }
+//         var_dump($this->_user);
+//         var_dump($this->errors);
+//         die;
         return false;
     }
 
@@ -81,24 +83,13 @@ class LoginForm extends Model
     public function getUser()
     {
         
-        $isDefaultTenant = TenantHelper::isDefaultTenant();
+        //$isDefaultTenant = TenantHelper::isDefaultTenant();
         
         
         if ($this->_user === false) {
-            if($isDefaultTenant){
-                $this->_user = User::findOne(['email' => $this->email, 'role' => User::ROLE_VENDOR]);
-            }else{
-                $tenantInfo = TenantInfo::isValidSubDomain(TenantHelper::getSubDomain());
-                if($tenantInfo !== false){
-                    $vendorId = $tenantInfo->userId;
-                    $tempUser = User::findOne(['email' => $this->email, 'role' => User::ROLE_VENDOR]);
-                    if($tempUser === null){
-                        //we get the customer user
-                        $tempUser = User::findOne(['email' => $this->email, 'role' => User::ROLE_CUSTOMER, 'vendorId' => $vendorId]);
-                    }
-                    $this->_user = $tempUser;
-                }
-            }
+            //if($isDefaultTenant){
+                $this->_user = User::findOne(['email' => $this->email, 'role' => User::ROLE_ADMIN]);
+        
         }
 
         return $this->_user;

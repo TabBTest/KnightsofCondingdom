@@ -15,6 +15,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>Please fill out the following fields to login:</p>
 
+    <?php if(\Yii::$app->getSession()->hasFlash('error')){?>
+    <div class="">
+        <div class="alert alert-danger">
+            <?php echo \Yii::$app->getSession()->getFlash('error'); ?>
+        </div>
+    </div>
+<?php } ?>
+
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
         'options' => ['class' => 'form-horizontal'],

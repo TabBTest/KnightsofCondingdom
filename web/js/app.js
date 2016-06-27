@@ -1,7 +1,9 @@
 $(document).ready(function() {
 	//if($("#phone").length == 1)
 		//$('#phone').mask("(999) 999-9999");
-
+	$(".order-quantity[type='number']").keypress(function (evt) {
+	    evt.preventDefault();
+	});	
 	$('#register-form .fieldset:eq(0)').fadeIn('slow');
 	
 	$('#register-form input[type="text"], #register-form input[type="email"], #register-form input[type="tel"]').on('focus', function() {
@@ -172,20 +174,21 @@ $(document).ready(function() {
     	}
     });
     setupUi();
+    listLinkActions();
     
 });
 var Order = {
 	init : false,
 	timeLimit : 30000, //30000
 	loadCustomer : function(){
-		$.get('/ordering/viewpage', 'page=1&userId='+$('.customer-order-history-pagination').data('user-id'), function(html){
+		$.get($('.customer-order-body').data('url'), 'page=1&userId='+$('.customer-order-history-pagination').data('user-id'), function(html){
        	 	$('.customer-order-body').html(html);
        	 	setupUi();
         })
 		
 	},
 	loadVendor : function(){
-		$.get('/order/viewpage', 'page=1&userId='+$('.vendor-order-history-pagination').data('user-id'), function(html){
+		$.get($('.vendor-order-body').data('url'), 'page=1&userId='+$('.vendor-order-history-pagination').data('user-id'), function(html){
        	 $('.vendor-order-body').html(html);
        	 setupUi();
         })
@@ -217,7 +220,7 @@ var setupUi = function(){
 		        page: $('.customer-order-history-pagination').data('current-page'),
                 maxVisible: 10
 		    }).on("page", function(event, /* page number here */ num){
-		         $.get('/ordering/viewpage', 'page='+num+'&userId='+$('.customer-order-history-pagination').data('user-id'), function(html){
+		         $.get($('.customer-order-body').data('url'), 'page='+num+'&userId='+$('.customer-order-history-pagination').data('user-id'), function(html){
 		        	 $('.customer-order-body').html(html);
 		        	 setupUi();
 		         })
@@ -235,7 +238,7 @@ var setupUi = function(){
 		        page: $('.vendor-order-history-pagination').data('current-page'),
                 maxVisible: 10
 		    }).on("page", function(event, /* page number here */ num){
-		         $.get('/order/viewpage', 'page='+num+'&userId='+$('.vendor-order-history-pagination').data('user-id'), function(html){
+		         $.get($('.vendor-order-body').data('url'), 'page='+num+'&userId='+$('.vendor-order-history-pagination').data('user-id'), function(html){
 		        	 $('.vendor-order-body').html(html);
 		        	 setupUi();
 		         })
@@ -252,7 +255,7 @@ var setupUi = function(){
 		        page: $('.vendor-billing-pagination').data('current-page'),
                 maxVisible: 10
 		    }).on("page", function(event, /* page number here */ num){
-		         $.get('/vendor/viewpage', 'page='+num+'&userId='+$('.vendor-billing-pagination').data('user-id'), function(html){
+		         $.get($('.vendor-billing-body').data('url'), 'page='+num+'&userId='+$('.vendor-billing-pagination').data('user-id'), function(html){
 		        	 $('.vendor-billing-body').html(html);
 		        	 setupUi();
 		         })
@@ -413,4 +416,31 @@ var Messages = {
 		showError : function(message){
 			alert(message);
 		}
+}
+
+function listLinkActions(){
+    $('.show-action').on('click',function(e){
+        e.preventDefault();
+        var $_this = $(this),
+            options = {'html':true,'placement':'auto right',container: 'body'},
+            content = $_this.next('.pop-content').html();
+
+        $_this.data('content', content);
+        $_this.popover(options).popover('show');
+
+    });
+    /* hide on widow resize not to have popover position issues */
+    $(window).on('resize',  function() {
+        $('.show-action').popover('hide');
+    });
+    /* Hide all pops */
+    $(document).on('click', function (e) {
+        $('.show-action').each(function () {
+            //the 'is' for buttons that trigger popups
+            //the 'has' for icons within a button that triggers a popup
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide').popover('destroy');
+            }
+        });
+    });
 }

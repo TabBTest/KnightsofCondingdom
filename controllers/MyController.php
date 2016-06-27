@@ -53,7 +53,7 @@ class MyController extends CController
      * Lists all ApplicationType models.
      * @return mixed
      */
-
+    /*
     public function actionSave(){
         $userId = \Yii::$app->user->id;
         $model = User::findOne(\Yii::$app->user->id);
@@ -169,4 +169,5 @@ class MyController extends CController
         }
         return $this->redirect('/vendor/settings');
     }
+    */
 }

@@ -50,15 +50,32 @@ class ProfileController extends CController
      */
 
     public function actionSave(){
+        /*
         $userId = \Yii::$app->user->id;
         $model = User::findOne(\Yii::$app->user->id);
         $nextUrl = '/vendor/settings';
         if($model->role == User::ROLE_CUSTOMER){
             $nextUrl = '/my/profile';
         }
-        
+        */
+        $nextUrl = '';
         if(count($_POST) > 0){
-
+            $userId = $_POST['userId'];
+            
+            $model = User::findOne($userId);
+            $nextUrl = '/vendor/settings';
+            if($model->role == User::ROLE_CUSTOMER){
+                $nextUrl = '/my/profile';
+            }
+            
+            if(Yii::$app->session->get('role') == User::ROLE_ADMIN){
+                $nextUrl = '/admin/vendors/settings?id='.$model->id;
+                if($model->role == User::ROLE_CUSTOMER){
+                    $nextUrl = '/admin/customers/profile?id='.$model->id;
+                }
+            }
+            
+            
             $userData = $_POST['User'];
             $hasDuplicate = false;
 
@@ -87,6 +104,11 @@ class ProfileController extends CController
                 $model->state = $userData['state'];
                 $model->email = $userData['email'];
                 $model->phoneNumber = $userData['phoneNumber'];
+                
+                if(Yii::$app->session->get('role') == User::ROLE_ADMIN){
+                    $model->isActive = intval($userData['isActive']);
+                }
+                
                 $message = 'Profile Saved Successfully';
 
                 if($_POST['password'] != ''){
@@ -111,6 +133,7 @@ class ProfileController extends CController
     }
     
     public function actionSaveBilling(){
+        /*
         $userId = \Yii::$app->user->id;
         $model = User::findOne(\Yii::$app->user->id);
         
@@ -118,9 +141,26 @@ class ProfileController extends CController
         if($model->role == User::ROLE_CUSTOMER){
             $nextUrl = '/my/profile';
         }
-        
+        */
+        $nextUrl = '';
         if(count($_POST) > 0){
     
+            $userId = $_POST['userId'];
+            
+            $model = User::findOne($userId);
+            $nextUrl = '/vendor/settings';
+            if($model->role == User::ROLE_CUSTOMER){
+                $nextUrl = '/my/profile';
+            }
+            
+            if(Yii::$app->session->get('role') == User::ROLE_ADMIN){
+                $nextUrl = '/admin/vendors/settings?id='.$model->id;
+                if($model->role == User::ROLE_CUSTOMER){
+                    $nextUrl = '/admin/customers/profile?id='.$model->id;
+                }
+            }
+            
+            
             $userData = $_POST['User'];
             $hasDuplicate = false;
     

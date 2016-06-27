@@ -31,6 +31,6 @@ $totalCount = $transactions['count'];
 </table>
 
 <?php }?>
-<div class="vendor-billing-pagination" data-user-id='<?php echo \Yii::$app->user->id?>' data-total-pages="<?php echo ceil($totalCount / 20)?>" data-current-page="<?php echo isset($currentPage) ? $currentPage : 1?>">
+<div class="vendor-billing-pagination"  data-user-id='<?php echo $userId?>' data-total-pages="<?php echo ceil($totalCount / 20)?>" data-current-page="<?php echo isset($currentPage) ? $currentPage : 1?>">
 
 </div>

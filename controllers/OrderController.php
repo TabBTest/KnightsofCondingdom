@@ -49,15 +49,15 @@ class OrderController extends CController
      */
     public function actionIndex()
     {
-        
-        return $this->render('index');
+        $orders = Orders::getVendorOrders(\Yii::$app->user->id, 20, 1);
+        return $this->render('index', ['orders' => $orders, 'userId' => \Yii::$app->user->id, 'url' => '/order/viewpage']);
     }
     
     public function actionViewpage(){
         $page = $_REQUEST['page'];
         $userId = $_REQUEST['userId'];
         $orders = Orders::getVendorOrders($userId, 20, $page);
-        return $this->renderPartial('_list', ['orders' => $orders, 'currentPage' => $page]);
+        return $this->renderPartial('_list', ['orders' => $orders, 'currentPage' => $page, 'userId' => $userId]);
     }
     
     public function actionConfirm(){

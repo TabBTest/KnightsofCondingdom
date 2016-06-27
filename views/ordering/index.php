@@ -106,8 +106,3 @@ foreach($vendorCategories as $category){
 </div>
 
 </form>
-<script>
-$("[type='number']").keypress(function (evt) {
-    evt.preventDefault();
-});
-</script>

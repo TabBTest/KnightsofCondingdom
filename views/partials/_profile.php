@@ -7,8 +7,16 @@ use yii\widgets\MaskedInput;
     <br>
     <form action='/profile/save' method='POST'>
         <?php
-        $userId = \Yii::$app->user->id;
+        $userId = $model->id;
         ?>
+        <input type='hidden' value='<?php echo $userId?>' name='userId'/>
+         <?php if(Yii::$app->session->get('role') == User::ROLE_ADMIN){?>
+         <div class='col-xs-12 form-group'>
+            <label>Is Active?</label>
+            <input type='hidden'  name='User[isActive]' value='0'/>
+            <input type='checkbox' class='' name='User[isActive]' <?php echo $model->isActive == 1 ? 'checked' : ''?> value='1'/>
+        </div>
+        <?php }?>
         <div class='col-xs-12 form-group'>
             <label>Name</label>
             <input type='text' class='form-control' name='User[name]' value='<?= $model->name?>'/>
