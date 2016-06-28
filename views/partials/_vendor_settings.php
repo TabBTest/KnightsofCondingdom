@@ -23,6 +23,14 @@ use app\helpers\TenantHelper;
 <div class="restalutions-widget" data-subdomain='<?php echo TenantHelper::getVendorSubdomain($model->id)?>' style='position: absolute; right: 10px; top: 50px; display: none'></div></textarea>
         </div>
     </div>
+    
+    <div class='row form-group'>
+        <div class='col-xs-12'>
+            <label class='form-label'>Your Button</label>
+            <a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-now.jpg" /></a>
+            <textarea class='form-control' rows="5" cols="20"><a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-now.jpg" /></a></textarea>
+        </div>
+    </div>
 
     <form action='/vendor/save-settings' method='POST'>
         <?php
