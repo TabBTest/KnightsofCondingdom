@@ -55,6 +55,14 @@ class TenantInfo extends \yii\db\ActiveRecord
 
         return $tenantCustom;
     }
+    
+    public static function getCustomClasses($code){
+        $tenantCustom = [];        
+        $tenantCustom[self::CODE_SALES_TAX] = 'numeric';
+        $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'numeric';
+        
+        return isset($tenantCustom[$code]) ? $tenantCustom[$code] : '';
+    }
 
     /**
      * @inheritdoc
