@@ -15,12 +15,19 @@ JS;
 
 $jsValidateSubdomain = <<<'JS'
 if (!$("input[name='TenantCode[SUBDOMAIN_REDIRECT]']").is(":checked")) {
-    console.log('kamote');
     $("input[name='TenantCode[REDIRECT_URL]']").prop("disabled",true);
 }
 
 $("input[name='TenantCode[SUBDOMAIN_REDIRECT]']").click(function() {
     $("input[name='TenantCode[REDIRECT_URL]']").prop("disabled", !this.checked)
+});
+
+if (!$("input[name='TenantCode[HAS_DELIVERY]']").is(":checked")) {
+    $("input[name='TenantCode[DELIVERY_CHARGE]']").prop("disabled",true);
+}
+
+$("input[name='TenantCode[HAS_DELIVERY]']").click(function() {
+    $("input[name='TenantCode[DELIVERY_CHARGE]']").prop("disabled", !this.checked)
 });
 JS;
 

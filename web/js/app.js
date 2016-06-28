@@ -401,7 +401,21 @@ var VendorMenu = {
 					} });
 		}
 }
-
+var VendorSettings = {
+		validateSettings : function(){
+			$('.vendor-settings-form .has-error').removeClass('has-error');
+			$('.numeric').each(function(){
+				if($.isNumeric($(this).val()) == false && $(this).prop('disabled') == false){
+					$(this).parent().addClass('has-error');
+				}
+			})
+			
+			if($('.vendor-settings-form .has-error').length == 0){
+				return true;
+			}
+			return false;
+		}
+}
 var Customer = {
 	viewOrder : function(orderId){
 		$.get('/ordering/details', 'id='+orderId, function(html){

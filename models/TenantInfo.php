@@ -18,6 +18,9 @@ class TenantInfo extends \yii\db\ActiveRecord
     const CODE_SUBDOMAIN = 'SUBDOMAIN';
     const CODE_SUBDOMAIN_REDIRECT = 'SUBDOMAIN_REDIRECT';
     const CODE_REDIRECT_URL = 'REDIRECT_URL';
+    const CODE_SALES_TAX = 'SALES_TAX';
+    const CODE_HAS_DELIVERY = 'HAS_DELIVERY';
+    const CODE_DELIVERY_CHARGE = 'DELIVERY_CHARGE';
     /**
      * @inheritdoc
      */
@@ -45,6 +48,10 @@ class TenantInfo extends \yii\db\ActiveRecord
         $tenantCustom[self::CODE_SUBDOMAIN] = 'Subdomain';
         $tenantCustom[self::CODE_SUBDOMAIN_REDIRECT] = 'Subdomain Redirect';
         $tenantCustom[self::CODE_REDIRECT_URL] = 'Redirect URL';
+        
+        $tenantCustom[self::CODE_SALES_TAX] = 'Sales Tax (in percentage)';
+        $tenantCustom[self::CODE_HAS_DELIVERY] = 'Has Delivery?';
+        $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'Delivery Charge Amount';
 
         return $tenantCustom;
     }
