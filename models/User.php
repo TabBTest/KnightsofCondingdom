@@ -13,6 +13,7 @@ use app\helpers\UtilityHelper;
  * @property string $password
  * @property integer $role
  * @property string $name
+ * @property string $imgPath
  * @property string $streetAddress
  * @property string $city
  * @property string $state
@@ -65,7 +66,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['role', 'vendorId'], 'integer'],
             [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive'], 'safe'],
             [['email', 'password', 'name', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId'], 'string', 'max' => 250],
-            [['state', 'billingState'], 'string', 'max' => 2]
+            [['state', 'billingState'], 'string', 'max' => 2],
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg']
         ];
     }
 
@@ -80,14 +82,15 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'password' => 'Password',
             'role' => 'Role',
             'name' => 'Name',
+            'imgFile' => 'Image File',
             'streetAddress' => 'Street Address',
             'city' => 'City',
             'state' => 'State',
             'phoneNumber' => 'Phone Number',
             'billingName' => 'Billing Name',
             'billingAddress' => 'Billing Street Address',
-            'billingAddress' => 'Billing City',
-            'billingAddress' => 'Billing State',
+            'billingCity' => 'Billing City',
+            'billingState' => 'Billing State',
             'vendorId' => 'Vendor ID',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
@@ -156,6 +159,18 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function validatePassword($password)
     {
         return $this->password === UtilityHelper::cryptPass($password);
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) {
+            $this->imageFile->saveAs(Yii::getAlias('@webroot') . '/images/users/' . UtilityHelper::cryptPass($this->email) . '.' . $this->imageFile->extension);
+            $this->imageFile = UtilityHelper::cryptPass($this->email) . '.' . $this->imageFile->extension;
+            $this->save();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function getVendorDefaultMenu($user){

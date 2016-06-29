@@ -1,11 +1,12 @@
 <?php 
 use app\models\User;
 use app\helpers\UtilityHelper;
+use yii\widgets\ActiveForm;
 use yii\widgets\MaskedInput;
 ?>
 <div id="tab-profile" class="tab-pane fade <?php echo isset($show) && $show ? 'in active' : ''?>">
     <br>
-    <form action='/profile/save' method='POST'>
+    <form action='/profile/save' method='POST' enctype="multipart/form-data">
         <?php
         $userId = $model->id;
         ?>
@@ -17,6 +18,13 @@ use yii\widgets\MaskedInput;
             <input type='checkbox' class='' name='User[isActive]' <?php echo $model->isActive == 1 ? 'checked' : ''?> value='1'/>
         </div>
         <?php }?>
+        <div class="col-xs-12 form-group">
+            <img src="/images/users/<?= $model->imageFile ?>" id="logo-thumbnail" class="img-rounded">
+        </div>
+        <div class="col-xs-12 form-group field-user-imagefile">
+            <label class="control-label" for="user-imagefile">Logo</label>
+            <input type="hidden" name="User[imageFile]" value=""><input type="file" id="user-imagefile" name="User[imageFile]">
+        </div>
         <div class='col-xs-12 form-group'>
             <label>Name</label>
             <input type='text' class='form-control' name='User[name]' value='<?= $model->name?>'/>
@@ -66,5 +74,4 @@ use yii\widgets\MaskedInput;
         </div>
 
     </form>
-    
 </div>

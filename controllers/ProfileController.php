@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\ApplicationType;
 use app\models\ApplicationTypeSearch;
+use yii\web\UploadedFile;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -117,6 +118,15 @@ class ProfileController extends CController
                         $model->confirmPassword = $_POST['password'];
                     }else{
                         \Yii::$app->getSession()->setFlash('warning', 'Password did not matched');
+                    }
+                }
+
+                $imageForUpload = UploadedFile::getInstance($model, 'imageFile');
+
+                if ($imageForUpload) {
+                    $model->imageFile = $imageForUpload;
+                    if (!$model->upload()) {
+                        \Yii::$app->getSession()->setFlash('warning', 'An error occured while uploading your logo. Please try again.');
                     }
                 }
 
