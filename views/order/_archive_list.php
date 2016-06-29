@@ -3,8 +3,6 @@ use app\models\Orders;
 $list = $orders['list'];
 $totalCount = $orders['count'];
 ?>
-
-
 <?php if($totalCount == 0){?>
 <table class="table table-striped table-condensed">
     <thead>
@@ -20,7 +18,7 @@ $totalCount = $orders['count'];
     </thead>
     <tbody>
         <tr>
-            <td colspan='7'>No Orders</td>
+            <td colspan='7'>No Archived Orders</td>
         </tr>
     </tbody>
 </table>
@@ -87,6 +85,6 @@ $totalCount = $orders['count'];
 </table>
 
 <?php }?>
-<div class="vendor-order-history-pagination" data-user-id='<?php echo $userId?>' data-total-pages="<?php echo ceil($totalCount / 20)?>" data-current-page="<?php echo isset($currentPage) ? $currentPage : 1?>">
+<div class="vendor-order-archive-history-pagination" data-user-id='<?php echo $userId?>' data-total-pages="<?php echo ceil($totalCount / 20)?>" data-current-page="<?php echo isset($currentPage) ? $currentPage : 1?>">
 
 </div>

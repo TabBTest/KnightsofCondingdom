@@ -77,10 +77,26 @@ class Orders extends \yii\db\ActiveRecord
         return $resp;             
     }
     
-    public static function getVendorOrders($userId, $resultsPerPage, $page){
+    public static function getVendorOrders($userId, $resultsPerPage, $page, $filters){
+        
+        $extraSQL = '';
+        if(isset($filters['showCompleted'])){
+            if( $filters['showCompleted'] == 0){
+                $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
+            }            
+        }else{
+            $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
+        }
+        
         $resp = array();
-        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
-        $resp['count'] = Orders::find()->where('vendorId = '.$userId)->count();
+        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL)->count();
+        return $resp;
+    }
+    public static function getVendorArchivedOrders($userId, $resultsPerPage, $page){
+        $resp = array();
+        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) >= 24 order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) >= 24')->count();
         return $resp;
     }
     public function getTotalAmount(){

@@ -188,7 +188,8 @@ var Order = {
 		
 	},
 	loadVendor : function(){
-		$.get($('.vendor-order-body').data('url'), 'page=1&userId='+$('.vendor-order-history-pagination').data('user-id'), function(html){
+		var showCompleted = $('#showCompletedOrder').is(':checked') ? 1 : 0;
+		$.get($('.vendor-order-body').data('url'), 'page=1&userId='+$('.vendor-order-history-pagination').data('user-id')+'&filter[showCompleted]='+showCompleted, function(html){
        	 $('.vendor-order-body').html(html);
        	 setupUi();
         })
@@ -238,7 +239,8 @@ var setupUi = function(){
 		        page: $('.vendor-order-history-pagination').data('current-page'),
                 maxVisible: 10
 		    }).on("page", function(event, /* page number here */ num){
-		         $.get($('.vendor-order-body').data('url'), 'page='+num+'&userId='+$('.vendor-order-history-pagination').data('user-id'), function(html){
+		    	var showCompleted = $('#showCompletedOrder').is(':checked') ? 1 : 0;
+		         $.get($('.vendor-order-body').data('url'), 'page='+num+'&userId='+$('.vendor-order-history-pagination').data('user-id')+'&filter[showCompleted]='+showCompleted, function(html){
 		        	 $('.vendor-order-body').html(html);
 		        	 setupUi();
 		         })
@@ -247,6 +249,25 @@ var setupUi = function(){
 	    		setInterval(Order.loadVendor, Order.timeLimit); // it will call the function autoload() after each 30 seconds.	
 	    		Order.init = true;
 	    	}
+	}
+	if( $('.vendor-order-archive-history-pagination').length != 0){
+	    // init bootpag
+	    	$('.vendor-order-archive-history-pagination').bootpag({
+		        total: $('.vendor-order-archive-history-pagination').data('total-pages'),
+		        page: $('.vendor-order-archive-history-pagination').data('current-page'),
+                maxVisible: 10
+		    }).on("page", function(event, /* page number here */ num){
+		         $.get($('.vendor-order-archive-body').data('url'), 'page='+num+'&userId='+$('.vendor-order-archive-history-pagination').data('user-id'), function(html){
+		        	 $('.vendor-order-archive-body').html(html);
+		        	 setupUi();
+		         })
+		    });
+	    	/*
+	    	if(Order.init == false){
+	    		setInterval(Order.loadVendor, Order.timeLimit); // it will call the function autoload() after each 30 seconds.	
+	    		Order.init = true;
+	    	}
+	    	*/
 	}
 	if( $('.vendor-billing-pagination').length != 0){
 	    // init bootpag

@@ -28,7 +28,7 @@ class OrderController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'viewpage', 'confirm', 'start', 'pickup'],
+                        'actions' => ['index', 'viewpage',  'viewpagearchive', 'confirm', 'start', 'pickup'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -49,16 +49,25 @@ class OrderController extends CController
      */
     public function actionIndex()
     {
-        $orders = Orders::getVendorOrders(\Yii::$app->user->id, 20, 1);
-        return $this->render('index', ['orders' => $orders, 'userId' => \Yii::$app->user->id, 'url' => '/order/viewpage']);
+        $orders = Orders::getVendorOrders(\Yii::$app->user->id, 20, 1, []);
+        $archivedOrders = Orders::getVendorArchivedOrders(\Yii::$app->user->id, 20, 1);
+        return $this->render('index', ['orders' => $orders, 'archivedOrders' => $archivedOrders, 'userId' => \Yii::$app->user->id, 'url' => '/order/viewpage', 'urlArchive' => '/order/viewpagearchive']);
     }
     
     public function actionViewpage(){
         $page = $_REQUEST['page'];
         $userId = $_REQUEST['userId'];
-        $orders = Orders::getVendorOrders($userId, 20, $page);
+        $orders = Orders::getVendorOrders($userId, 20, $page, $_REQUEST['filter']);
         return $this->renderPartial('_list', ['orders' => $orders, 'currentPage' => $page, 'userId' => $userId]);
     }
+    
+    public function actionViewpagearchive(){
+        $page = $_REQUEST['page'];
+        $userId = $_REQUEST['userId'];
+        $orders = Orders::getVendorArchivedOrders($userId, 20, $page);
+        return $this->renderPartial('_archive_list', ['orders' => $orders, 'currentPage' => $page, 'userId' => $userId]);
+    }
+    
     
     public function actionConfirm(){
         $orderId = $_REQUEST['id'];
