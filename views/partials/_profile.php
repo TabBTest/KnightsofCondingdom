@@ -23,7 +23,7 @@ use yii\widgets\MaskedInput;
         </div>
         <div class="col-xs-12 form-group field-user-imagefile">
             <label class="control-label" for="user-imagefile">Logo</label>
-            <input type="hidden" name="User[imageFile]" value=""><input type="file" id="user-imagefile" name="User[imageFile]">
+            <input type="hidden" name="User[imageFile]" value=""><input type="file" id="user-imagefile" name="User[imageFile]" accept="image/jpeg|image/png">
         </div>
         <div class='col-xs-12 form-group'>
             <label>Name</label>

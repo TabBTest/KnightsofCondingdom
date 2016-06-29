@@ -164,8 +164,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function upload()
     {
         if ($this->validate()) {
-            $this->imageFile->saveAs(Yii::getAlias('@webroot') . '/images/users/' . UtilityHelper::cryptPass($this->email) . '.' . $this->imageFile->extension);
-            $this->imageFile = UtilityHelper::cryptPass($this->email) . '.' . $this->imageFile->extension;
+            $newFileName = hash('md5', $this->email);
+            $this->imageFile->saveAs(Yii::getAlias('@webroot') . '/images/users/' . $newFileName . '.' . $this->imageFile->extension);
+            $this->imageFile = $newFileName . '.' . $this->imageFile->extension;
             $this->save();
             return true;
         } else {
