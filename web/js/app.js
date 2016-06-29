@@ -173,6 +173,17 @@ $(document).ready(function() {
     		alert('Please add your order');
     	}
     });
+    
+    $('.btn-send-promo').on('click', function(){
+    	var to = $(this).data('to');
+    	$('#promo-html').val(tinyMCE.get('promotion').getContent())
+    	$.post('/promotion/send?to='+to, $('.promotion-form').serialize(), function(resp){
+    		var data = $.parseJSON(resp);
+    		if(data.status == 1){
+    			Messages.showSuccess('Message Sent');
+    		}
+    	})
+    })
     setupUi();
     listLinkActions();
     
@@ -449,6 +460,9 @@ var Customer = {
 
 var Messages = {
 		showError : function(message){
+			alert(message);
+		},
+		showSuccess : function(message){
 			alert(message);
 		}
 }

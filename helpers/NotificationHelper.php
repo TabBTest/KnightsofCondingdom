@@ -80,4 +80,23 @@ class NotificationHelper {
         }
         return false;
     }
+    
+    static public function sendPromotion($promo, $users){
+        $message = \Yii::$app->mailer->compose()->setHtmlBody($promo->html)
+        ->setFrom(\Yii::$app->params['adminEmail'])
+        ->setSubject($promo->subject);
+        
+        $emails = [];
+        foreach($users as $user){
+            $emails[] = $user->email;
+        }
+        
+        $message->bcc = $emails;
+        
+        $email = $message->send();
+        if($email){
+            return true;
+        }
+        return false;
+    }
 }
