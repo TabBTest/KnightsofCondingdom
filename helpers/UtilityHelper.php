@@ -4,6 +4,30 @@ namespace app\helpers;
 use yii\helpers\Html;
 use app\models\User;
 class UtilityHelper {
+/**
+	 * Check operating system
+	 *
+	 * @return boolean true if it's Windows OS
+	 */
+	protected function isWindows()
+	{
+		if (PHP_OS == 'WINNT' || PHP_OS == 'WIN32') {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	static public function runCommand($command, $params){
+    
+        if (self::isWindows() === true) {
+            pclose(popen('start /b ' . \Yii::$app->basePath.'\yii.bat '.$command.' '.$params, 'r'));
+        } else {
+            //pclose(popen(\Yii::$app->basePath.'/yii '. $command.' '.$params . ' /dev/null &', 'r'));
+            shell_exec(\Yii::$app->basePath.'/yii '. $command.' '.$params . ' > /dev/null 2>/dev/null &');
+        }
+        return true;
+    }
+    
     static public function cryptPass($x){
         //$password =  hash("sha256",$x);
         //return str_replace(array('0','o','1','l','i'), '', $password);

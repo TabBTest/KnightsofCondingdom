@@ -14,6 +14,11 @@ use Yii;
  */
 class VendorPromotion extends \yii\db\ActiveRecord
 {
+    const TYPE_EMAIL = 1;
+    const TYPE_SMS = 2;
+    
+    const SEND_TO_SELF = 0;
+    const SEND_TO_CUSTOMERS = 1;
     /**
      * @inheritdoc
      */
@@ -31,7 +36,7 @@ class VendorPromotion extends \yii\db\ActiveRecord
             [['vendorId', 'subject'], 'required'],
             [['vendorId'], 'integer'],
             [['html'], 'string'],
-            [['date_created'], 'safe'],
+            [['date_created', 'promoType', 'sendToType'], 'safe'],
         ];
     }
 
@@ -57,5 +62,21 @@ class VendorPromotion extends \yii\db\ActiveRecord
             'html' => 'Html',
             'date_created' => 'Date Created',
         ];
+    }
+    
+    public static function getPromoEmails($userId, $resultsPerPage, $page){
+        $resp = array();
+        $resp['list'] = VendorPromotion::find()->where('promoType = '.self::TYPE_EMAIL.' and vendorId = '.$userId.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = VendorPromotion::find()->where('promoType = '.self::TYPE_EMAIL.' and vendorId = '.$userId)->count();
+         
+        return $resp;
+    }
+    
+    public static function getPromoSms($userId, $resultsPerPage, $page){
+        $resp = array();
+        $resp['list'] = VendorPromotion::find()->where('promoType = '.self::TYPE_SMS.' and vendorId = '.$userId.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = VendorPromotion::find()->where('promoType = '.self::TYPE_SMS.' and vendorId = '.$userId)->count();
+         
+        return $resp;
     }
 }

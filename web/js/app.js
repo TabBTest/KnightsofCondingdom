@@ -175,12 +175,27 @@ $(document).ready(function() {
     });
     
     $('.btn-send-promo').on('click', function(){
+    	$('.promotion-form has-error').removeClass('has-error');
+    	if($('.promotion-form input[name="subject"]').val() == ''){
+    		$('.promotion-form input[name="subject"]').parent().addClass('has-error');
+    		return false;
+    	}
+    	
     	var to = $(this).data('to');
     	$('#promo-html').val(tinyMCE.get('promotion').getContent())
     	$.post('/promotion/send?to='+to, $('.promotion-form').serialize(), function(resp){
     		var data = $.parseJSON(resp);
     		if(data.status == 1){
-    			Messages.showSuccess('Message Sent');
+    			Messages.showSuccess('Promotions is being processed already');
+    		}
+    	})
+    })
+     $('.btn-send-promo-sms').on('click', function(){
+    	var to = $(this).data('to');
+    	$.post('/promotion/send?to='+to, $('.promotion-form-sms').serialize(), function(resp){
+    		var data = $.parseJSON(resp);
+    		if(data.status == 1){
+    			Messages.showSuccess('Promotions is being processed already');
     		}
     	})
     })
@@ -338,6 +353,34 @@ var setupUi = function(){
 		         })
 		    });
 	}
+	
+	if( $('.promo-email-paginationn').length != 0){
+	    // init bootpag
+	    	$('.promo-email-pagination').bootpag({
+		        total: $('.promo-email-pagination').data('total-pages'),
+		        page: $('.promo-email-pagination').data('current-page'),
+                maxVisible: 10
+		    }).on("page", function(event, /* page number here */ num){
+		         $.get($('.promo-email-body').data('url'), 'page='+num+'&userId='+$('.promo-email-pagination').data('user-id'), function(html){
+		        	 $('.promo-email-body').html(html);
+		        	 setupUi();
+		         })
+		    });
+	}
+	
+	if( $('.promo-sms-pagination').length != 0){
+	    // init bootpag
+	    	$('.promo-sms-pagination').bootpag({
+		        total: $('.promo-sms-pagination').data('total-pages'),
+		        page: $('.promo-sms-pagination').data('current-page'),
+                maxVisible: 10
+		    }).on("page", function(event, /* page number here */ num){
+		         $.get($('.promo-sms-body').data('url'), 'page='+num+'&userId='+$('.promo-sms-pagination').data('user-id'), function(html){
+		        	 $('.promo-sms-body').html(html);
+		        	 setupUi();
+		         })
+		    });
+	}
 };
 
 
@@ -477,6 +520,13 @@ var VendorSettings = {
 				return true;
 			}
 			return false;
+		},
+		viewPromo : function(id){			
+    		$.get('/promotion/view', 'id='+id, function(html){
+        		$('#custom-modal .modal-title').html('View Promo');
+        		$('#custom-modal .modal-body').html(html);
+        		$('#custom-modal').modal('show');	
+        	});
 		}
 }
 var Customer = {

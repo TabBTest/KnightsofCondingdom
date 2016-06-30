@@ -8,17 +8,6 @@
 namespace app\commands;
 
 use yii\console\Controller;
-use app\helpers\TouricoHelper;
-use app\models\Locations;
-use app\helpers\ExpediaHelper;
-use app\models\Search;
-use app\models\SearchResults;
-use app\models\ExpediaHotels;
-use app\helpers\UtilityHelper;
-use app\models\AppLocation;
-use AlgoliaSearch\Client;
-use app\helpers\HotelIndexDocHelper;
-use app\models\ShortcutRecords;
 use app\models\User;
 use app\helpers\TenantHelper;
 

@@ -16,6 +16,9 @@ use yii\base\Application;
 use app\models\User;
 use app\models\VendorPromotion;
 use app\helpers\NotificationHelper;
+use app\models\Promotion;
+use app\models\PromotionUserStatus;
+use app\helpers\UtilityHelper;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -30,7 +33,7 @@ class PromotionController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'send'],
+                        'actions' => ['index', 'send', 'view-page-email', 'view-page-sms', 'view'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -51,10 +54,17 @@ class PromotionController extends CController
      */
     public function actionIndex()
     {
-        
-        return $this->render('index');
+        $userId =  \Yii::$app->user->id;
+        $emailList = VendorPromotion::getPromoEmails($userId, 20, 1);
+        $smsList = VendorPromotion::getPromoSms($userId, 20, 1);
+        return $this->render('index', ['vendorId' =>$userId, 'emailList' => $emailList, 'smsList' => $smsList, 'url' => '/promotions/view-page-email', 'urlSms' => '/promotions/view-page-sms']);
     }
-    
+    public function actionView(){
+        $id = $_REQUEST['id'];
+        $vendorPromo = VendorPromotion::findOne(['id' => $id]);
+        echo $vendorPromo->html;
+        die;
+    }
     public function actionSend(){
         //var_dump($_REQUEST);
         if(count($_POST) > 0){
@@ -65,16 +75,40 @@ class PromotionController extends CController
             $promo->vendorId = \Yii::$app->user->id;
             $promo->html = $html;
             $promo->subject = $_POST['subject'];
+            $promo->promoType = $_POST['type'];
             
             if($to == 0){
+                $promo->sendToType = VendorPromotion::SEND_TO_SELF;
+                $promo->save();
+                
                 //self
                 $user = User::findOne(\Yii::$app->user->id);
-                NotificationHelper::sendPromotion($promo, [$user]);
+                
+                $promoUser = new PromotionUserStatus();
+                $promoUser->vendorPromotionId = $promo->id;
+                $promoUser->userId = $user->id;
+                $promoUser->status = PromotionUserStatus::STATUS_IN_QUEUE;
+                $promoUser->save();
+                
+                                
+                //NotificationHelper::sendPromotion($promo);
+                
+                UtilityHelper::runCommand("promotion/send", $promo->id);
             }else{
+                $promo->sendToType = VendorPromotion::SEND_TO_CUSTOMERS;
                 $promo->save();
                 //to all customers
                 $users = User::findAll(['isActive' => 1, 'vendorId' =>  \Yii::$app->user->id]);
-                NotificationHelper::sendPromotion($promo, $users);
+                
+                foreach($users as $user){
+                    $promoUser = new PromotionUserStatus();
+                    $promoUser->vendorPromotionId = $promo->id;
+                    $promoUser->userId = $user->id;
+                    $promoUser->status = PromotionUserStatus::STATUS_IN_QUEUE;
+                    $promoUser->save();
+                }      
+                //NotificationHelper::sendPromotion($promo);
+                UtilityHelper::runCommand("promotion/send", $promo->id);
             }
         }
         $resp = [];
