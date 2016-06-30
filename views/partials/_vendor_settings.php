@@ -10,7 +10,7 @@ use app\helpers\TenantHelper;
         <div class='row form-group'>
         <div class='col-xs-12'>
             <label class='form-label'>Your Widget</label>
-            <textarea class='form-control' rows="5" cols="20">
+            <textarea class='form-control copy-content' id='widget-js' rows="5" cols="20">
 <script type="text/javascript" id="foodapp-js" src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/js/sdk.js"></script>
 <div class='restalutions-widget-button' style='position: absolute; top: 10px; right: 10px; height: 20px; width: 100px; -moz-user-select: none;
     background-image: none;
@@ -21,14 +21,20 @@ use app\helpers\TenantHelper;
     text-align: center;background-color: #5cb85c; '>Show Menu
 </div>
 <div class="restalutions-widget" data-subdomain='<?php echo TenantHelper::getVendorSubdomain($model->id)?>' style='position: absolute; right: 10px; top: 50px; display: none'></div></textarea>
+<br />
+<a href="javascript: void(0)" data-clipboard-target="#widget-js" class="btn btn-info btn-copy-widget" data-type='widget'><i class="fa fa-copy">Copy to Clipboard</i></a>
         </div>
     </div>
+    
+    
     
     <div class='row form-group'>
         <div class='col-xs-12'>
             <label class='form-label'>Your Button</label>
             <a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-now.jpg" /></a>
-            <textarea class='form-control' rows="5" cols="20"><a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-now.jpg" /></a></textarea>
+            <textarea class='form-control copy-content' id='widget-button' rows="5" cols="20"><a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-now.jpg" /></a></textarea>
+            <br />
+<a href="javascript: void(0)" data-clipboard-target="#widget-button" class="btn btn-info btn-copy-widget" data-type='button'><i class="fa fa-copy">Copy to Clipboard</i></a>
         </div>
     </div>
 

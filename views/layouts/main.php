@@ -160,6 +160,7 @@ use app\helpers\TenantHelper;
     <script src="/js/jquery.bootpag.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/ga.js"></script>
+    <script src="/js/clipboard.min.js"></script>
     <script src="/js/app.js"></script>
 <style>
 body > .wrap > .container {

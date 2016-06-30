@@ -184,6 +184,37 @@ $(document).ready(function() {
     		}
     	})
     })
+    
+    if( $('#tab-settings').length != 0){
+
+        var clipboard = new Clipboard('.btn-copy-widget');
+
+        clipboard.on('success', function(e) {
+            e.clearSelection();
+            Messages.showSuccess('Copied text to clipboard');
+        });
+        clipboard.on('error', function(e) {
+            var d = new CM();
+            Messages.showError('An Error occurred. The text was no copied in your Clipboard. Please try again.');
+        });
+        
+        $('textarea.copy-content').on('click', function(){
+        	
+        	
+        	  $(this).focus();
+        	  $(this).select();
+        	  document.execCommand("copy");
+        	  //Messages.showSuccess('Copied text to clipboard');
+        });
+        /*
+if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
+        element.focus();
+        element.setSelectionRange(0, element.value.length);
+
+        selectedText = element.value;
+    }
+         */
+    }
     setupUi();
     listLinkActions();
     

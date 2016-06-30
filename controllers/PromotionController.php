@@ -65,13 +65,13 @@ class PromotionController extends CController
             $promo->vendorId = \Yii::$app->user->id;
             $promo->html = $html;
             $promo->subject = $_POST['subject'];
-            $promo->save();
             
             if($to == 0){
                 //self
                 $user = User::findOne(\Yii::$app->user->id);
                 NotificationHelper::sendPromotion($promo, [$user]);
             }else{
+                $promo->save();
                 //to all customers
                 $users = User::findAll(['isActive' => 1, 'vendorId' =>  \Yii::$app->user->id]);
                 NotificationHelper::sendPromotion($promo, $users);
