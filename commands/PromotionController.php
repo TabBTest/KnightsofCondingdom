@@ -19,7 +19,7 @@ use app\helpers\NotificationHelper;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class MembershipController extends Controller
+class PromotionController extends Controller
 {
     /**
      * This command echoes what you have entered as the message.
