@@ -39,7 +39,8 @@ use app\helpers\TenantHelper;
 
 
     NavBar::begin([
-        'brandLabel' => 'Restalutions',
+        'brandLabel' => Html::img('/images/logo.png'),
+        'brandOptions' => ['class' => 'navbar-brand'],
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
