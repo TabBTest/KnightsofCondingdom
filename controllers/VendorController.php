@@ -16,6 +16,7 @@ use yii\base\Application;
 use app\models\TenantInfo;
 use app\models\VendorMembership;
 use app\models\User;
+use app\models\VendorOperatingHours;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -76,6 +77,23 @@ class VendorController extends CController
                 }
             } else {
                 \Yii::$app->getSession()->setFlash('error', 'Subdomain is already taken. Please select a different subdomain.');
+            }
+            
+            VendorOperatingHours::deleteAll(['vendorId' => $userId]);
+            $startTimes = $_POST['startTime'];
+            $endTimes = $_POST['endTime'];
+            foreach($startTimes as $keyDay => $operatingHours){
+                foreach($operatingHours as $index => $startTime){
+                    if($startTime != ''){
+                        $endTime = $endTimes[$keyDay][$index];
+                        $vendorOperatingHour = new VendorOperatingHours();
+                        $vendorOperatingHour->vendorId = $userId;
+                        $vendorOperatingHour->day = intval($keyDay);
+                        $vendorOperatingHour->startTime = $startTime;
+                        $vendorOperatingHour->endTime = $endTime;
+                        $vendorOperatingHour->save();
+                    }
+                }
             }
         }
        

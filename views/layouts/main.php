@@ -35,9 +35,7 @@ use app\helpers\TenantHelper;
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <?php
-
-
+    <?php 
     NavBar::begin([
         'brandLabel' => Html::img('/images/logo.png'),
         'brandOptions' => ['class' => 'navbar-brand'],
@@ -55,7 +53,7 @@ use app\helpers\TenantHelper;
                 ['label' => 'Products', 'url' => ['/site/products']],
             ],
         ]);
-    }else if(Yii::$app->session->get('role') == User::ROLE_VENDOR){
+    }else if(Yii::$app->user->identity->role == User::ROLE_VENDOR){
 
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
@@ -69,7 +67,7 @@ use app\helpers\TenantHelper;
 
             ],
         ]);
-    }else if(Yii::$app->session->get('role') == User::ROLE_CUSTOMER){
+    }else if(Yii::$app->user->identity->role== User::ROLE_CUSTOMER){
 
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],

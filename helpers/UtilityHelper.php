@@ -108,4 +108,39 @@ class UtilityHelper {
         $rest .=    '</ul></div>';
         return $rest;
     }
+    
+    public static function getDays(){
+        return [0 => 'Sun',
+            1 => 'Mon',
+            2 => 'Tue',
+            3 => 'Wed',
+            4 => 'Thu',
+            5 => 'Fri',
+            6 => 'Sat',
+            
+        ];
+    }
+    public static function getOperatingTime(){
+        $start=strtotime('00:00');
+        $end=strtotime('24:00');
+        $timeSlot = [];
+        for ($i=$start;$i<=$end;$i = $i + 15*60)
+        {
+        
+            //write your if conditions and implement your logic here
+            $timeInfo = '';
+            $timeDisplay = '';
+            if($i == $end){
+                $timeInfo =  '24:00';
+                $timeDisplay = '12:00 am';
+            }else{
+                $timeInfo = date('H:i',$i);
+                $timeDisplay = date('h:i a',$i);
+        
+            }
+            $timeSlot[$timeInfo] = $timeDisplay;
+        
+        }
+        return $timeSlot;
+    }
 }

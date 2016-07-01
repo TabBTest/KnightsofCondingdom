@@ -381,6 +381,8 @@ var setupUi = function(){
 		         })
 		    });
 	}
+	
+	VendorSettings.setupOperatingHoursUI();
 };
 
 
@@ -516,6 +518,15 @@ var VendorSettings = {
 				}
 			})
 			
+			//we check all the time
+			$('.operating-hours').each(function(){
+				if($(this).find('.start').val() == '' && $(this).find('.end').val() != ''){
+					$(this).find('.start').parent().addClass('has-error');
+				}else if($(this).find('.start').val() != '' && $(this).find('.end').val() == ''){
+					$(this).find('.end').parent().addClass('has-error');
+				}
+			})
+			
 			if($('.vendor-settings-form .has-error').length == 0){
 				return true;
 			}
@@ -527,6 +538,31 @@ var VendorSettings = {
         		$('#custom-modal .modal-body').html(html);
         		$('#custom-modal').modal('show');	
         	});
+		},
+		addOperatingHours : function(day){
+			//$('.operating-hours[data-day='+day+']:eq(0)').clone().appendTo($('.operating-hour-list[data-day='+day+']'));
+			
+			var $elem = $('.operating-hours[data-day='+day+']:eq(0)').clone();
+			$elem.find('select').val('');					
+			$('.operating-hour-list[data-day='+day+']').append($elem);
+			
+			VendorSettings.setupOperatingHoursUI();
+		},
+		setupOperatingHoursUI : function(){
+			$('.delete-operating-hours').off('click');
+			$('.delete-operating-hours').on('click', function(){
+				var day = $(this).data('day');
+				if($('.operating-hours[data-day='+day+']').length == 1){
+					var $elem = $('.operating-hours[data-day='+day+']').clone();
+					$(this).parents('.operating-hours').remove();	
+					$elem.find('select').val('');					
+					$('.operating-hour-list[data-day='+day+']').append($elem);
+				}
+				else{
+					$(this).parents('.operating-hours').remove();	
+				}
+				
+			});
 		}
 }
 var Customer = {

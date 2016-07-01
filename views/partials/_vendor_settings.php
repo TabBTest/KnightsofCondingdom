@@ -4,6 +4,7 @@ use app\helpers\UtilityHelper;
 use yii\widgets\MaskedInput;
 use app\models\TenantInfo;
 use app\helpers\TenantHelper;
+use app\models\VendorOperatingHours;
 ?>
 <div id="tab-settings" class="tab-pane fade in active">
         <br>
@@ -64,7 +65,85 @@ use app\helpers\TenantHelper;
                 </div>
             <?php }?>
         <?php }?>
-
+        <?php 
+        $operatingTime = UtilityHelper::getOperatingTime();                
+        ?>
+        <div class='row form-group  form-inline'>
+            <div class='col-xs-12'>
+                <label class='form-label'>Operating Hours</label>
+            </div>
+            <?php foreach(UtilityHelper::getDays() as $key => $val){
+                $operatingHours = VendorOperatingHours::getVendorOperatingHours($userId, $key);
+                ?>
+            
+            <div class="form-group col-xs-12" style='margin-bottom: 10px'>
+            <label for="inputEmail3" class="col-xs-2 control-label"><?php echo $val?></label>
+            <div class='col-xs-10'>
+                <div class='operating-hour-list' data-day='<?php echo $key?>'>
+                
+                    <?php foreach($operatingHours as $operatingHour){?>
+                    <div class='operating-hours row' data-day='<?php echo $key?>' style='margin-bottom: 10px'>
+                        <div class="col-xs-2">
+                            <select  style='width: 100%' class='form-control start' name='startTime[<?php echo $key?>][]'>
+                                <option value=''>Start Time</option>
+                                <?php foreach($operatingTime as $val => $display){?>
+                                <option <?php echo $operatingHour->startTime == $val ? 'selected' : ''?> value='<?php echo $val?>'><?php echo $display?></option>
+                                <?php }?>
+                            </select>
+                        </div>            
+                      
+                        <div class="col-xs-2">
+                            
+                            <select   style='width: 100%' class='form-control end' name='endTime[<?php echo $key?>][]'>
+                                <option value=''>End Time</option>
+                                <?php foreach($operatingTime as $val => $display){?>
+                                <option <?php echo $operatingHour->endTime == $val ? 'selected' : ''?> value='<?php echo $val?>'><?php echo $display?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+                        <div class="col-xs-2" style='margin-top: 5px;'>                    
+                            <a data-day='<?php echo $key?>' class='delete-operating-hours' href='javascript: void(0)'><i class='fa fa-trash'></i></a>                
+                        </div>
+                    </div>
+                    <?php }?>
+                
+                    <?php if(count($operatingHours) == 0){?>
+                    <div class='operating-hours row' data-day='<?php echo $key?>' style='margin-bottom: 10px'>
+                        <div class="col-xs-2">
+                            <select  style='width: 100%' class='form-control start' name='startTime[<?php echo $key?>][]'>
+                                <option value=''>Start Time</option>
+                                <?php foreach($operatingTime as $val => $display){?>
+                                <option value='<?php echo $val?>'><?php echo $display?></option>
+                                <?php }?>
+                            </select>
+                        </div>            
+                      
+                        <div class="col-xs-2">
+                            
+                            <select   style='width: 100%' class='form-control end' name='endTime[<?php echo $key?>][]'>
+                                <option value=''>End Time</option>
+                                <?php foreach($operatingTime as $val => $display){?>
+                                <option value='<?php echo $val?>'><?php echo $display?></option>
+                                <?php }?>
+                            </select>
+                        </div>
+                        <div class="col-xs-2" style='margin-top: 5px;'>                    
+                            <a data-day='<?php echo $key?>' class='delete-operating-hours' href='javascript: void(0)'><i class='fa fa-trash'></i></a>                
+                        </div>
+                    </div>
+                    <?php }?>
+                </div>
+                <div class='row'>
+                    <div class='col-xs-12' >
+                        <button onclick="javascript:  VendorSettings.addOperatingHours(<?php echo $key?>)" type='button' class='btn btn-info btn-xs'>Add More Time</button>
+                    </div>
+                </div>
+            </div>
+            
+          </div>
+            <?php }?>
+        </div>
+        
         <div class='row form-group'>
             <div class='col-xs-12'>
                 <button class='btn btn-success'>Save</button>
