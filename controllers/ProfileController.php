@@ -69,7 +69,7 @@ class ProfileController extends CController
                 $nextUrl = '/my/profile';
             }
             
-            if(Yii::$app->session->get('role') == User::ROLE_ADMIN){
+            if(Yii::$app->session->get('role') != null && Yii::$app->session->get('role') == User::ROLE_ADMIN){
                 $nextUrl = '/admin/vendors/settings?id='.$model->id;
                 if($model->role == User::ROLE_CUSTOMER){
                     $nextUrl = '/admin/customers/profile?id='.$model->id;
@@ -164,7 +164,7 @@ class ProfileController extends CController
                 $nextUrl = '/my/profile';
             }
             
-            if(Yii::$app->session->get('role') == User::ROLE_ADMIN){
+            if(Yii::$app->session->get('role') != null && Yii::$app->session->get('role') == User::ROLE_ADMIN){
                 $nextUrl = '/admin/vendors/settings?id='.$model->id;
                 if($model->role == User::ROLE_CUSTOMER){
                     $nextUrl = '/admin/customers/profile?id='.$model->id;

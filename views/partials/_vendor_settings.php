@@ -7,6 +7,10 @@ use app\helpers\TenantHelper;
 use app\models\VendorOperatingHours;
 ?>
 
+<?php 
+// var_dump(Yii::$app->session->get('role'));
+// var_dump($model->isVendorStoreOpen());
+?>
 <div id="tab-settings" class="tab-pane fade in active">
         <br>
         <div class='row form-group'>

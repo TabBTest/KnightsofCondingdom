@@ -110,6 +110,20 @@ class TenantHelper {
         }
         return false;
     }
+    
+    static public function isVendorStoreClose(){
+        if(TenantHelper::isDefaultTenant() === false){
+            $subdomain = TenantHelper::getSubDomain();
+            $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
+        
+            $userVendor = User::findOne($tenantInfo->userId);
+            if($userVendor->isVendorStoreOpen() === false){
+                return true;
+            }
+                    
+        }
+        return false;
+    }
     /*
     static public function getTenantDataInfo($tenantId = false){
         

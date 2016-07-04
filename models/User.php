@@ -304,4 +304,60 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $date;
         //var_dump(date('m-d-Y H:i a', strtotime('now', strtotime())));
     }
+    /*
+    $start=strtotime('00:00');
+    $end=strtotime('24:00');
+    $timeSlot = [];
+    for ($i=$start;$i<=$end;$i = $i + 15*60)
+    {
+    
+        //write your if conditions and implement your logic here
+        $timeInfo = '';
+        $timeDisplay = '';
+        if($i == $end){
+            $timeInfo =  '24:00';
+            $timeDisplay = '12:00 am';
+        }else{
+            $timeInfo = date('H:i',$i);
+            $timeDisplay = date('h:i a',$i);
+    
+        }
+        $timeSlot[$timeInfo] = $timeDisplay;
+    
+    }
+    return $timeSlot;
+    */
+    
+    public function isVendorStoreOpen(){
+        //get the current day
+        $vendorId = $this->id;
+        
+        $date_time_zone = new \DateTimeZone($this->timezone );
+        $date_time_current = new \DateTime('now', $date_time_zone);
+        $key = $date_time_current->format('w');
+        //var_dump($date_time_current->format('w'));
+        //var_dump($date_time_current->getTimestamp ());
+        $operatingHours = VendorOperatingHours::getVendorOperatingHours($vendorId, $key);
+        //var_dump($vendorId);
+        if($operatingHours){
+            
+            foreach($operatingHours as $operatingHour){
+                $date_time = new \DateTime('now', $date_time_zone);
+                $timeComponent = explode(':', $operatingHour->startTime);
+                $date_time->setTime($timeComponent[0], $timeComponent[1], 0);
+                
+                $date_time_close = new \DateTime('now', $date_time_zone);
+                $timeComponent = explode(':', $operatingHour->endTime);
+                $date_time_close->setTime($timeComponent[0], $timeComponent[1], 0);
+                
+                //var_dump($date_time->format('m-d-Y H:i').' to '.$date_time_close->format('m-d-Y H:i'));
+                
+                if($date_time->getTimestamp() <= $date_time_current->getTimestamp() && $date_time_current->getTimestamp() <= $date_time_close->getTimestamp()){
+                    return true;
+                }
+            }
+            
+        }
+        return false;
+    }
 }

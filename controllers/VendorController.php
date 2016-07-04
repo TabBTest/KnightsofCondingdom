@@ -63,8 +63,9 @@ class VendorController extends CController
         if(count($_POST) > 0){
             $userId = $_POST['userId'];
             $codes = $_POST['TenantCode'];
-            if(Yii::$app->session->get('role') == User::ROLE_ADMIN){
+            if(Yii::$app->session->get('role') != null && Yii::$app->session->get('role') == User::ROLE_ADMIN){
                 $nextUrl = '/admin/vendors/settings?id='.$userId;
+               
             }
             if (TenantInfo::isUniqueSubdomain($userId, $codes['SUBDOMAIN'])) {
                 foreach($codes as $code => $val){
