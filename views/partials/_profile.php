@@ -62,6 +62,16 @@ use yii\widgets\MaskedInput;
             <input type='text' class='form-control' name='User[email]' id='email'  value='<?php echo $model->email?>'/>
         </div>
         <div class='col-xs-12 form-group'>
+            <label>Preferred Timezone</label>
+            <select name='User[timezone]' required class='form-control'>
+                <option value="">Select Timezone</option>
+                <?php foreach(UtilityHelper::getAvailableTimezones() as $key => $timezone){?>
+                    <option <?php echo $model->timezone == $timezone['timezone'] ? 'selected' : ''?> value="<?php echo $timezone['timezone']?>"><?php echo $timezone['textDisplay']?></option>
+                <?php }?>
+            </select>
+           
+        </div>
+        <div class='col-xs-12 form-group'>
             <label>New Password</label>
             <input type='password' class='form-control' name='password'  value=''/>
         </div>

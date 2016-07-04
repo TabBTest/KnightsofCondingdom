@@ -104,6 +104,7 @@ class ProfileController extends CController
                 $model->city = $userData['city'];
                 $model->state = $userData['state'];
                 $model->email = $userData['email'];
+                $model->timezone = $userData['timezone'];
                 $model->phoneNumber = $userData['phoneNumber'];
                 
                 if(Yii::$app->session->get('role') == User::ROLE_ADMIN){

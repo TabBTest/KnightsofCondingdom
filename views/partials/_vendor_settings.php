@@ -6,6 +6,7 @@ use app\models\TenantInfo;
 use app\helpers\TenantHelper;
 use app\models\VendorOperatingHours;
 ?>
+
 <div id="tab-settings" class="tab-pane fade in active">
         <br>
         <div class='row form-group'>

@@ -76,7 +76,19 @@ class Orders extends \yii\db\ActiveRecord
        
         return $resp;             
     }
+    /*
+    public function afterFind()
+    {
     
+        // I don't know code to change time zone, so I assume there is a function named "functionToChangeTimeZone"
+        $this->date_created = \Yii::$app->user->identity->showConvertedTime($this->date_created );
+        $this->confirmedDateTime = \Yii::$app->user->identity->showConvertedTime($this->confirmedDateTime);
+        $this->startDateTime = \Yii::$app->user->identity->showConvertedTime($this->startDateTime );
+        $this->pickedUpDateTime = \Yii::$app->user->identity->showConvertedTime($this->pickedUpDateTime );
+        
+        return parent::afterFind();
+    }
+    */
     public static function getVendorOrders($userId, $resultsPerPage, $page, $filters){
         
         $extraSQL = '';

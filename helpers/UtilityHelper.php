@@ -142,5 +142,29 @@ class UtilityHelper {
         
         }
         return $timeSlot;
+    }  
+    
+    public static function getAvailableTimezones(){
+
+        $return = array();
+        $timezone_identifiers_list = timezone_identifiers_list();
+        foreach($timezone_identifiers_list as $timezone_identifier){
+            $date_time_zone = new \DateTimeZone($timezone_identifier);
+            $date_time = new \DateTime('now', $date_time_zone);
+            $hours = floor($date_time_zone->getOffset($date_time) / 3600);
+            $mins = floor(($date_time_zone->getOffset($date_time) - ($hours*3600)) / 60);
+            $hours = 'GMT' . ($hours < 0 ? $hours : '+'.$hours);
+            $mins = ($mins > 0 ? $mins : '0'.$mins);
+            $text = str_replace("_"," ",$timezone_identifier);
+            $return[$timezone_identifier] = ['timezone' => $timezone_identifier, 'textDisplay' => '('.$hours.':'.$mins.') - '.$text, 'offset' => $date_time_zone->getOffset($date_time) ];
+        }
+        
+        usort($return, function ($a, $b)
+        {
+            if($a['offset'] == $b['offset']){ return 0 ; }
+            return ($a['offset'] < $b['offset']) ? -1 : 1;
+        });
+        
+        return $return;
     }
 }

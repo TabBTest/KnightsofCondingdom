@@ -64,7 +64,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
-            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive'], 'safe'],
+            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone'], 'safe'],
             [['email', 'password', 'name', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId'], 'string', 'max' => 250],
             [['state', 'billingState'], 'string', 'max' => 2],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg']
@@ -120,8 +120,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             if($this->password != '' && UtilityHelper::cryptPass($this->password) == UtilityHelper::cryptPass($this->confirmPassword)){
                 $this->password=UtilityHelper::cryptPass($this->password);
             }
-            if($this->isNewRecord)
+            if($this->isNewRecord){
+                $this->timezone = 'UTC';
                 $this->date_created=date('Y-m-d H:i:s', strtotime('now'));
+            }
             return true;
         }else{
             return false;
@@ -277,5 +279,29 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getVendorName(){
         $vendor = User::findOne($this->vendorId);
         return $vendor->name;
+    }
+    public function getTimezoneOffset(){
+        //UtilityHelper::getAvailableTimezones();
+        if($this->timezone != ''){
+            $date_time_zone = new \DateTimeZone($this->timezone );
+            $date_time = new \DateTime('now', $date_time_zone);
+            return $date_time_zone->getOffset($date_time);
+           
+        }
+        return 0;
+        
+    }
+    public function showConvertedTime($date, $format = 'm-d-Y H:i'){
+        if($date != null && $date != ''){
+            $date_time_zone = new \DateTimeZone($this->timezone );
+            
+            
+            $date = new \DateTime(date('Y-m-d H:i:s +00', strtotime($date)));
+            $date->setTimezone($date_time_zone); // +04
+            
+            return $date->format($format); // 2012-07-15 05:00:00
+        }
+        return $date;
+        //var_dump(date('m-d-Y H:i a', strtotime('now', strtotime())));
     }
 }

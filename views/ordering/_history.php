@@ -21,7 +21,7 @@ $totalCount = $orders['count'];
         <tr class="" data-id="<?php echo $orderInfo->id?>">
             <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)">See Order</a></td>
             <td>$<?php echo $orderInfo->getTotalAmount()?></td>
-            <td><?php echo date('m-d-Y H:i', strtotime($orderInfo->date_created));?></td>
+            <td><?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->date_created );?></td>
             <td><?php echo  $orderInfo->transactionId;?></td>
             <td>           
                 <?php if($orderInfo->status == Orders::STATUS_PROCESSED){?>

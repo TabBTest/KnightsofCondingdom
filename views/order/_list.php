@@ -42,7 +42,7 @@ $totalCount = $orders['count'];
         <tr class="" data-id="<?php echo $orderInfo->id?>">
             <td><?php echo $orderInfo->getCustomerName()?></td>
             <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)">See Order</a></td>
-            <td><?php echo date('m-d-Y H:i', strtotime($orderInfo->date_created));?></td>
+            <td><?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->date_created );?></td>
             <td>           
                 <?php if($orderInfo->status == Orders::STATUS_PROCESSED){?>
                 <i class="fa fa-check alert-success" aria-hidden="true"></i>                
@@ -57,7 +57,7 @@ $totalCount = $orders['count'];
                 <?php if($orderInfo->confirmedDateTime == null){?>
                 <button type='button' class='btn btn-info btn-xs' onclick='javascript: Order.confirm(<?php echo $orderInfo->id?>)'>CONFIRM</button>
                 <?php }else{?>
-                <?php echo date('m-d-Y H:i', strtotime($orderInfo->confirmedDateTime));?>
+                <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->confirmedDateTime );?>
                 <?php }
                 }?>
                 
@@ -67,7 +67,7 @@ $totalCount = $orders['count'];
                 <?php if($orderInfo->startDateTime == null){?>
                 <button type='button' class='btn btn-info btn-xs'  onclick='javascript: Order.start(<?php echo $orderInfo->id?>)'>START</button>
                 <?php }else{?>
-                <?php echo date('m-d-Y H:i', strtotime($orderInfo->startDateTime));?>
+                <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->startDateTime );?>
                 <?php }
                 }?>
             </td>
@@ -76,7 +76,7 @@ $totalCount = $orders['count'];
                 <?php if($orderInfo->pickedUpDateTime == null){?>
                 <button type='button' class='btn btn-info btn-xs'  onclick='javascript: Order.pickup(<?php echo $orderInfo->id?>)'>PICKED UP?</button>
                 <?php }else{?>
-                <?php echo date('m-d-Y H:i', strtotime($orderInfo->pickedUpDateTime));?>
+                <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->pickedUpDateTime );?>
                 <?php }
                 }?>
             </td>
