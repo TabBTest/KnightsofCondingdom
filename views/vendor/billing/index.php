@@ -1,10 +1,11 @@
 <?php 
 
 use app\models\VendorMembership;
-$this->title = 'Billing History';
-$this->params['breadcrumbs'][] = $this->title;
+// $this->title = 'Billing History';
+// $this->params['breadcrumbs'][] = $this->title;
 ?>
-
+<div id="billing-history" class="tab-pane fade">
+        <br />
 <?php if(\Yii::$app->getSession()->hasFlash('error')){?>
  <div class="">
 <div class="alert alert-danger">
@@ -28,4 +29,5 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="col-xs-12 vendor-billing-body" data-url='<?php echo $url?>'>
     <?php echo $this->render('_list', ['transactions' => $transactions, 'userId' => $userId]);?>
+</div>
 </div>

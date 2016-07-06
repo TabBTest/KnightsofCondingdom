@@ -6,6 +6,7 @@ use yii\widgets\MaskedInput;
 use app\helpers\UtilityHelper;
 use app\models\User;
 use app\helpers\TenantHelper;
+use app\models\VendorMembership;
 $this->title = 'Settings';
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -59,11 +60,13 @@ $this->registerJs($pageJs, $this::POS_READY);
     <li class="active"><a data-toggle="tab" href="#tab-settings">Settings</a></li>
     <li><a data-toggle="tab" href="#tab-profile">Profile</a></li>
     <li><a data-toggle="tab" href="#billing-info">Billing Info</a></li>
+    <li><a data-toggle="tab" href="#billing-history">Billing History</a></li>
 </ul>
 
 <div class="tab-content">
     <?php echo $this->render('//partials/_vendor_settings', ['model' => $model]);?>
     <?php echo $this->render('//partials/_profile', ['model' => $model, 'show' => false]);?>
     <?php echo $this->render('//partials/_billing', ['model' => $model]);?>
+    <?php echo $this->render('billing/index', ['transactions' =>  VendorMembership::getVendorMemberships($model->id, 20, 1), 'url' => '/vendor/viewpage', 'userId' => $model->id]);?>
     
 </div>
