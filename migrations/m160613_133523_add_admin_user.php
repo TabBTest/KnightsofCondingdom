@@ -8,11 +8,15 @@ class m160613_133523_add_admin_user extends Migration
 {
     public function up()
     {     
+        /*
         $user = new User();
         $user->role = User::ROLE_ADMIN;
         $user->email = 'admin';
         $user->password = UtilityHelper::cryptPass('adminpassword');
         $user->save(false);
+        */
+        
+        $this->execute("insert into user(role, email, password) values (".User::ROLE_ADMIN.", 'admin', '".UtilityHelper::cryptPass('adminpassword')."');");
     }
 
     public function down()
