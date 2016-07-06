@@ -60,13 +60,18 @@ $this->registerJs($pageJs, $this::POS_READY);
     <li class="active"><a data-toggle="tab" href="#tab-settings">Settings</a></li>
     <li><a data-toggle="tab" href="#tab-profile">Profile</a></li>
     <li><a data-toggle="tab" href="#billing-info">Billing Info</a></li>
+    <?php if(Yii::$app->user->identity->role == User::ROLE_VENDOR){?>
     <li><a data-toggle="tab" href="#billing-history">Billing History</a></li>
+    <?php }?>
 </ul>
 
 <div class="tab-content">
     <?php echo $this->render('//partials/_vendor_settings', ['model' => $model]);?>
     <?php echo $this->render('//partials/_profile', ['model' => $model, 'show' => false]);?>
     <?php echo $this->render('//partials/_billing', ['model' => $model]);?>
-    <?php echo $this->render('billing/index', ['transactions' =>  VendorMembership::getVendorMemberships($model->id, 20, 1), 'url' => '/vendor/viewpage', 'userId' => $model->id]);?>
+    <?php if(Yii::$app->user->identity->role == User::ROLE_VENDOR){?>
+                    <?php echo $this->render('billing/index', ['transactions' =>  VendorMembership::getVendorMemberships($model->id, 20, 1), 'url' => '/vendor/viewpage', 'userId' => $model->id]);?>
+    <?php }?>
+    
     
 </div>

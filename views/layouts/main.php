@@ -54,16 +54,15 @@ use app\helpers\TenantHelper;
             ],
         ]);
     }else if(Yii::$app->user->identity->role == User::ROLE_VENDOR){
-
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
                 ['label' => 'Dashboard', 'url' => ['/dashboard']],
-                ['label' => 'Menu', 'url' => ['/menu']],
-                ['label' => 'Customer', 'url' => ['/customer']],
-                ['label' => 'Order', 'url' => ['/order']],
-                ['label' => 'Promotion', 'url' => ['/promotion']],
-                ['label' => 'Settings', 'url' => ['/vendor/settings']],
+                ['label' => 'Menu', 'url' => ['/menu'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'menu') !== false ? true : false],
+                ['label' => 'Customer', 'url' => ['/customer'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'customer') !== false ? true : false],
+                ['label' => 'Order', 'url' => ['/order'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'order') !== false ? true : false],
+                ['label' => 'Promotion', 'url' => ['/promotion'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'promotion') !== false ? true : false],
+                ['label' => 'Settings', 'url' => ['/vendor/settings'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? true : false],
 
             ],
         ]);
@@ -73,9 +72,9 @@ use app\helpers\TenantHelper;
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
                 ['label' => 'Dashboard', 'url' => ['/dashboard']],
-                ['label' => 'New Order', 'url' => ['/ordering']],
-                ['label' => 'Order History', 'url' => ['/ordering/history']],
-                ['label' => 'Profile', 'url' => ['/my/profile']],
+                ['label' => 'New Order', 'url' => ['/ordering'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'ordering') !== false ? true : false],
+                ['label' => 'Order History', 'url' => ['/ordering/history'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'history') !== false ? true : false],
+                ['label' => 'Profile', 'url' => ['/my/profile'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'profile') !== false ? true : false],
                 //['label' => 'Profile', 'url' => ['/vendor']],
             ],
         ]);

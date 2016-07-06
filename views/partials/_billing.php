@@ -10,10 +10,7 @@ use yii\widgets\MaskedInput;
             $userId = $model->id;
             ?>
             <input type='hidden' value='<?php echo $userId?>' name='userId'/>
-            <div class='col-xs-12 form-group'>
-                 <?php if(Yii::$app->user->identity->role == User::ROLE_VENDOR){?>
-                    <a class='btn btn-sm btn-info pull-right' href='/vendor/billing'>Billing History</a>
-                <?php }?>
+            <div class='col-xs-12 form-group'>                
                 <label>Current Card: <?php echo 'XXXX-XXXX-XXXX-'.$model->cardLast4?></label>
                 <br />
                 <label>Current Card Expires: <?php echo date('M Y', strtotime($model->cardExpiry))?></label>

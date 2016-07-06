@@ -139,3 +139,11 @@ a.desc:after {
     width: 150px;
     height: 150px;
 }
+
+.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover {
+ 	background-color: #bababa;
+}
+
+.navbar-inverse .btn-link:hover {
+    background-color: #bababa;
+}
