@@ -15,6 +15,7 @@ $totalCount = $customers['count'];
             <th>Street Address</th>
             <th>City</th>
             <th>State</th>
+            <th>&nbsp;</th>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +27,7 @@ $totalCount = $customers['count'];
             <td><?= $customer->streetAddress?></td>
             <td><?= $customer->city ?></td>
             <td><?= $customer->state ?></td>
+            <td><a class='btn btn-xs btn-info' href='/ordering/history/?id=<?php echo base64_encode($customer->id )?>'>View Orders</a></td>
         </tr>
         <?php }?>
     </tbody>

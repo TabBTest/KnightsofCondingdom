@@ -184,8 +184,13 @@ class OrderingController extends CController
     }
     
     public function actionHistory(){
-        $orders = Orders::getCustomerOrders(\Yii::$app->user->id, 20, 1);
-        return $this->render('history', ['orders'=>$orders, 'userId' => \Yii::$app->user->id, 'url' => '/ordering/viewpage']);
+        $userId = \Yii::$app->user->id;
+        if(isset($_REQUEST['id'])){
+            $userId = base64_decode($_REQUEST['id']);
+        }
+        
+        $orders = Orders::getCustomerOrders($userId, 20, 1);
+        return $this->render('history', ['orders'=>$orders, 'userId' => $userId, 'url' => '/ordering/viewpage']);
     }
     public function actionViewpage(){
         $page = $_REQUEST['page'];
