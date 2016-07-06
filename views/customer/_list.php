@@ -21,8 +21,8 @@ $totalCount = $customers['count'];
         <?php foreach($list as $customer){?>
         <tr class="" data-id="<?= $customer->id ?>">
             <td><?= $customer->name ?></td>
-            <td><?= $customer->phoneNumber?></td>
-            <td><?= $customer->email ?></td>
+            <td><a href='tel:<?php echo $customer->phoneNumber?>'><?= $customer->phoneNumber?></a></td>
+            <td><a href='mailto:<?php echo $customer->email?>'><?= $customer->email ?></td>
             <td><?= $customer->streetAddress?></td>
             <td><?= $customer->city ?></td>
             <td><?= $customer->state ?></td>

@@ -52,10 +52,10 @@ foreach($vendorCategories as $category){
       </h4>
 
         </div>
-        <div id="category<?php echo $category->id?>" class="panel-collapse collapse ">
+        <div id="category<?php echo $category->id?>" class="panel-collapse collapse in">
             <div class="panel-body">
                     
-                    
+                    <?php echo nl2br($category->description)?>
                     <div class="panel-group categories-menu-panel" id="accordion1" role="tablist" aria-multiselectable="true">
                     <?php 
                     $menuItems = VendorMenuItem::find()->where('vendorMenuId = '. $menu->id . ' and menuCategoryId = ' . $category->id.' order by sorting asc')->all();
@@ -74,7 +74,7 @@ foreach($vendorCategories as $category){
                         <label class='form-label' style='float: right; margin-right: 10px;'>$<?php echo $item->amount?></label>
                       </h4>
                     </div>
-                    <div id="menu<?php echo $item->id?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div id="menu<?php echo $item->id?>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                       <div class="panel-body">
                         <div class='col-xs-3'>
                             <?php if($item->hasPhoto()){?>
