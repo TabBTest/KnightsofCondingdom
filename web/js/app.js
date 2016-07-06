@@ -6,6 +6,15 @@ $(document).ready(function() {
 	});	
 	$('#register-form .fieldset:eq(0)').fadeIn('slow');
 	
+	$('.closeall').click(function(){
+	  $('.panel-collapse.in')
+	    .collapse('hide');
+	});
+	$('.openall').click(function(){
+	  $('.panel-collapse:not(".in")')
+	    .collapse('show');
+	});
+	
 	$('#register-form input[type="text"], #register-form input[type="email"], #register-form input[type="tel"]').on('focus', function() {
     	$(this).parent().removeClass('has-error');
     	$(this).parent().find('.help-block').html('');

@@ -30,6 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class='row'>
     <div class='col-xs-12 text-center'>
+        &nbsp;&nbsp;&nbsp;&nbsp;<a style='margin-left: 10px' href="#" class="btn btn-default openall pull-right">Expand All</a> &nbsp;&nbsp;<a href="#" class="btn btn-default closeall pull-right">Close All</a>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-xs-12 text-center'>
         <h1>Menu <button class='btn btn-info pull-right add-category-item' data-id='<?php echo $menu->id?>'>Add Category</button></h1>
     </div>
 </div>
