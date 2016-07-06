@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class='col-xs-12 form-group'>
             <label>Filter:&nbsp;&nbsp; <input type='checkbox' name='showCompletedOrder' id='showCompletedOrder'/>&nbsp;&nbsp;Show Completed Order</label>
         </div>
-        <div class="col-xs-12 vendor-order-body" data-url='<?php echo $url?>'>
+        <div class="col-xs-12 vendor-order-body" data-user-id='<?php echo $userId?>' data-url='<?php echo $url?>'>
             <?php echo $this->render('_list', ['orders' => $orders, 'userId' => $userId]);?>
         </div>
     </div>

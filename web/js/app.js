@@ -20,6 +20,9 @@ $(document).ready(function() {
     	$(this).parent().find('.help-block').html('');
     });
 	
+	$('#showCompletedOrder').on('change', function(){
+		Order.loadVendor();
+	});
 	 // next step
     $('#register-form .btn-next').on('click', function() {
     	var parent_fieldset = $(this).parents('.fieldset');
@@ -255,7 +258,7 @@ var Order = {
 	},
 	loadVendor : function(){
 		var showCompleted = $('#showCompletedOrder').is(':checked') ? 1 : 0;
-		$.get($('.vendor-order-body').data('url'), 'page=1&userId='+$('.vendor-order-history-pagination').data('user-id')+'&filter[showCompleted]='+showCompleted, function(html){
+		$.get($('.vendor-order-body').data('url'), 'page=1&userId='+$('.vendor-order-body').data('user-id')+'&filter[showCompleted]='+showCompleted, function(html){
        	 $('.vendor-order-body').html(html);
        	 setupUi();
         })
