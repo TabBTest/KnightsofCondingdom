@@ -115,10 +115,11 @@ class TenantHelper {
         if(TenantHelper::isDefaultTenant() === false){
             $subdomain = TenantHelper::getSubDomain();
             $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
-        
-            $userVendor = User::findOne($tenantInfo->userId);
-            if($userVendor->isVendorStoreOpen() === false){
-                return true;
+            if($tenantInfo){
+                $userVendor = User::findOne($tenantInfo->userId);
+                if($userVendor->isVendorStoreOpen() === false){
+                    return true;
+                }
             }
                     
         }
