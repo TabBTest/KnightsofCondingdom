@@ -63,6 +63,13 @@ class VendorController extends CController
         if(count($_POST) > 0){
             $userId = $_POST['userId'];
             $codes = $_POST['TenantCode'];
+
+            if ($_POST['orderButtonImage']) {
+                $model = User::findOne($_SESSION['__id']);
+                $model->orderButtonImage = $_POST['orderButtonImage'];
+                $model->save();
+            }
+
             if(Yii::$app->session->get('role') != null && Yii::$app->session->get('role') == User::ROLE_ADMIN){
                 $nextUrl = '/admin/vendors/settings?id='.$userId;
                

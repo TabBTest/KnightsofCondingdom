@@ -13,7 +13,8 @@ use app\helpers\UtilityHelper;
  * @property string $password
  * @property integer $role
  * @property string $name
- * @property string $imgPath
+ * @property string $imgFile
+ * @property string $orderButtonImage
  * @property string $streetAddress
  * @property string $city
  * @property string $state
@@ -65,7 +66,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
             [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone'], 'safe'],
-            [['email', 'password', 'name', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId'], 'string', 'max' => 250],
+            [['email', 'password', 'name', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId', 'orderButtonImage'], 'string', 'max' => 250],
             [['state', 'billingState'], 'string', 'max' => 2],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg']
         ];

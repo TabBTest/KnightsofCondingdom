@@ -9,11 +9,13 @@ use app\helpers\TenantHelper;
 $this->title = 'Settings';
 $this->params['breadcrumbs'][] = $this->title;
 
-$jsSelectState = <<<JS
-$('#select-state').val('$model->state');
-JS;
+$pageJs = <<<JS
+$('#select-order-now-button').on('click', function() {
+	$('#order-now-button-field').prop("value", $('input[name=order-now-button-select]:checked').val());
+});
 
-$jsValidateSubdomain = <<<'JS'
+$('#select-state').val('$model->state');
+
 if (!$("input[name='TenantCode[SUBDOMAIN_REDIRECT]']").is(":checked")) {
     $("input[name='TenantCode[REDIRECT_URL]']").prop("disabled",true);
 }
@@ -32,8 +34,7 @@ $("input[name='TenantCode[HAS_DELIVERY]']").click(function() {
 JS;
 
 $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_publishable_key'] . '\');', $this::POS_READY);
-$this->registerJs($jsSelectState, $this::POS_READY);
-$this->registerJs($jsValidateSubdomain, $this::POS_READY);
+$this->registerJs($pageJs, $this::POS_READY);
 ?>
 
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>

@@ -7,10 +7,6 @@ use app\helpers\TenantHelper;
 use app\models\VendorOperatingHours;
 ?>
 
-<?php 
-// var_dump(Yii::$app->session->get('role'));
-// var_dump($model->isVendorStoreOpen());
-?>
 <div id="tab-settings" class="tab-pane fade in active">
         <br>
         <div class='row form-group'>
@@ -31,16 +27,44 @@ use app\models\VendorOperatingHours;
 <a href="javascript: void(0)" data-clipboard-target="#widget-js" class="btn btn-info btn-copy-widget" data-type='widget'><i class="fa fa-copy">Copy to Clipboard</i></a>
         </div>
     </div>
-    
-    
-    
+
+
+
     <div class='row form-group'>
         <div class='col-xs-12'>
             <label class='form-label'>Your Button</label>
-            <a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-now.jpg" /></a>
-            <textarea class='form-control copy-content' id='widget-button' rows="5" cols="20"><a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-now.jpg" /></a></textarea>
+            <a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a>
+            <textarea class='form-control copy-content' id='widget-button' rows="5" cols="20"><a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a></textarea>
             <br />
 <a href="javascript: void(0)" data-clipboard-target="#widget-button" class="btn btn-info btn-copy-widget" data-type='button'><i class="fa fa-copy">Copy to Clipboard</i></a>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#change-button-modal">
+                Change Order Now Button
+            </button>
+            <div class="modal fade" id="change-button-modal" tabindex="-1" role="dialog" aria-labelledby="change-button-modal-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="change-button-modal-label">Select a Button Style</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="radio">
+                                <label><input type="radio" name="order-now-button-select" value="order-now-01.png"><img src="/images/order-buttons/order-now-01.png" alt="Order Now Button 1"></label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" name="order-now-button-select" value="order-now-02.png"><img src="/images/order-buttons/order-now-02.png" alt="Order Now Button 2"></label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" name="order-now-button-select" value="order-now-03.png"><img src="/images/order-buttons/order-now-03.png" alt="Order Now Button 3"></label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-info" data-dismiss="modal" id="select-order-now-button">Select Image</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -49,6 +73,7 @@ use app\models\VendorOperatingHours;
         $userId = $model->id;
         ?>
         <input type='hidden' value='<?php echo $userId?>' name='userId'/>
+        <input type='hidden' value='<?= $model->orderButtonImage ?>' name='orderButtonImage' id="order-now-button-field"/>
         <?php foreach(TenantInfo::getTenantCodes() as $codeKey => $codeDescription){
             ?>
             <?php if($codeKey == TenantInfo::CODE_SUBDOMAIN_REDIRECT || $codeKey == TenantInfo::CODE_HAS_DELIVERY){?>
