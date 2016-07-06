@@ -18,6 +18,7 @@ use app\models\VendorMenu;
 use app\models\VendorMenuItem;
 use app\helpers\UtilityHelper;
 use app\models\MenuCategories;
+use app\models\VendorMenuItemAddOns;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -32,7 +33,7 @@ class MenuController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index','add-category', 'save-category', 'edit-category', 'add-item','edit-item', 'save-item', 'delete-item', 'save-menu-sort', 'save-category-sort'],
+                        'actions' => ['add-item-add-ons','edit-item-add-ons', 'save-item-add-ons', 'delete-item-add-ons', 'index','add-category', 'save-category', 'edit-category', 'add-item','edit-item', 'save-item', 'delete-item', 'save-menu-sort','save-menu-add-on-sort', 'save-category-sort'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -138,6 +139,54 @@ class MenuController extends CController
         return $this->redirect('/menu');
     }
     
+    
+    public function actionAddItemAddOns(){
+        $vendorMenuItemId = $_REQUEST['id'];
+        $sorting = $_REQUEST['sorting'];
+        $vendorMenuItemAddOns = new VendorMenuItemAddOns();
+        $vendorMenuItemAddOns->vendorMenuItemId = $vendorMenuItemId;
+        $vendorMenuItemAddOns->sorting = $sorting;
+        return $this->renderPartial('add-item-add-ons', ['menuItemAddOns' => $vendorMenuItemAddOns]);
+    }
+    
+    public function actionEditItemAddOns(){
+        $vendorMenuItemAddOnId = $_REQUEST['id'];
+        $vendorMenuItemAddOns = VendorMenuItemAddOns::findOne($vendorMenuItemAddOnId);
+        return $this->renderPartial('add-item-add-ons', ['menuItemAddOns' => $vendorMenuItemAddOns]);
+    }
+    
+    public function actionDeleteItemAddOns(){
+        $vendorMenuItemAddOnId = $_REQUEST['id'];
+        $vendorMenuItemAddOn = VendorMenuItemAddOns::findOne($vendorMenuItemAddOnId);
+        $vendorMenuItemAddOn->isArchived = 1;
+        $vendorMenuItemAddOn->save();
+        \Yii::$app->getSession()->setFlash('success', 'Menu Item Add On Deleted Successfully');
+    }
+    
+    public function actionSaveItemAddOns(){
+    
+        if(count($_POST) > 0){
+            $menuItemAddOnsId = $_POST['id'];
+            $vendorMenuItemAddOn = VendorMenuItemAddOns::findOne($menuItemAddOnsId);
+            if($vendorMenuItemAddOn == null){
+                $vendorMenuItemAddOn = new VendorMenuItemAddOns();
+                $vendorMenuItemAddOn->vendorMenuItemId = intval($_POST['vendorMenuItemId']);
+                $vendorMenuItemAddOn->sorting = intval($_POST['sorting']);
+            }
+    
+            $vendorMenuItemAddOn->name = $_POST['name'];
+            $vendorMenuItemAddOn->description = $_POST['description'];
+            $vendorMenuItemAddOn->amount = floatval($_POST['amount']);
+            $vendorMenuItemAddOn->save();
+    
+            
+    
+            \Yii::$app->getSession()->setFlash('success', 'Menu Item Add On Saved Successfully');
+    
+        }
+        return $this->redirect('/menu');
+    }
+    
     public function actionAddCategory(){
         
         $sorting = $_REQUEST['sorting'];
@@ -189,7 +238,20 @@ class MenuController extends CController
             }
         }
     }
-    
+    public function actionSaveMenuAddOnSort(){
+        $sort = $_POST['sort'];
+        if($sort != ''){
+            $sortInfo = explode(',', $sort);
+            foreach($sortInfo as $info){
+                $sortData = explode(':', $info);
+                $item = VendorMenuItemAddOns::findOne($sortData[0]);
+                if($item){
+                    $item->sorting = intval($sortData[1]);
+                    $item->save();
+                }
+            }
+        }
+    }
     public function actionSaveCategorySort(){
         $sort = $_POST['sort'];
         if($sort != ''){

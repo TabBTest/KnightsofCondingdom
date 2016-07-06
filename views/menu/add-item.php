@@ -28,6 +28,9 @@
         </div>
         <div class='col-xs-12 form-group'>
             <button type='button' class='btn' data-dismiss="modal">Close</button>
+            <?php if($menuItem->isNewRecord == false){?>
+                <button class='btn btn-danger delete-menu-item' type='button' data-menu-item-id='<?php echo $menuItem->id?>'>Delete</button>
+            <?php }?>
             <button type='button' class='btn btn-success' onclick="javascript: VendorMenu.saveItem()">Save</button>
         </div>
     </div>

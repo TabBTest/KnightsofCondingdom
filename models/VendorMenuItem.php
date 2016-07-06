@@ -69,4 +69,8 @@ class VendorMenuItem extends \yii\db\ActiveRecord
         }
         return false;
     }
+    
+    public function getAddOns(){
+        return VendorMenuItemAddOns::find()->where('vendorMenuItemId = ' . $this->id . ' and isArchived = 0 order by sorting asc')->all();
+    }
 }

@@ -90,13 +90,43 @@ foreach($vendorCategories as $category){
                             <?php }?>
                             
                         </div>
-                        <div class='col-xs-6'>
+                        <div class='col-xs-4'>
                             <label class='form-label'><?php echo $item->description?></label>
                         </div>
-                        <div class='col-xs-3'>
-                            <button class='btn btn-info edit-menu-item' type='button' data-menu-item-id='<?php echo $item->id?>'>Edit</button>
-                            <button class='btn btn-danger delete-menu-item' type='button' data-menu-item-id='<?php echo $item->id?>'>Delete</button>
+                         <div class='col-xs-2'>
+                            <button class='btn btn-info edit-menu-item' type='button' data-menu-item-id='<?php echo $item->id?>'>Edit</button>                            
                         </div>
+                        <div class='col-xs-3'>
+                            <div class='row'>
+                                <div class='col-xs-6'>
+                                <h4>Add-ons</h4>
+                                </div>
+                                <div class='col-xs-6'>
+                                <button class='btn btn-info btn-sm pull-right add-menu-item-add-ons' type='button' data-menu-item-id='<?php echo $item->id?>'>Add</button>
+                                </div>
+                            </div>
+                            <div class='row'>
+                             <div class='col-xs-12'>
+                             <ul class="list-group add-ons-list">
+                              <?php 
+                              $addOns =  $item->getAddOns();
+                              foreach($addOns as $addOn){
+                                ?>
+                              <li  data-toggle="popover" title="Description" data-menu-item-add-on-id='<?php echo $addOn->id?>' data-content="<?php echo $addOn->description?>" class="vendor-menu-item-add-on-<?php echo $item->id?> list-group-item add-ons-popover">
+                             <?php echo $addOn->name?>
+                             <a class='btn btn-xs btn-info pull-right edit-menu-item-add-on' href='javascript: void(0)' data-menu-item-add-on-id='<?php echo $addOn->id?>'>Edit</a>
+                             <label style='margin-right: 10px;' class='pull-right'>$<?php echo $addOn->amount?></label>
+                             
+                                 
+                               </li>
+                               <?php 
+                                }?>
+                            </ul>
+                               
+                            </div>
+                            </div>                       
+                        </div>
+                       
                       </div>
                     </div>
                   </div>

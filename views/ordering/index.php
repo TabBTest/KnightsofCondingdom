@@ -45,7 +45,7 @@ foreach($vendorCategories as $category){
       </h4>
 
         </div>
-        <div id="category<?php echo $category->id?>" class="panel-collapse collapse ">
+        <div id="category<?php echo $category->id?>" class="panel-collapse collapse in">
             <div class="panel-body">
                     
                                       
@@ -70,7 +70,7 @@ foreach($vendorCategories as $category){
                             
                     ?>
                              <tr>
-                                <td><a href='javascript: VendorMenu.openMenuDetails("<?php echo md5($item->id)?>")'><?php echo $item->name?></a>
+                                <td><?php echo $item->name?>&nbsp;&nbsp;&nbsp;<a class='btn btn-xs btn-info' href='javascript: VendorMenu.openMenuDetails("<?php echo md5($item->id)?>")'>Details</a>
                                     <div class='menu-details-<?php echo md5($item->id)?>' style='display: none'>
                                     <?php if($item->hasPhoto()){?>
                                     <img src='/menu-images/<?php echo $item->getPhotoPath() ?>' width='150px' height='150px'/>

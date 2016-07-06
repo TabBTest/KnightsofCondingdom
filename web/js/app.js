@@ -152,22 +152,56 @@ $(document).ready(function() {
     	})
     	
     });
+    $('.add-menu-item-add-ons').on('click', function(){
+    	var sorting = $('.vendor-menu-item-add-on-'+$(this).data('menu-item-id')).length + 1;
+    	$.get('/menu/add-item-add-ons', 'id='+$(this).data('menu-item-id')+'&sorting='+sorting, function(html){
+    		$('#custom-modal .modal-title').html('Add Menu Item - Add-ons');
+    		$('#custom-modal .modal-body').html(html);
+    		$('#custom-modal').modal('show');	
+    		
+    		
+    		
+    	})
+    	
+    });
+    
+    $('.edit-menu-item-add-on').on('click', function(){
+    	$.get('/menu/edit-item-add-ons', 'id='+$(this).data('menu-item-add-on-id'), function(html){
+    		$('#custom-modal .modal-title').html('Edit Menu Item - Add-ons');
+    		$('#custom-modal .modal-body').html(html);
+    		$('#custom-modal').modal('show');	
+    		$('.delete-menu-item-add-on').off('click');
+    		$('.delete-menu-item-add-on').on('click', function(){
+    	    	if(confirm('Are you sure you want to delete this item add on?')){
+    		    	$.post('/menu/delete-item-add-ons', 'id='+$(this).data('menu-item-add-on-id'), function(html){
+    		    		window.location.href = '/menu';
+    		    	})
+    	    	}
+    	    	
+    	    });
+    		
+    	})
+    	
+    });
     $('.edit-menu-item').on('click', function(){
     	$.get('/menu/edit-item', 'id='+$(this).data('menu-item-id'), function(html){
     		$('#custom-modal .modal-title').html('Edit Menu Item');
     		$('#custom-modal .modal-body').html(html);
     		$('#custom-modal').modal('show');	
+    		$('.delete-menu-item').off('click');
+    		$('.delete-menu-item').on('click', function(){
+    	    	if(confirm('Are you sure you want to delete this item?')){
+    		    	$.post('/menu/delete-item', 'id='+$(this).data('menu-item-id'), function(html){
+    		    		window.location.href = '/menu';
+    		    	})
+    	    	}
+    	    	
+    	    });
+    		
     	})
     	
     });
-    $('.delete-menu-item').on('click', function(){
-    	if(confirm('Are you sure you want to delete this item?')){
-	    	$.post('/menu/delete-item', 'id='+$(this).data('menu-item-id'), function(html){
-	    		window.location.href = '/menu';
-	    	})
-    	}
-    	
-    });
+    
     $('.btn-submit-order').on('click', function(){
     	var hasOrder = false;
     	$('.order-quantity').each(function(){
@@ -244,11 +278,11 @@ if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
     }
     setupUi();
     listLinkActions();
-    
+    $('.add-ons-popover').popover({'placement' : 'left', 'trigger' : 'hover'});
 });
 var Order = {
 	init : false,
-	timeLimit : 30000, //30000
+	timeLimit : 15000, //30000
 	loadCustomer : function(){
 		$.get($('.customer-order-body').data('url'), 'page=1&userId='+$('.customer-order-history-pagination').data('user-id'), function(html){
        	 	$('.customer-order-body').html(html);
@@ -469,6 +503,21 @@ var VendorMenu = {
 				$('#menu-item-form').submit();
 			}
 		},
+		saveItemAddOns : function(){
+			$('#menu-item-add-ons-form .has-error').removeClass('has-error');
+			$('#menu-item-add-ons-form input[type="text"]').each(function(){
+				if($(this).val() == ''){
+					$(this).parent().addClass('has-error');
+				}
+				if($(this).hasClass('price') && !$.isNumeric($(this).val())){
+					$(this).parent().addClass('has-error');
+				}
+			});
+			
+			if($('#menu-item-add-ons-form .has-error').length == 0){
+				$('#menu-item-add-ons-form').submit();
+			}
+		},
 		openMenuDetails : function(menuId){
 			$('.menu-details-'+menuId).toggle();
 		},
@@ -491,6 +540,11 @@ var VendorMenu = {
 		},
 		updateMenuSort : function(sort){
 			$.post('/menu/save-menu-sort', 'sort='+sort, function(){
+				
+			})
+		},
+		updateMenuAddOnSort : function (sort){
+			$.post('/menu/save-menu-add-on-sort', 'sort='+sort, function(){
 				
 			})
 		},
@@ -518,6 +572,22 @@ var VendorMenu = {
 						});
 						if(sortNums != '')
 							VendorMenu.updateMenuSort(sortNums);
+					} });
+			
+			$('.add-ons-list').sortable(
+					{ update: function( event, ui ) {
+						var sortNums = '';
+						ui.item.parent().find('.list-group-item').each(function(index){
+							if(sortNums != ''){
+								sortNums +=',';
+							}
+							sortNums += $(this).data('menu-item-add-on-id') + ':' + index;
+						});
+						
+						if(sortNums != ''){
+							VendorMenu.updateMenuAddOnSort(sortNums);
+						}
+							
 					} });
 		}
 }
