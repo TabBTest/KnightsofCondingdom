@@ -10,10 +10,12 @@ return [
 	'smtp_username' => 'username',
 	'smtp_password' => 'password',
 	'recaptcha_site_key' => '',
-	    //test account, please use real account to avoid errors
+	//test account, please use real account to avoid errors
     'twilio.sid' => 'AC05922bc54d4825ba1505fae388f34e83',
     'twilio.token' => '63e1ea12b6de713c4568957243b59943',
     'twilio.phone' => '15304773451',
 	'redis_host' => 'localhost',
     'redis_port' => 6379,
+    'nodejs_host' => 'localhost',
+    'nodejs_port' => 3000
 ];

@@ -1,4 +1,6 @@
-<?php 
+<?php
+
+$params = require(\Yii::$app->basePath . '/config/params.php');
 
 use app\models\VendorMenuItem;
 use app\models\Orders;
@@ -6,14 +8,11 @@ $this->title = 'Order Management';
 $this->params['breadcrumbs'][] = $this->title;
 
 $pageJs = <<<JS
-console.log('kamote');
-
-var socket = io('http://restalutions.dev:3000');
+var socket = io('{$params['nodejs_host']}' + ':' + '{$params['nodejs_port']}');
 
 socket.on('orders:newOrder', function() {
   console.log('a new order was received.');
 });
-
 JS;
 
 $this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js');
