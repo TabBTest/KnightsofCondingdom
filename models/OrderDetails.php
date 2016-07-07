@@ -18,6 +18,11 @@ use Yii;
  */
 class OrderDetails extends \yii\db\ActiveRecord
 {
+    const TYPE_MENU_ITEM = 1;
+    const TYPE_MENU_ITEM_ADD_ON = 2;
+    const TYPE_SALES_TAX = 3;
+    const TYPE_DELIVERY_CHARGE = 4;
+    const TYPE_ADMIN_FEE = 5;
     /**
      * @inheritdoc
      */
@@ -35,7 +40,7 @@ class OrderDetails extends \yii\db\ActiveRecord
             [['orderId', 'vendorMenuItemId', 'name', 'amount', 'quantity', 'totalAmount'], 'required'],
             [['orderId', 'vendorMenuItemId', 'quantity'], 'integer'],
             [['amount', 'totalAmount'], 'number'],
-            [['date_created'], 'safe'],
+            [['date_created', 'notes', 'type'], 'safe'],
             [['name'], 'string', 'max' => 250],
         ];
     }

@@ -60,7 +60,8 @@ class SimulationController extends Controller
                                     $orderDetails->amount = $vendorMenuItem->amount;
                                     $orderDetails->quantity = intval($quantity);
                                     $orderDetails->totalAmount = intval($quantity) * $vendorMenuItem->amount;
-                            
+                                    $orderDetails->type = OrderDetails::TYPE_MENU_ITEM;
+                                    
                                     if($orderDetails->save()){
                                         echo 'Order # '.$index.' created<br />';
                                     }else{

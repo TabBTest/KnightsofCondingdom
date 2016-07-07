@@ -72,13 +72,14 @@ use app\helpers\TenantHelper;
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
                 ['label' => 'Dashboard', 'url' => ['/dashboard']],
-                ['label' => 'New Order', 'url' => ['/ordering'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'ordering') !== false ? true : false],
+                ['label' => 'New Order', 'url' => ['/ordering'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'ordering') !== false && strpos(\Yii::$app->controller->getRoute(), 'history') === false ? true : false],
                 ['label' => 'Order History', 'url' => ['/ordering/history'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'history') !== false ? true : false],
                 ['label' => 'Profile', 'url' => ['/my/profile'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'profile') !== false ? true : false],
                 //['label' => 'Profile', 'url' => ['/vendor']],
             ],
         ]);
     }
+    
     if(Yii::$app->user->isGuest){
 
         if(TenantHelper::isDefaultTenant()){
@@ -138,7 +139,7 @@ use app\helpers\TenantHelper;
 
 <!-- Modal -->
 <div class="modal fade" id="custom-modal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

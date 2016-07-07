@@ -21,6 +21,7 @@ use app\helpers\UtilityHelper;
 use app\helpers\TenantHelper;
 use app\models\TenantInfo;
 use app\models\MenuCategories;
+use app\models\VendorMenuItemAddOns;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -35,12 +36,12 @@ class OrderingController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                    'actions' => ['menu', 'summary'],
+                    'actions' => ['menu', 'summary', 'add-item', 'item-order-summary', 'add-order'],
                     'allow' => true,
                     'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index', 'summary', 'save', 'history', 'viewpage', 'details'],
+                        'actions' => ['index', 'summary', 'save', 'history', 'viewpage', 'details', 'menu', 'summary', 'add-item', 'item-order-summary', 'add-order'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -100,14 +101,16 @@ class OrderingController extends CController
     public function actionDetails(){
     
         $id = $_REQUEST['id'];
+        $order = Orders::findOne($id);
         $orderDetails = OrderDetails::findAll(['orderId' => $id]);
-        return $this->renderPartial('details', ['orders' => $orderDetails]);
+        return $this->renderPartial('details', ['orders' => $orderDetails, 'orderInfo' => $order]);
     }
     
     public function actionSave(){
     
         $orders = [];
         if(count($_POST) > 0){
+            
             $user = User::findOne(\Yii::$app->user->id);
             $userVendor = User::findOne($user->vendorId);
             
@@ -118,14 +121,47 @@ class OrderingController extends CController
                 //we charge the customer cc, if its ok, then we create the order
                 $customerOrdersMetaData = [];
                 $index = 1;
-                foreach($_POST['Orders'] as $menuItemId => $quantity){
+                foreach($_POST['Orders'] as  $orderKey => $menuItemId){
+                    $quantity = $_POST['OrdersQuantity'][$orderKey];                
                     $vendorMenuItem = VendorMenuItem::findOne($menuItemId);
                     $totalAmount = intval($quantity) * $vendorMenuItem->amount;
                     $finalAmount  += $totalAmount;
                 
                     $customerOrdersMetaData['order menu '.$index++] = ['name' => $vendorMenuItem->name, 'quantity' => $quantity, 'amount' => $vendorMenuItem->amount, 'totalAmount' => $totalAmount];
+                    
+                    if(isset($_POST['AddOns'][$orderKey])){
+                        foreach($_POST['AddOns'][$orderKey] as $addOnId => $elem){
+                            $menuItemAddOn = VendorMenuItemAddOns::findOne($addOnId);
+                            $totalAddonAmount =  $quantity * $menuItemAddOn->amount;
+                            $finalAmount += $totalAddonAmount;
+                            
+                            $customerOrdersMetaData['add on '.$index++] = ['name' => $menuItemAddOn->name, 'quantity' => $quantity, 'amount' => $menuItemAddOn->amount, 'totalAmount' => $totalAddonAmount];
+                        }
+                    }
                 }
-                $finalAmount = number_format($finalAmount, 2, '.', '');
+                
+                //we need to add here the sales tax
+                $subdomain = TenantHelper::getSubDomain();
+                $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
+                $salesTax = 0;
+                $salesTaxPercent = 0;
+                $salesTaxAmount = 0;
+                if($tenantInfo){
+                    $salesTaxInfo = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_SALES_TAX]);
+                    if($salesTaxInfo && $salesTaxInfo->val > 0){
+                        $salesTax = 1 + (floatval($salesTaxInfo->val) / 100);
+                        $salesTaxPercent = $salesTaxInfo->val;
+                    }
+                }
+                
+                $totalFinalAmount = $finalAmount * $salesTax;
+                $salesTaxAmount = $totalFinalAmount - $finalAmount;
+                $customerOrdersMetaData['sales tax'] = ['name' => 'sales tax', 'amount' => $salesTaxAmount];
+                
+                //still need to include delivery
+                //still need to check if cash payment
+                
+                $finalAmount = number_format($totalFinalAmount, 2, '.', '');
                 \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
                 $amount = $finalAmount * 100;
                 $charge = \Stripe\Charge::create(
@@ -147,13 +183,20 @@ class OrderingController extends CController
                     $order->customerId = \Yii::$app->user->id;
                     $order->vendorId = $user->vendorId;
                     $order->cardLast4 = $user->cardLast4;
+                    $notes = '';
+                    if(isset($_POST['notes'])){
+                        $notes = $_POST['notes'];
+                    }
+                    $order->notes = $notes;
+                    
                     if($order->save()){
                         
                         $ch = \Stripe\Charge::retrieve($order->transactionId);
                         $ch->metadata = ['Order ID' => $order->id];
                         $ch->save();
                         
-                        foreach($_POST['Orders'] as $menuItemId => $quantity){
+                        foreach($_POST['Orders'] as  $orderKey => $menuItemId){
+                            $quantity = $_POST['OrdersQuantity'][$orderKey];   
                     
                             $vendorMenuItem = VendorMenuItem::findOne($menuItemId);
                             $orderDetails = new OrderDetails();
@@ -163,10 +206,64 @@ class OrderingController extends CController
                             $orderDetails->amount = $vendorMenuItem->amount;
                             $orderDetails->quantity = intval($quantity);
                             $orderDetails->totalAmount = intval($quantity) * $vendorMenuItem->amount;
-                    
+                            $orderDetails->type = OrderDetails::TYPE_MENU_ITEM;
+                            $notes = '';
+                            if(isset($_POST['OrdersNotes'][$orderKey])){
+                                $notes = $_POST['OrdersNotes'][$orderKey];
+                            }
+                            $orderDetails->notes = $notes;
                             $orderDetails->save();
+                            
+                            if(isset($_POST['AddOns'][$orderKey])){
+                                foreach($_POST['AddOns'][$orderKey] as $addOnId => $elem){
+                                    $menuItemAddOn = VendorMenuItemAddOns::findOne($addOnId);
+                                    
+                                    $orderDetails = new OrderDetails();
+                                    $orderDetails->orderId = $order->id;
+                                    $orderDetails->vendorMenuItemId = 0;
+                                    $orderDetails->name = $menuItemAddOn->name;
+                                    $orderDetails->amount = $menuItemAddOn->amount;
+                                    $orderDetails->quantity = intval($quantity);
+                                    $orderDetails->totalAmount = intval($quantity) * $menuItemAddOn->amount;
+                                    $orderDetails->type = OrderDetails::TYPE_MENU_ITEM_ADD_ON;
+                                    $orderDetails->save();                                    
+                                }
+                            }
                     
                         }
+                        //add for the sales tax
+                        $orderDetails = new OrderDetails();
+                        $orderDetails->orderId = $order->id;
+                        $orderDetails->vendorMenuItemId = 0;
+                        $orderDetails->name = 'Sales Tax ('.$salesTaxPercent.'%)';
+                        $orderDetails->amount = $salesTax;
+                        $orderDetails->quantity = 1;
+                        $orderDetails->totalAmount = $salesTax;
+                        $orderDetails->type = OrderDetails::TYPE_SALES_TAX;
+                        $orderDetails->save();
+                        
+                        $deliveryFee = 0;
+                        $orderDetails = new OrderDetails();
+                        $orderDetails->orderId = $order->id;
+                        $orderDetails->vendorMenuItemId = 0;
+                        $orderDetails->name = 'Delivery Fee';
+                        $orderDetails->amount = $deliveryFee;
+                        $orderDetails->quantity = 1;
+                        $orderDetails->totalAmount = $deliveryFee;
+                        $orderDetails->type = OrderDetails::TYPE_DELIVERY_CHARGE;
+                        $orderDetails->save();
+                        
+                        $adminFee = 0;
+                        $orderDetails = new OrderDetails();
+                        $orderDetails->orderId = $order->id;
+                        $orderDetails->vendorMenuItemId = 0;
+                        $orderDetails->name = 'Admin Fee';
+                        $orderDetails->amount = $adminFee;
+                        $orderDetails->quantity = 1;
+                        $orderDetails->totalAmount = $adminFee;
+                        $orderDetails->type = OrderDetails::TYPE_ADMIN_FEE;
+                        $orderDetails->save();
+                        
                         \Yii::$app->getSession()->setFlash('success', 'Orders Submitted Successfully');
                     }
                 }else{
@@ -182,7 +279,28 @@ class OrderingController extends CController
         }
         return $this->redirect('/ordering');
     }
-    
+    public function actionAddItem(){
+        $menuItemId = $_REQUEST['menuItemId'];
+        $vendorMenuItem = VendorMenuItem::findOne($menuItemId);
+        return $this->renderPartial('add-item', ['item' => $vendorMenuItem]);
+    }
+    public function actionItemOrderSummary(){
+        return $this->renderPartial('item-order-summary', ['params' => $_POST]);
+    }
+    public function actionAddOrder(){
+        
+        $subdomain = TenantHelper::getSubDomain();
+        $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
+        $salesTax = 0;
+        if($tenantInfo){
+            $salesTaxInfo = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_SALES_TAX]);
+            if($salesTaxInfo && $salesTaxInfo->val > 0){
+                $salesTax = 1 + (floatval($salesTaxInfo->val) / 100);
+            }            
+        }
+        
+        return $this->renderPartial('main-order-summary', ['params' => $_POST, 'salesTax' => $salesTax]);
+    }
     public function actionHistory(){
         $userId = \Yii::$app->user->id;
         if(isset($_REQUEST['id'])){

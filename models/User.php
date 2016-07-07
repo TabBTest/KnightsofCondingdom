@@ -97,7 +97,16 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'date_updated' => 'Date Updated',
         ];
     }
-
+    
+    public function getFullName(){
+        return $this->name;
+    }
+    public function getFullAddress(){
+        return $this->billingStreetAddress.', '.$this->billingCity.', '.$this->billingState;
+    }
+    public function getContactNumber(){
+        return $this->billingPhoneNumber;
+    }
     /**
      * @inheritdoc
      */

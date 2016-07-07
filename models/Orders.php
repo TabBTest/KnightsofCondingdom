@@ -21,6 +21,11 @@ class Orders extends \yii\db\ActiveRecord
     const STATUS_NEW = 1;
     const STATUS_PENDING = 2;
     const STATUS_PROCESSED = 3;
+    public $orderId = '';
+    public function getOrderId(){
+        $orderId = 10000 + $this->id;
+        return $orderId;
+    }
     /**
      * @inheritdoc
      */
@@ -37,7 +42,7 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['customerId', 'vendorId', 'status'], 'required'],
             [['customerId', 'vendorId', 'status'], 'integer'],
-            [['confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4'], 'safe'],
+            [['confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes'], 'safe'],
         ];
     }
 

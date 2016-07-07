@@ -279,6 +279,20 @@ if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
     setupUi();
     listLinkActions();
     $('.add-ons-popover').popover({'placement' : 'left', 'trigger' : 'hover'});
+    
+    $('.add-to-cart').on('click', function(){
+    	var sorting = $('.vendor-menu-categories').length + 1;
+    	$.get('/ordering/add-item', 'menuItemId='+$(this).data('menu-item-id'), function(html){
+    		$('#custom-modal .modal-title').html('Add Order');
+    		$('#custom-modal .modal-body').html(html);
+    		$('#custom-modal').modal('show');
+    		$('.add-ons-popover').popover({'placement' : 'left', 'trigger' : 'hover'});
+    		Order.showItemOrderSummary();
+    		$('.order-changes').off('change');
+    		$('.order-changes').on('change', Order.showItemOrderSummary);
+    	})
+    	
+    });
 });
 var Order = {
 	init : false,
@@ -313,8 +327,34 @@ var Order = {
 		$.post('/order/pickup', 'id='+orderId, function(){
 			Order.loadVendor();	
 		})
+	},
+	showItemOrderSummary : function(){
+		$.post('/ordering/item-order-summary', $('#item-order-summary').serialize(), function(html){
+			$('.item-order-summary-content').html(html);
+		})
+	},
+	AddOrder : function(){
+		$('#item-order-summary .has-error').removeClass('has-error');
+		if($.isNumeric($('.order-quantity').val()) && parseInt($('.order-quantity').val()) > 0){
+			Order.refreshMainOrderSummary();
+		}else{
+			$('.order-quantity').parent().addClass('has-error');
+		}
+		
+	},
+	refreshMainOrderSummary : function(){
+		$.post('/ordering/add-order', $('#item-order-summary, #main-order-summary').serialize(), function(html){
+			$('.main-order-summary-content').html(html);
+			$('#custom-modal').modal('hide');
+			$('.delete-order-item').off('click');
+			$('.delete-order-item').on('click', Order.deleteOrderItem);
+			$('#item-order-summary').html('');
+		})
+	},
+	deleteOrderItem : function(){
+		$('.order-'+$(this).data('key')).remove();
+		Order.refreshMainOrderSummary();
 	}
-
 }
 var setupUi = function(){
 	if( $('.customer-order-history-pagination').length != 0){
