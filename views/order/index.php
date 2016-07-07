@@ -6,7 +6,7 @@ use app\models\VendorMenuItem;
 use app\models\Orders;
 $this->title = 'Order Management';
 $this->params['breadcrumbs'][] = $this->title;
-
+/*
 $pageJs = <<<JS
 var socket = io('{$params['nodejs_host']}' + ':' + '{$params['nodejs_port']}');
 
@@ -15,8 +15,9 @@ socket.on('orders:newOrder', function() {
 });
 JS;
 
-//$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js');
-//$this->registerJs($pageJs, $this::POS_READY);
+$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js');
+$this->registerJs($pageJs, $this::POS_READY);
+ */
 ?>
 
 <?php if(\Yii::$app->getSession()->hasFlash('error')){?>
