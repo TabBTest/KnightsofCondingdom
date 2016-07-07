@@ -3,16 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\ApplicationType;
-use app\models\ApplicationTypeSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use yii\base\ViewContextInterface;
-use app\models\ApplicationTypeFormSetup;
-use app\models\Candidates;
-use yii\base\Application;
 use app\models\Orders;
 
 /**
