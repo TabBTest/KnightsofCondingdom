@@ -55,15 +55,15 @@ $config = [
             'rules' => [
             ],
         ],
-        'redis' => [
-            'class' => 'yii\redis\Connection',
-            'hostname' => $params['redis_host'],
-            'port' => $params['redis_port'],
-            'database' => 0,
-        ],
-        'session' => [
-            'class' => 'yii\redis\Session',
-        ],
+//         'redis' => [
+//             'class' => 'yii\redis\Connection',
+//             'hostname' => $params['redis_host'],
+//             'port' => $params['redis_port'],
+//             'database' => 0,
+//         ],
+//         'session' => [
+//             'class' => 'yii\redis\Session',
+//         ],
     ],
     'params' => $params,
 ];
