@@ -29,7 +29,7 @@ $totalCount = $orders['count'];
     <thead>
         <tr>
             <th>Name</th>
-            <th>Order Details</th>
+            <th>Order #</th>
             <th>Time</th>
             <th>Status</th>
             <th>Confirmed Time</th>
@@ -41,7 +41,7 @@ $totalCount = $orders['count'];
         <?php foreach($list as $orderInfo){?>
         <tr class="" data-id="<?php echo $orderInfo->id?>">
             <td><?php echo $orderInfo->getCustomerName()?></td>
-            <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)">See Order</a></td>
+            <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)"># <?php echo $orderInfo->getOrderId()?></a></td>
             <td><?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->date_created );?></td>
             <td>           
                 <?php if($orderInfo->status == Orders::STATUS_PROCESSED){?>
@@ -54,9 +54,7 @@ $totalCount = $orders['count'];
             </td>
             <td>
                 <?php if($orderInfo->date_created != null){?>
-                <?php if($orderInfo->confirmedDateTime == null){?>
-                <button type='button' class='btn btn-info btn-xs' onclick='javascript: Order.confirm(<?php echo $orderInfo->id?>)'>CONFIRM</button>
-                <?php }else{?>
+                <?php if($orderInfo->confirmedDateTime != null){?>
                 <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->confirmedDateTime );?>
                 <?php }
                 }?>
@@ -64,18 +62,14 @@ $totalCount = $orders['count'];
             </td>
             <td>
                 <?php if($orderInfo->confirmedDateTime != null){?>
-                <?php if($orderInfo->startDateTime == null){?>
-                <button type='button' class='btn btn-info btn-xs'  onclick='javascript: Order.start(<?php echo $orderInfo->id?>)'>START</button>
-                <?php }else{?>
+                <?php if($orderInfo->startDateTime != null){?>
                 <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->startDateTime );?>
                 <?php }
                 }?>
             </td>
             <td>
                 <?php if($orderInfo->startDateTime != null){?>
-                <?php if($orderInfo->pickedUpDateTime == null){?>
-                <button type='button' class='btn btn-info btn-xs'  onclick='javascript: Order.pickup(<?php echo $orderInfo->id?>)'>PICKED UP?</button>
-                <?php }else{?>
+                <?php if($orderInfo->pickedUpDateTime != null){?>
                 <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->pickedUpDateTime );?>
                 <?php }
                 }?>

@@ -22,8 +22,9 @@ class Orders extends \yii\db\ActiveRecord
     const STATUS_PENDING = 2;
     const STATUS_PROCESSED = 3;
     public $orderId = '';
+    const MAGIC_NUMBER = 10000;
     public function getOrderId(){
-        $orderId = 10000 + $this->id;
+        $orderId = self::MAGIC_NUMBER + $this->id;
         return $orderId;
     }
     /**
@@ -66,7 +67,8 @@ class Orders extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if(parent::beforeSave($insert)){            
-            $this->date_created=date('Y-m-d H:i:s', strtotime('now'));
+            if($this->isNewRecord)
+                $this->date_created=date('Y-m-d H:i:s', strtotime('now'));
             return true;
         }else{
             return false;
@@ -105,15 +107,40 @@ class Orders extends \yii\db\ActiveRecord
             $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
         }
         
+        if(isset($filters['name']) && $filters['name'] != ''){
+            $extraSQL .= " and customerId in (select id from user where name like '%".mysql_escape_string($filters['name'])."%')";           
+        }
+        
+        if(isset($filters['orderId']) && $filters['orderId'] != ''){
+            $extraSQL .= " and (id + ".self::MAGIC_NUMBER.") =  '".$filters['orderId']."'";
+        }
+        
         $resp = array();
         $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
         $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL)->count();
         return $resp;
     }
-    public static function getVendorArchivedOrders($userId, $resultsPerPage, $page){
+    public static function getVendorArchivedOrders($userId, $resultsPerPage, $page, $filters){
+        $extraSQL = '';
+//         if(isset($filters['showCompleted'])){
+//             if( $filters['showCompleted'] == 0){
+//                 $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
+//             }
+//         }else{
+//             $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
+//         }
+        
+        if(isset($filters['name']) && $filters['name'] != ''){
+            $extraSQL .= " and customerId in (select id from user where name like '%".mysql_escape_string($filters['name'])."%')";
+        }
+        
+        if(isset($filters['orderId']) && $filters['orderId'] != ''){
+            $extraSQL .= " and (id + ".self::MAGIC_NUMBER.") =  '".$filters['orderId']."'";
+        }
+        
         $resp = array();
-        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) >= 24 order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
-        $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) >= 24')->count();
+        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) >= 24 '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) >= 24 '.$extraSQL)->count();
         return $resp;
     }
     public function getTotalAmount(){

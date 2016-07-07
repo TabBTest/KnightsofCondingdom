@@ -172,11 +172,20 @@ $(document).ready(function() {
     		$('#custom-modal').modal('show');	
     		$('.delete-menu-item-add-on').off('click');
     		$('.delete-menu-item-add-on').on('click', function(){
-    	    	if(confirm('Are you sure you want to delete this item add on?')){
-    		    	$.post('/menu/delete-item-add-ons', 'id='+$(this).data('menu-item-add-on-id'), function(html){
-    		    		window.location.href = '/menu';
-    		    	})
-    	    	}
+    	    	
+    	    	 $.confirm({
+    		            title: "Delete Item Add On?",
+    		            content: "Are you sure you want to delete this item add on?",
+    		            confirmButton: 'Yes, Remove',
+    		            cancelButton:'No, Keep it',
+    		            confirmButtonClass: 'btn-info',
+    		            cancelButtonClass: 'btn-danger',
+    		            confirm: function(){
+    		            	$.post('/menu/delete-item-add-ons', 'id='+$(this).data('menu-item-add-on-id'), function(html){
+    	    		    		window.location.href = '/menu';
+    	    		    	})
+    		            }
+    		        });
     	    	
     	    });
     		
@@ -190,11 +199,20 @@ $(document).ready(function() {
     		$('#custom-modal').modal('show');	
     		$('.delete-menu-item').off('click');
     		$('.delete-menu-item').on('click', function(){
-    	    	if(confirm('Are you sure you want to delete this item?')){
-    		    	$.post('/menu/delete-item', 'id='+$(this).data('menu-item-id'), function(html){
-    		    		window.location.href = '/menu';
-    		    	})
-    	    	}
+    	    	
+    	    	$.confirm({
+		            title: "Delete Item?",
+		            content: "Are you sure you want to delete this item?",
+		            confirmButton: 'Yes, Remove',
+		            cancelButton:'No, Keep it',
+		            confirmButtonClass: 'btn-info',
+		            cancelButtonClass: 'btn-danger',
+		            confirm: function(){
+		            	$.post('/menu/delete-item', 'id='+$(this).data('menu-item-id'), function(html){
+	    		    		window.location.href = '/menu';
+	    		    	})
+		            }
+		        });
     	    	
     	    });
     		
@@ -306,26 +324,49 @@ var Order = {
 	},
 	loadVendor : function(){
 		var showCompleted = $('#showCompletedOrder').is(':checked') ? 1 : 0;
-		$.get($('.vendor-order-body').data('url'), 'page=1&userId='+$('.vendor-order-body').data('user-id')+'&filter[showCompleted]='+showCompleted, function(html){
-       	 $('.vendor-order-body').html(html);
-       	 setupUi();
-        })
+		
+         Order.loadCurrentOrder();
+         Order.loadArchivedOrder();
+         
         
+	},
+	loadCurrentOrder : function(){
+		var param = $('#current-order-form').serialize();
+		$.get($('.vendor-order-body').data('url'), 'page=1&userId='+$('.vendor-order-body').data('user-id')+'&'+param, function(html){
+	       	 $('.vendor-order-body').html(html);
+	       	 setupUi();
+        });
+	},
+	loadArchivedOrder : function(){
+		var param = $('#archived-order-form').serialize();
+		$.get($('.vendor-order-archive-body').data('url'), 'page=1&userId='+$('.vendor-order-archive-body').data('user-id')+'&'+param, function(html){
+	       	 $('.vendor-order-archive-body').html(html);
+	       	 setupUi();
+        })
+	},
+	search : function(type){
+		if(type == 'current')
+			Order.loadCurrentOrder();
+		else if(type == 'archived')
+			Order.loadArchivedOrder();
 	},
 	confirm : function(orderId){
 		$.post('/order/confirm', 'id='+orderId, function(){
-			Order.loadVendor();	
+			Order.loadVendor();
+			Customer.viewOrder(orderId);
 		})
 		
 	},
 	start : function(orderId){
 		$.post('/order/start', 'id='+orderId, function(){
 			Order.loadVendor();	
+			Customer.viewOrder(orderId);
 		})
 	},
 	pickup : function(orderId){
 		$.post('/order/pickup', 'id='+orderId, function(){
-			Order.loadVendor();	
+			Order.loadVendor();
+			Customer.viewOrder(orderId);
 		})
 	},
 	showItemOrderSummary : function(){
@@ -699,10 +740,25 @@ var Customer = {
 
 var Messages = {
 		showError : function(message){
-			alert(message);
+			//alert(message);
+			$.alert({
+		        title: 'Notification',
+		        content: message,
+		        closeIcon: true,
+		        title: false, // hides the title.
+		        confirmButtonClass: 'btn-info',
+		    });
 		},
 		showSuccess : function(message){
-			alert(message);
+			//alert(message);
+			
+		    $.alert({
+		        title: 'Notification',
+		        content: message,
+		        closeIcon: true,
+		        title: false, // hides the title.
+		        confirmButtonClass: 'btn-info',
+		    });
 		}
 }
 

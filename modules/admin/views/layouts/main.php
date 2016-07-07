@@ -23,6 +23,7 @@ use app\helpers\TenantHelper;
     <?php $this->head() ?>
     <link href="/css/jquery-ui.min.css" rel="stylesheet">
     <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/jquery-confirm.min.css" rel="stylesheet">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/site.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
@@ -131,6 +132,7 @@ use app\helpers\TenantHelper;
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/ga.js"></script>
     <script src="/js/clipboard.min.js"></script>
+    <script src="/js/jquery-confirm.min.js"></script>
     <script src="/js/app.js"></script>
 <style>
 body > .wrap > .container {

@@ -50,16 +50,30 @@ $this->registerJs($pageJs, $this::POS_READY);
 
 <div class="tab-content">
     <div id="tab-current-order" class="tab-pane active" style='margin-top: 10px'>
-    
-        <div class='col-xs-12 form-group'>
-            <label>Filter:&nbsp;&nbsp; <input type='checkbox' name='showCompletedOrder' id='showCompletedOrder'/>&nbsp;&nbsp;Show Completed Order</label>
-        </div>
+        <form id='current-order-form'>
+            <div class='col-xs-12 form-group'>
+                <label> <input value='1' type='checkbox' name='filter[showCompleted]' id='showCompletedOrder'/>&nbsp;&nbsp;Show Completed Order</label>
+            </div>
+            <div class='col-xs-12 form-group'>
+                <label>Name:&nbsp;&nbsp; <input type='text' name='filter[name]' class='form-control' /> </label>
+                <label>Order #:&nbsp;&nbsp; <input type='text' name='filter[orderId]' class='form-control' /> </label>
+                <label style='vertical-align: bottom'>&nbsp;<button type='button' class='btn btn-info' onclick='Order.search("current");'>Search</button></label>
+            </div>
+        </form>
         <div class="col-xs-12 vendor-order-body" data-user-id='<?php echo $userId?>' data-url='<?php echo $url?>'>
             <?php echo $this->render('_list', ['orders' => $orders, 'userId' => $userId]);?>
         </div>
     </div>
     <div id="tab-archive-order" class="tab-pane fade" style='margin-top: 10px'>
-        <div class="col-xs-12 vendor-order-archive-body" data-url='<?php echo $urlArchive?>'>
+        <form id='archived-order-form'>
+            
+            <div class='col-xs-12 form-group'>
+                <label>Name:&nbsp;&nbsp; <input type='text' name='filter[name]' class='form-control' /> </label>
+                <label>Order #:&nbsp;&nbsp; <input type='text' name='filter[orderId]' class='form-control' /> </label>
+                <label style='vertical-align: bottom'>&nbsp;<button type='button' class='btn btn-info' onclick='Order.search("archived");'>Search</button></label>
+            </div>
+        </form>
+        <div class="col-xs-12 vendor-order-archive-body"  data-user-id='<?php echo $userId?>' data-url='<?php echo $urlArchive?>'>
             <?php echo $this->render('_archive_list', ['orders' => $archivedOrders, 'userId' => $userId]);?>
         </div>
     </div>
