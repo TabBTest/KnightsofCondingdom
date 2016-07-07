@@ -143,8 +143,8 @@ class Orders extends \yii\db\ActiveRecord
         }
         
         $resp = array();
-        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and (isArchived = 1 or TIMESTAMPDIFF(HOUR, date_created, now()) >= 24) '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
-        $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and (isArchived = 1 or TIMESTAMPDIFF(HOUR, date_created, now()) >= 24) '.$extraSQL)->count();
+        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and (TIMESTAMPDIFF(HOUR, date_created, now()) >= 24) '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and (TIMESTAMPDIFF(HOUR, date_created, now()) >= 24) '.$extraSQL)->count();
         return $resp;
     }
     public function getTotalAmount(){
