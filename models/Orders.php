@@ -21,6 +21,10 @@ class Orders extends \yii\db\ActiveRecord
     const STATUS_NEW = 1;
     const STATUS_PENDING = 2;
     const STATUS_PROCESSED = 3;
+    
+    const PAYMENT_TYPE_CARD = 1;
+    const PAYMENT_TYPE_CASH = 2;
+    
     public $orderId = '';
     const MAGIC_NUMBER = 10000;
     public function getOrderId(){
@@ -43,7 +47,7 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['customerId', 'vendorId', 'status'], 'required'],
             [['customerId', 'vendorId', 'status'], 'integer'],
-            [['confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes'], 'safe'],
+            [['confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived'], 'safe'],
         ];
     }
 
@@ -116,8 +120,8 @@ class Orders extends \yii\db\ActiveRecord
         }
         
         $resp = array();
-        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
-        $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL)->count();
+        $resp['list'] = Orders::find()->where('isArchived = 0 and vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = Orders::find()->where('isArchived = 0 and vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL)->count();
         return $resp;
     }
     public static function getVendorArchivedOrders($userId, $resultsPerPage, $page, $filters){
@@ -139,8 +143,8 @@ class Orders extends \yii\db\ActiveRecord
         }
         
         $resp = array();
-        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) >= 24 '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
-        $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) >= 24 '.$extraSQL)->count();
+        $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and (isArchived = 1 or TIMESTAMPDIFF(HOUR, date_created, now()) >= 24) '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and (isArchived = 1 or TIMESTAMPDIFF(HOUR, date_created, now()) >= 24) '.$extraSQL)->count();
         return $resp;
     }
     public function getTotalAmount(){
@@ -154,5 +158,12 @@ class Orders extends \yii\db\ActiveRecord
     public function getCustomerName(){
         $user = User::findOne($this->customerId);
         return $user->name;   
+    }
+    public function getPaymentType(){
+        if($this->paymentType == self::PAYMENT_TYPE_CARD)
+            return 'Credit Card';
+        else if($this->paymentType == self::PAYMENT_TYPE_CASH)
+            return 'Cash';
+        return 'N/A';
     }
 }

@@ -351,23 +351,89 @@ var Order = {
 			Order.loadArchivedOrder();
 	},
 	confirm : function(orderId){
-		$.post('/order/confirm', 'id='+orderId, function(){
-			Order.loadVendor();
-			Customer.viewOrder(orderId);
-		})
 		
+		$.confirm({
+            title: "Order # "+(10000+orderId)+" as Confirmed?",
+            content: "Are you sure you want to mark this order as confirmed?",
+            confirmButton: 'Yes, confirm',
+            cancelButton:'No, Keep it',
+            confirmButtonClass: 'btn-info',
+            cancelButtonClass: 'btn-danger',
+            confirm: function(){
+            	$.post('/order/confirm', 'id='+orderId, function(){
+        			Order.loadVendor();
+        			Customer.viewOrder(orderId);
+        		})
+            }
+        });
 	},
 	start : function(orderId){
-		$.post('/order/start', 'id='+orderId, function(){
-			Order.loadVendor();	
-			Customer.viewOrder(orderId);
-		})
+		
+		$.confirm({
+            title: "Order # "+(10000+orderId)+" as Started?",
+            content: "Are you sure you want to mark this order as started?",
+            confirmButton: 'Yes, confirm',
+            cancelButton:'No, Keep it',
+            confirmButtonClass: 'btn-info',
+            cancelButtonClass: 'btn-danger',
+            confirm: function(){
+            	$.post('/order/start', 'id='+orderId, function(){
+        			Order.loadVendor();	
+        			Customer.viewOrder(orderId);
+        		})
+            }
+        });
 	},
-	pickup : function(orderId){
-		$.post('/order/pickup', 'id='+orderId, function(){
-			Order.loadVendor();
-			Customer.viewOrder(orderId);
-		})
+	pickup : function(orderId){		
+		$.confirm({
+            title: "Order # "+(10000+orderId)+" as Picked Up?",
+            content: "Are you sure you want to mark this order as picked up?",
+            confirmButton: 'Yes, confirm',
+            cancelButton:'No, Keep it',
+            confirmButtonClass: 'btn-info',
+            cancelButtonClass: 'btn-danger',
+            confirm: function(){
+            	$.post('/order/pickup', 'id='+orderId, function(){
+        			Order.loadVendor();
+        			Customer.viewOrder(orderId);
+        		})
+            }
+        });
+	},
+	markAsPaid : function(orderId){				
+		$.confirm({
+			 title: "Order # "+(10000+orderId)+" as Paid?",
+            content: "Are you sure you want to mark this order as paid?",
+            confirmButton: 'Yes, confirm',
+            cancelButton:'No, Keep it',
+            confirmButtonClass: 'btn-info',
+            cancelButtonClass: 'btn-danger',
+            confirm: function(){
+            	$.post('/order/mark-paid', 'id='+orderId, function(){
+        			Order.loadVendor();
+        			Customer.viewOrder(orderId);
+        		})
+            }
+        });
+	},
+	archiveOrder : function(orderId){
+		$.confirm({
+			 title: "Order # "+(10000+orderId)+" as Archived?",
+           content: "Are you sure you want to archived this order?",
+           confirmButton: 'Yes, confirm',
+           cancelButton:'No, Keep it',
+           confirmButtonClass: 'btn-info',
+           cancelButtonClass: 'btn-danger',
+           confirm: function(){
+           	$.post('/order/archive', 'id='+orderId, function(){
+       			Order.loadVendor();
+       			if($('#custom-modal').hasClass('in')){
+       				Customer.viewOrder(orderId);	
+       			}
+       			
+       		})
+           }
+       });
 	},
 	showItemOrderSummary : function(){
 		$.post('/ordering/item-order-summary', $('#item-order-summary').serialize(), function(html){

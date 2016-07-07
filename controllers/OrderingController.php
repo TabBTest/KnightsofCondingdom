@@ -160,40 +160,55 @@ class OrderingController extends CController
                 
                 //still need to include delivery
                 //still need to check if cash payment
+                $paymentType = $_POST['paymentType'];
                 
-                $finalAmount = number_format($totalFinalAmount, 2, '.', '');
-                \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
-                $amount = $finalAmount * 100;
-                $charge = \Stripe\Charge::create(
-                    array(
-                        "amount" => $amount,
-                        "currency" => "usd",
-                        "customer" => $user->stripeId, // obtained with Stripe.js
-                        "description" => "Order Charge for Customer ID: ".$user->id,
-                       // 'metadata' => $customerOrdersMetaData
-                    )  );
+                $order = new Orders();
                 
-                //echo $charge;
-                $chargeArray = $charge->__toArray(true);
-                if($chargeArray['status'] == 'succeeded'){
-    
-                    $order = new Orders();
-                    $order->transactionId = $chargeArray['id'];
-                    $order->status = Orders::STATUS_NEW;
-                    $order->customerId = \Yii::$app->user->id;
-                    $order->vendorId = $user->vendorId;
-                    $order->cardLast4 = $user->cardLast4;
-                    $notes = '';
-                    if(isset($_POST['notes'])){
-                        $notes = $_POST['notes'];
+                $order->status = Orders::STATUS_NEW;
+                $order->customerId = \Yii::$app->user->id;
+                $order->vendorId = $user->vendorId;
+               
+               
+                $notes = '';
+                if(isset($_POST['notes'])){
+                    $notes = $_POST['notes'];
+                }
+                $order->notes = $notes;
+                
+                if($paymentType == Orders::PAYMENT_TYPE_CARD){
+                    $finalAmount = number_format($totalFinalAmount, 2, '.', '');
+                    \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
+                    $amount = $finalAmount * 100;
+                    $charge = \Stripe\Charge::create(
+                        array(
+                            "amount" => $amount,
+                            "currency" => "usd",
+                            "customer" => $user->stripeId, // obtained with Stripe.js
+                            "description" => "Order Charge for Customer ID: ".$user->id,
+                           // 'metadata' => $customerOrdersMetaData
+                        )  );
+                    
+                    //echo $charge;
+                    $chargeArray = $charge->__toArray(true);
+                    
+                    if($chargeArray['status'] == 'succeeded'){
+                        $order->transactionId = $chargeArray['id'];
+                        $order->cardLast4 = $user->cardLast4;
+                        $order->paymentType = Orders::PAYMENT_TYPE_CARD;
+                        $order->isPaid = 1;
                     }
-                    $order->notes = $notes;
+                }else if($paymentType == Orders::PAYMENT_TYPE_CASH){
+                    $order->isPaid = 0;
+                    $order->paymentType = Orders::PAYMENT_TYPE_CASH;
+                }
+               
                     
                     if($order->save()){
-                        
-                        $ch = \Stripe\Charge::retrieve($order->transactionId);
-                        $ch->metadata = ['Order ID' => $order->id];
-                        $ch->save();
+                        if($paymentType == Orders::PAYMENT_TYPE_CARD){
+                            $ch = \Stripe\Charge::retrieve($order->transactionId);
+                            $ch->metadata = ['Order ID' => $order->id];
+                            $ch->save();
+                        }
                         
                         foreach($_POST['Orders'] as  $orderKey => $menuItemId){
                             $quantity = $_POST['OrdersQuantity'][$orderKey];   
@@ -269,9 +284,10 @@ class OrderingController extends CController
                         $redis = Yii::$app->redis;
                         $redis->executeCommand('PUBLISH', ['orders', 'New order']);
                     }
-                }else{
-                    \Yii::$app->getSession()->setFlash('error', 'Orders Submitted Successfully');
-                }
+//                 }
+                    else{
+                     \Yii::$app->getSession()->setFlash('error', 'Error in processing order, please try again');
+                     }
             
             }catch (\Stripe\Error\Card $e){
                 $error = $e->getJsonBody()['error']['message'];

@@ -27,8 +27,22 @@ use app\models\User;
         <div class='col-xs-12'>
             <label class='form-label'>Date Ordered: <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->date_created );?></label>
         </div>
+        <div class='col-xs-12'>
+            <label class='form-label'>Payment Type: <?php echo $orderInfo->getPaymentType();?></label>
+        </div>
         <div class='col-xs-12' >
-            <label class='form-label'>Is Paid: <?php echo $orderInfo->transactionId != null && $orderInfo->transactionId != '' ? 'Paid' : 'Not Paid';?></label>
+            <label class='form-label'>Is Paid? 
+            <?php if($orderInfo->isPaid == 1){
+            ?>
+                <i class="fa fa-check alert-success" aria-hidden="true"></i>
+            <?php 
+            }else{
+            ?>
+                <i class="fa fa-times alert-danger" aria-hidden="true"></i>
+                <button class='btn btn-xs btn-info' onclick='javascript: Order.markAsPaid(<?php echo $orderInfo->id?>)' type='button'>Mark As Paid</button>
+            <?php 
+            }?>
+            </label>
         </div>
     </div>
     <div class='col-xs-6'>

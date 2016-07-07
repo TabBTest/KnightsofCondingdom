@@ -4,6 +4,7 @@ use app\models\VendorMenuItem;
 use app\models\VendorMenuItemAddOns;
 use app\helpers\TenantHelper;
 use app\models\TenantInfo;
+use app\models\Orders;
 if(isset($params['Orders'])){                         
 ?>
 <div class='col-xs-12 text-center'>
@@ -75,6 +76,19 @@ $finalAmount = 0;
 <div class='col-xs-12'>
     <label>Instructions</label>
     <textarea class='form-control' rows='5' cols='25' name='notes' placeholder='Please add your extra instructions here...'><?php echo isset($params['notes']) ? $params['notes'] : ''?></textarea>    
+</div>
+<div class='col-xs-12'>
+    <label>How do you want to pay?</label>
+            
+</div>
+<div class='col-xs-12'>
+    <label>
+        <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CARD?>' <?php echo !isset($params['paymentType']) || (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CARD) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Card
+    </label>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <label>
+        <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CASH?>' <?php echo (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CASH) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Cash
+    </label>        
 </div>
 <br />
 <div class='col-xs-12 text-center' style='margin: 10px 0;'>

@@ -147,3 +147,6 @@ a.desc:after {
 .navbar-inverse .btn-link:hover {
     background-color: #bababa;
 }
+table tr th, table tr td{
+	text-align: center;
+}

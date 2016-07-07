@@ -20,7 +20,7 @@ class OrderController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'viewpage',  'viewpagearchive', 'confirm', 'start', 'pickup'],
+                        'actions' => ['index', 'viewpage',  'viewpagearchive', 'confirm', 'start', 'pickup', 'mark-paid', 'archive'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -81,6 +81,20 @@ class OrderController extends CController
         $order = Orders::findOne($orderId);
         $order->pickedUpDateTime=date('Y-m-d H:i:s', strtotime('now'));
         $order->status = Orders::STATUS_PROCESSED;
+        $order->save();
+        die;
+    }
+    public function actionMarkPaid(){
+        $orderId = $_REQUEST['id'];
+        $order = Orders::findOne($orderId);
+        $order->isPaid = 1;
+        $order->save();
+        die;
+    }
+    public function actionArchive(){
+        $orderId = $_REQUEST['id'];
+        $order = Orders::findOne($orderId);
+        $order->isArchived = 1;
         $order->save();
         die;
     }

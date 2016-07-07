@@ -30,11 +30,13 @@ $totalCount = $orders['count'];
         <tr>
             <th>Name</th>
             <th>Order #</th>
+            <th>Is Paid?</th>
             <th>Time</th>
             <th>Status</th>
             <th>Confirmed Time</th>
             <th>Start Time</th>
-            <th>Picked-up Time</th>            
+            <th>Picked-up Time</th>
+            <th>Action</th>            
         </tr>
     </thead>
     <tbody>
@@ -42,6 +44,17 @@ $totalCount = $orders['count'];
         <tr class="" data-id="<?php echo $orderInfo->id?>">
             <td><?php echo $orderInfo->getCustomerName()?></td>
             <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)"># <?php echo $orderInfo->getOrderId()?></a></td>
+            <td>
+            <?php if($orderInfo->isPaid == 1){
+            ?>
+                <i class="fa fa-check alert-success" aria-hidden="true"></i>
+            <?php 
+            }else{
+            ?>
+                <i class="fa fa-times alert-danger" aria-hidden="true"></i>
+            <?php 
+            }?>
+            </td>
             <td><?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->date_created );?></td>
             <td>           
                 <?php if($orderInfo->status == Orders::STATUS_PROCESSED){?>
@@ -74,7 +87,9 @@ $totalCount = $orders['count'];
                 <?php }
                 }?>
             </td>
-           
+           <td>
+                <a href='javascript: Order.archiveOrder(<?php echo $orderInfo->id?>)'><i class="fa fa-file-archive-o" aria-hidden="true"></i></a>
+            </td>
         </tr>
         <?php }?>
     </tbody>

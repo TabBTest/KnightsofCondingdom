@@ -51,6 +51,9 @@ class SimulationController extends Controller
                             $order->customerId = $user->id;
                             $order->vendorId = $vendor->id;
                             $order->cardLast4 = $user->cardLast4;
+                            $order->isPaid = 1;
+                            $order->paymentType = Orders::PAYMENT_TYPE_CARD;
+                            
                             if($order->save()){
                                     $quantity = 2;
                                     $orderDetails = new OrderDetails();
