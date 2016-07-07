@@ -4,6 +4,20 @@ use app\models\VendorMenuItem;
 use app\models\Orders;
 $this->title = 'Order Management';
 $this->params['breadcrumbs'][] = $this->title;
+
+$pageJs = <<<JS
+console.log('kamote');
+
+var socket = io('http://restalutions.dev:3000');
+
+socket.on('orders:newOrder', function() {
+  console.log('a new order was received.');
+});
+
+JS;
+
+$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js');
+$this->registerJs($pageJs, $this::POS_READY);
 ?>
 
 <?php if(\Yii::$app->getSession()->hasFlash('error')){?>
