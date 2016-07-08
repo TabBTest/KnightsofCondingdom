@@ -62,7 +62,7 @@ use app\helpers\TenantHelper;
             'items' => [
                 ['label' => 'Dashboard', 'url' => ['/admin/home'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'home') !== false ? true : false],
                 ['label' => 'Vendors', 'url' => ['/admin/vendors'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'vendors') !== false ? true : false],
-                ['label' => 'Customer', 'url' => ['/admin/customers'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'customers') !== false ? true : false],
+//                 ['label' => 'Customer', 'url' => ['/admin/customers'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'customers') !== false ? true : false],
                 ['label' => 'Settings', 'url' => ['/admin/settings'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? true : false],
             ],
         ]);

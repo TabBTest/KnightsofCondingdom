@@ -33,7 +33,7 @@ class MenuCategories extends \yii\db\ActiveRecord
             [['vendorId', 'name'], 'required'],
             [['vendorId', 'sorting'], 'integer'],
             [['description'], 'string'],
-            [['date_created'], 'safe'],
+            [['date_created', 'isArchived'], 'safe'],
             [['name'], 'string', 'max' => 250],
         ];
     }

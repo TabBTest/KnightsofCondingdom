@@ -99,9 +99,11 @@ use app\models\VendorOperatingHours;
         $operatingTime = UtilityHelper::getOperatingTime();                
         ?>
         <div class='row form-group  form-inline'>
-            <div class='col-xs-12'>
-                <label class='form-label'>Operating Hours</label>
-            </div>
+            
+            <div class='col-xs-8'>
+                <div class='col-xs-12'>
+                    <label class='form-label'>Operating Hours</label>
+                </div>
             <?php foreach(UtilityHelper::getDays() as $key => $val){
                 $operatingHours = VendorOperatingHours::getVendorOperatingHours($userId, $key);
                 ?>
@@ -113,8 +115,8 @@ use app\models\VendorOperatingHours;
                 
                     <?php foreach($operatingHours as $operatingHour){?>
                     <div class='operating-hours row' data-day='<?php echo $key?>' style='margin-bottom: 10px'>
-                        <div class="col-xs-2">
-                            <select  style='width: 100%' class='form-control start' name='startTime[<?php echo $key?>][]'>
+                        <div class="col-xs-3">
+                            <select  style='width: 100%' class='form-control start operating-hr' name='startTime[<?php echo $key?>][]'>
                                 <option value=''>Start Time</option>
                                 <?php foreach($operatingTime as $val => $display){?>
                                 <option <?php echo $operatingHour->startTime == $val ? 'selected' : ''?> value='<?php echo $val?>'><?php echo $display?></option>
@@ -122,16 +124,16 @@ use app\models\VendorOperatingHours;
                             </select>
                         </div>            
                       
-                        <div class="col-xs-2">
+                        <div class="col-xs-3">
                             
-                            <select   style='width: 100%' class='form-control end' name='endTime[<?php echo $key?>][]'>
+                            <select   style='width: 100%' class='form-control end operating-hr' name='endTime[<?php echo $key?>][]'>
                                 <option value=''>End Time</option>
                                 <?php foreach($operatingTime as $val => $display){?>
                                 <option <?php echo $operatingHour->endTime == $val ? 'selected' : ''?> value='<?php echo $val?>'><?php echo $display?></option>
                                 <?php }?>
                             </select>
                         </div>
-                        <div class="col-xs-2" style='margin-top: 5px;'>                    
+                        <div class="col-xs-3" style='margin-top: 5px;'>                    
                             <a data-day='<?php echo $key?>' class='delete-operating-hours' href='javascript: void(0)'><i class='fa fa-trash'></i></a>                
                         </div>
                     </div>
@@ -139,8 +141,8 @@ use app\models\VendorOperatingHours;
                 
                     <?php if(count($operatingHours) == 0){?>
                     <div class='operating-hours row' data-day='<?php echo $key?>' style='margin-bottom: 10px'>
-                        <div class="col-xs-2">
-                            <select  style='width: 100%' class='form-control start' name='startTime[<?php echo $key?>][]'>
+                        <div class="col-xs-3">
+                            <select  style='width: 100%' class='form-control start operating-hr' name='startTime[<?php echo $key?>][]'>
                                 <option value=''>Start Time</option>
                                 <?php foreach($operatingTime as $val => $display){?>
                                 <option value='<?php echo $val?>'><?php echo $display?></option>
@@ -148,16 +150,16 @@ use app\models\VendorOperatingHours;
                             </select>
                         </div>            
                       
-                        <div class="col-xs-2">
+                        <div class="col-xs-3">
                             
-                            <select   style='width: 100%' class='form-control end' name='endTime[<?php echo $key?>][]'>
+                            <select   style='width: 100%' class='form-control end operating-hr' name='endTime[<?php echo $key?>][]'>
                                 <option value=''>End Time</option>
                                 <?php foreach($operatingTime as $val => $display){?>
                                 <option value='<?php echo $val?>'><?php echo $display?></option>
                                 <?php }?>
                             </select>
                         </div>
-                        <div class="col-xs-2" style='margin-top: 5px;'>                    
+                        <div class="col-xs-3" style='margin-top: 5px;'>                    
                             <a data-day='<?php echo $key?>' class='delete-operating-hours' href='javascript: void(0)'><i class='fa fa-trash'></i></a>                
                         </div>
                     </div>
@@ -169,9 +171,18 @@ use app\models\VendorOperatingHours;
                     </div>
                 </div>
             </div>
-            
+           
           </div>
             <?php }?>
+            </div>
+            <div class='col-xs-4'>
+                <div class='col-xs-12'>
+                    <label class='form-label'>Preview:</label>
+                </div>
+                <div class='col-xs-12 preview-operating-hours'>
+                    
+                </div>
+            </div>
         </div>
         
         <div class='row form-group'>

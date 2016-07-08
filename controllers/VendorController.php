@@ -31,7 +31,7 @@ class VendorController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['settings', 'save-settings', 'profile', 'billing', 'view-page'],
+                        'actions' => ['settings', 'save-settings', 'profile', 'billing', 'view-page', 'preview-hours'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -122,6 +122,10 @@ class VendorController extends CController
         $userId = $_REQUEST['userId'];
         $transactions = VendorMembership::getVendorMemberships($userId, 20, $page);
         return $this->renderPartial('billing/_list', ['transactions' => $transactions, 'currentPage' => $page, 'userId' => $userId]);
+    }
+    
+    public function actionPreviewHours(){
+        return $this->renderPartial('preview-hours', ['params' => $_POST]);
     }
 
 //     public function actionProfile()

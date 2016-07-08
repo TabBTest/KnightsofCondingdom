@@ -33,7 +33,7 @@ class MenuController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['add-item-add-ons','edit-item-add-ons', 'save-item-add-ons', 'delete-item-add-ons', 'index','add-category', 'save-category', 'edit-category', 'add-item','edit-item', 'save-item', 'delete-item', 'save-menu-sort','save-menu-add-on-sort', 'save-category-sort'],
+                        'actions' => ['add-item-add-ons','edit-item-add-ons', 'save-item-add-ons', 'delete-item-add-ons', 'index','add-category', 'save-category', 'edit-category', 'add-item','edit-item', 'save-item', 'delete-item','delete-category', 'save-menu-sort','save-menu-add-on-sort', 'save-category-sort'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -65,7 +65,7 @@ class MenuController extends CController
             $vendorMenu->save();
         }
         
-        $vendorCategories = MenuCategories::find()->where('vendorId = '.$user->id.' order by sorting asc')->all();
+        $vendorCategories = MenuCategories::find()->where('isArchived = 0 and vendorId = '.$user->id.' order by sorting asc')->all();
         
         return $this->render('index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
     }
@@ -94,7 +94,13 @@ class MenuController extends CController
         $vendorMenuItem->save();
         \Yii::$app->getSession()->setFlash('success', 'Menu Item Deleted Successfully');
     }
-    
+    public function actionDeleteCategory(){
+        $menuCategoryId = $_REQUEST['id'];
+        $menuCategory = MenuCategories::findOne($menuCategoryId);
+        $menuCategory->isArchived = 1;
+        $menuCategory->save();
+        \Yii::$app->getSession()->setFlash('success', 'Menu Category Deleted Successfully');
+    }
     public function actionSaveItem(){
         
         if(count($_POST) > 0){

@@ -67,7 +67,7 @@ class OrderingController extends CController
         $userVendor = User::findOne($user->vendorId);
         $vendorMenu = User::getVendorDefaultMenu($userVendor);
         
-        $vendorCategories = MenuCategories::find()->where('vendorId = '.$user->vendorId.' order by sorting asc')->all();
+        $vendorCategories = MenuCategories::find()->where('isArchived = 0 and vendorId = '.$user->vendorId.' order by sorting asc')->all();
         
         return $this->render('index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
     }
@@ -81,7 +81,7 @@ class OrderingController extends CController
         $userVendor = User::findOne($tenantInfo->userId);
         $vendorMenu = User::getVendorDefaultMenu($userVendor);
     
-        $vendorCategories = MenuCategories::find()->where('vendorId = '.$tenantInfo->userId.' order by sorting asc')->all();
+        $vendorCategories = MenuCategories::find()->where('isArchived = 0 and vendorId = '.$tenantInfo->userId.' order by sorting asc')->all();
         
         return $this->render('index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
     }

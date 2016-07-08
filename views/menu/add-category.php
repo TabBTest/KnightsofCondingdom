@@ -13,6 +13,9 @@
         </div>        
         <div class='col-xs-12 form-group'>
             <button type='button' class='btn' data-dismiss="modal">Close</button>
+             <?php if($category->isNewRecord == false){?>
+                <button class='btn btn-danger delete-menu-category' type='button' data-menu-category-id='<?php echo $category->id?>'>Delete</button>
+            <?php }?>
             <button type='button' class='btn btn-success' onclick="javascript: VendorMenu.saveCategory()">Save</button>
         </div>
     </div>

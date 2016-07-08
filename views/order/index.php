@@ -50,6 +50,10 @@ $this->registerJs($pageJs, $this::POS_READY);
 
 <div class="tab-content">
     <div id="tab-current-order" class="tab-pane active" style='margin-top: 10px'>
+        
+        <div class='col-xs-12 form-group'>
+            <label class='form-label'>* Orders older than 24 hours are automatically archived.</label>
+        </div>
         <form id='current-order-form'>
             <div class='col-xs-12 form-group'>
                 <label> <input value='1' type='checkbox' name='filter[showCompleted]' id='showCompletedOrder'/>&nbsp;&nbsp;Show Completed Order</label>

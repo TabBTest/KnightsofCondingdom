@@ -139,7 +139,26 @@ $(document).ready(function() {
     	$.get('/menu/edit-category', 'id='+$(this).data('id'), function(html){
     		$('#custom-modal .modal-title').html('Edit Category');
     		$('#custom-modal .modal-body').html(html);
-    		$('#custom-modal').modal('show');	
+    		$('#custom-modal').modal('show');
+    		
+    		$('.delete-menu-category').off('click');
+    		$('.delete-menu-category').on('click', function(){
+    	    	var categoryId = $(this).data('menu-category-id');
+    	    	$.confirm({
+		            title: "Delete Menu Category?",
+		            content: "Are you sure you want to delete this menu category?",
+		            confirmButton: 'Yes, Remove',
+		            cancelButton:'No, Keep it',
+		            confirmButtonClass: 'btn-info',
+		            cancelButtonClass: 'btn-danger',
+		            confirm: function(){
+		            	$.post('/menu/delete-category', 'id='+categoryId, function(html){
+	    		    		window.location.href = '/menu';
+	    		    	})
+		            }
+		        });
+    	    	
+    	    });
     	})
     	
     });
@@ -172,7 +191,7 @@ $(document).ready(function() {
     		$('#custom-modal').modal('show');	
     		$('.delete-menu-item-add-on').off('click');
     		$('.delete-menu-item-add-on').on('click', function(){
-    	    	
+    			var itemAddOnId = $(this).data('menu-item-add-on-id');
     	    	 $.confirm({
     		            title: "Delete Item Add On?",
     		            content: "Are you sure you want to delete this item add on?",
@@ -181,7 +200,7 @@ $(document).ready(function() {
     		            confirmButtonClass: 'btn-info',
     		            cancelButtonClass: 'btn-danger',
     		            confirm: function(){
-    		            	$.post('/menu/delete-item-add-ons', 'id='+$(this).data('menu-item-add-on-id'), function(html){
+    		            	$.post('/menu/delete-item-add-ons', 'id='+itemAddOnId, function(html){
     	    		    		window.location.href = '/menu';
     	    		    	})
     		            }
@@ -199,7 +218,7 @@ $(document).ready(function() {
     		$('#custom-modal').modal('show');	
     		$('.delete-menu-item').off('click');
     		$('.delete-menu-item').on('click', function(){
-    	    	
+    			var itemId = $(this).data('menu-item-id');
     	    	$.confirm({
 		            title: "Delete Item?",
 		            content: "Are you sure you want to delete this item?",
@@ -208,7 +227,7 @@ $(document).ready(function() {
 		            confirmButtonClass: 'btn-info',
 		            cancelButtonClass: 'btn-danger',
 		            confirm: function(){
-		            	$.post('/menu/delete-item', 'id='+$(this).data('menu-item-id'), function(html){
+		            	$.post('/menu/delete-item', 'id='+itemId, function(html){
 	    		    		window.location.href = '/menu';
 	    		    	})
 		            }
@@ -234,7 +253,7 @@ $(document).ready(function() {
 	    		$('#custom-modal').modal('show');	
 	    	});
     	}else{
-    		alert('Please add your order');
+    		Messages.showError('Please add your order');
     	}
     });
     
@@ -311,6 +330,10 @@ if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
     	})
     	
     });
+    
+    if($('.preview-operating-hours').length == 1){
+    	VendorSettings.previewHours();
+    }
 });
 var Order = {
 	init : false,
@@ -790,7 +813,13 @@ var VendorSettings = {
 				else{
 					$(this).parents('.operating-hours').remove();	
 				}
-				
+				VendorSettings.previewHours();
+			});
+			$('.operating-hr').on('change', VendorSettings.previewHours);
+		},
+		previewHours : function(){
+			$.post('/vendor/preview-hours', $('.vendor-settings-form').serialize(), function(html){
+				$('.preview-operating-hours').html(html);
 			});
 		}
 }
