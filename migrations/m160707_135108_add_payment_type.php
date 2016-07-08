@@ -9,12 +9,9 @@ class m160707_135108_add_payment_type extends Migration
     {
         $this->execute(" alter TABLE orders add column paymentType int(11) null;");
         $this->execute(" alter TABLE orders add column isPaid int(11) null;");
-        $allOrders = Orders::find()->where('')->all();
-        foreach($allOrders as $order){
-            $order->isPaid = 1;
-            $order->paymentType = Orders::PAYMENT_TYPE_CARD;
-            $order->save();
-        }
+        
+        $this->execute(" update orders set isPaid = 1, paymentType = 1");
+                
     }
 
     public function down()
