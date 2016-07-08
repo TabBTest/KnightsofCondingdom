@@ -193,10 +193,19 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return false;
     }
 
-    public static function getVendorCustomers($userId, $resultsPerPage, $page){
+    public static function getVendorCustomers($userId, $resultsPerPage, $page, $filters){
+        $extraSQL = '';
+        if(isset($filters['name']) && $filters['name'] != ''){
+            $extraSQL .= " and name like '%".mysql_escape_string($filters['name'])."%'";           
+        }
+        
+        if(isset($filters['email']) && $filters['email'] != ''){
+            $extraSQL .= " and email like '%".mysql_escape_string($filters['email'])."%'";
+        }
+        
         $resp = array();
-        $resp['list'] = User::find()->where('vendorId = '.$userId.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
-        $resp['count'] = User::find()->where('vendorId = '.$userId)->count();
+        $resp['list'] = User::find()->where('vendorId = '.$userId.' '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = User::find()->where('vendorId = '.$userId.' '.$extraSQL)->count();
         return $resp;
     }
     

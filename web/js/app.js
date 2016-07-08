@@ -801,6 +801,49 @@ var Customer = {
     		$('#custom-modal .modal-body').html(html);
     		$('#custom-modal').modal('show');	
     	});
+	},
+	search : function(){
+		var param = $('#customer-search-form').serialize();
+		
+		
+		 $.get('/customer/viewpage', 'page=1&userId='+$('.vendor-customer-pagination').data('user-id')+'&'+param, function(html){
+        	 $('.vendor-customer-body').html(html);
+        	 setupUi();
+        	 listLinkActions();
+         })
+         
+	},
+	activate : function(id){
+		 $.confirm({
+	            title: "Activate Customer?",
+	            content: "Are you sure you want to activate this customer account?",
+	            confirmButton: 'Yes, continue',
+	            cancelButton:'No, Keep it',
+	            confirmButtonClass: 'btn-info',
+	            cancelButtonClass: 'btn-danger',
+	            confirm: function(){
+	            	$.post('/customer/activate', 'id='+id, function(html){
+	            		Messages.showSuccess('Customer Activated Successfully');
+	            		Customer.search();
+	 		    	});
+	            }
+	        });
+	},
+	deactivate : function(id){
+		 $.confirm({
+	            title: "De-activate Customer?",
+	            content: "Are you sure you want to de-activate this customer account?",
+	            confirmButton: 'Yes, continue',
+	            cancelButton:'No, Keep it',
+	            confirmButtonClass: 'btn-info',
+	            cancelButtonClass: 'btn-danger',
+	            confirm: function(){
+	            	$.post('/customer/deactivate', 'id='+id, function(html){
+	            		Messages.showSuccess('Customer De-activated Successfully');
+	            		Customer.search();
+	 		    	});
+	            }
+	        });
 	}
 }
 

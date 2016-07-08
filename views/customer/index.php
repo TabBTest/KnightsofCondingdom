@@ -22,12 +22,14 @@ $this->params['breadcrumbs'][] = $this->title;
  </div>
 <?php } ?>
 
-<div class='row'>
-    <div class='col-xs-12 text-center'>
-        <h1><?php echo Yii::$app->session->get('name')?></h1>
+<form id='customer-search-form'>    
+    <div class='col-xs-12 form-group'>
+        <label>Name:&nbsp;&nbsp; <input type='text' name='filter[name]' class='form-control' /> </label>
+        <label>Email:&nbsp;&nbsp; <input type='text' name='filter[email]' class='form-control' /> </label>
+        <label style='vertical-align: bottom'>&nbsp;<button type='button' class='btn btn-info' onclick='Customer.search();'>Search</button></label>
     </div>
-</div>
+</form>
 
 <div class="col-xs-12 vendor-customer-body">
-    <?php echo $this->render('_list', ['customers' => User::getVendorCustomers(\Yii::$app->user->id, 20, 1)]);?>
+    <?php echo $this->render('_list', ['customers' => User::getVendorCustomers(\Yii::$app->user->id, 20, 1, [])]);?>
 </div>

@@ -15,6 +15,7 @@ $totalCount = $customers['count'];
             <th>Street Address</th>
             <th>City</th>
             <th>State</th>
+            <th>Is Active?</th>
             <th>&nbsp;</th>
         </tr>
     </thead>
@@ -27,7 +28,32 @@ $totalCount = $customers['count'];
             <td><?= $customer->streetAddress?></td>
             <td><?= $customer->city ?></td>
             <td><?= $customer->state ?></td>
-            <td><a class='btn btn-xs btn-info' href='/ordering/history/?id=<?php echo base64_encode($customer->id )?>'>View Orders</a></td>
+            <td>
+             <?php if($customer->isActive == 1){?>
+            <i style="width:15px" class="fa fa-thumbs-up"></i>
+            <?php }else{?>
+            <i style="width:15px" class="fa fa-thumbs-down"></i>
+            <?php }?>
+            </td>
+            <td>
+            <a class="show-action" href="#" data-original-title="" title=""><i class="fa fa-cogs"></i> Actions</a>
+            <div style="display: none" class="pop-content">
+                <ul style="list-style-type: none; margin: 0; padding: 0;">                       
+                    <li>
+                        <a href='/ordering/history/?id=<?php echo base64_encode($customer->id )?>'><i style="width:15px" class="fa fa-list" aria-hidden="true"></i><span style="font-size: 14px;"> View Orders</span></a>
+                    </li>
+                    <li>
+                        <?php if($customer->isActive == 1){?>
+                        <a href="javascript: Customer.deactivate('<?php echo base64_encode($customer->id)?>')" class=""><i style="width:15px" class="fa fa-thumbs-down"></i><span style="font-size: 14px;"> De-activate Account</span></a>
+                        <?php }else{?>
+                        <a href="javascript: Customer.activate('<?php echo base64_encode($customer->id)?>')" class=""><i style="width:15px" class="fa fa-thumbs-up"></i><span style="font-size: 14px;"> Activate Account</span></a>
+                        <?php }?>
+                    </li>
+                </ul>
+            </div>
+                            
+            &nbsp;
+            </td>
         </tr>
         <?php }?>
     </tbody>

@@ -28,7 +28,7 @@ class CustomerController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'viewpage'],
+                        'actions' => ['index', 'viewpage', 'activate', 'deactivate'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -55,7 +55,27 @@ class CustomerController extends CController
     public function actionViewpage(){
         $page = $_REQUEST['page'];
         $userId = $_REQUEST['userId'];
-        $customers = User::getVendorCustomers($userId, 20, $page);    
+        $customers = User::getVendorCustomers($userId, 20, $page, $_REQUEST['filter']);    
         return $this->renderPartial('_list', ['customers' => $customers, 'currentPage' => $page]);
+    }
+    
+    public function actionActivate(){
+        $id = $_REQUEST['id'];
+        $user = User::findOne(base64_decode($id));
+        if($user){
+            $user->isActive = 1;
+            $user->save();
+        }
+        die;
+    }
+    
+    public function actionDeactivate(){
+        $id = $_REQUEST['id'];
+        $user = User::findOne(base64_decode($id));
+        if($user){
+            $user->isActive = 0;
+            $user->save();
+        }
+        die;
     }
 }
