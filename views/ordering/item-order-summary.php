@@ -20,10 +20,22 @@ foreach($params['Orders'] as $orderKey => $menuItemId){
         <td><?php echo $quantity?> <?php echo $menuItem->name?></td>
         <td>$<?php echo UtilityHelper::formatAmountForDisplay($totalAmount)?></td>
     </tr>
+<?php 
+if(isset($params['AddOnsExclusive'][$orderKey])){
+            $menuItemAddOn = VendorMenuItemAddOns::findOne($params['AddOnsExclusive'][$orderKey]);
+            $totalAddonAmount =  $quantity * $menuItemAddOn->amount;
+            $finalAmount += $totalAddonAmount;
+?>
+        <tr>
+            <td>Add-ons: <?php echo $quantity?> <?php echo $menuItemAddOn->name?></td>
+            <td>$<?php echo UtilityHelper::formatAmountForDisplay($totalAddonAmount)?></td>
+        </tr>
+<?php 
+        }    
     
-    
-<?php
     if(isset($params['AddOns'][$orderKey])){
+        
+        
         foreach($params['AddOns'][$orderKey] as $addOnId){
             
             $menuItemAddOn = VendorMenuItemAddOns::findOne($addOnId);

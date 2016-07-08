@@ -171,46 +171,8 @@ $(document).ready(function() {
     	})
     	
     });
-    $('.add-menu-item-add-ons').on('click', function(){
-    	var sorting = $('.vendor-menu-item-add-on-'+$(this).data('menu-item-id')).length + 1;
-    	$.get('/menu/add-item-add-ons', 'id='+$(this).data('menu-item-id')+'&sorting='+sorting, function(html){
-    		$('#custom-modal .modal-title').html('Add Menu Item - Add-ons');
-    		$('#custom-modal .modal-body').html(html);
-    		$('#custom-modal').modal('show');	
-    		
-    		
-    		
-    	})
-    	
-    });
+    $('.add-menu-item-add-ons').on('click', VendorMenu.newAddOn);
     
-    $('.edit-menu-item-add-on').on('click', function(){
-    	$.get('/menu/edit-item-add-ons', 'id='+$(this).data('menu-item-add-on-id'), function(html){
-    		$('#custom-modal .modal-title').html('Edit Menu Item - Add-ons');
-    		$('#custom-modal .modal-body').html(html);
-    		$('#custom-modal').modal('show');	
-    		$('.delete-menu-item-add-on').off('click');
-    		$('.delete-menu-item-add-on').on('click', function(){
-    			var itemAddOnId = $(this).data('menu-item-add-on-id');
-    	    	 $.confirm({
-    		            title: "Delete Item Add On?",
-    		            content: "Are you sure you want to delete this item add on?",
-    		            confirmButton: 'Yes, Remove',
-    		            cancelButton:'No, Keep it',
-    		            confirmButtonClass: 'btn-info',
-    		            cancelButtonClass: 'btn-danger',
-    		            confirm: function(){
-    		            	$.post('/menu/delete-item-add-ons', 'id='+itemAddOnId, function(html){
-    	    		    		window.location.href = '/menu';
-    	    		    	})
-    		            }
-    		        });
-    	    	
-    	    });
-    		
-    	})
-    	
-    });
     $('.edit-menu-item').on('click', function(){
     	$.get('/menu/edit-item', 'id='+$(this).data('menu-item-id'), function(html){
     		$('#custom-modal .modal-title').html('Edit Menu Item');
@@ -685,7 +647,18 @@ var VendorMenu = {
 			});
 			
 			if($('#menu-item-add-ons-form .has-error').length == 0){
-				$('#menu-item-add-ons-form').submit();
+				//$('#menu-item-add-ons-form').submit();
+				
+				$.post('/menu/save-item-add-ons', $('#menu-item-add-ons-form').serialize(), function(data){
+					var resp = $.parseJSON(data);
+					if(resp.status == 1){
+						Messages.showSuccess('Add On Saved Successfully');
+						if(resp.type == 'menu-item')
+							VendorMenu.editAddOn(resp.id);
+						else if(resp.type == 'category')
+							VendorMenu.editAddOn(resp.id);
+					}					
+				})
 			}
 		},
 		openMenuDetails : function(menuId){
@@ -705,17 +678,17 @@ var VendorMenu = {
 		},
 		updateCategorySort : function(sort){
 			$.post('/menu/save-category-sort', 'sort='+sort, function(){
-				
+				Messages.showSuccess('Updated Category Ordering Successfully');
 			})
 		},
 		updateMenuSort : function(sort){
 			$.post('/menu/save-menu-sort', 'sort='+sort, function(){
-				
+				Messages.showSuccess('Updated Menu Ordering Successfully');
 			})
 		},
 		updateMenuAddOnSort : function (sort){
 			$.post('/menu/save-menu-add-on-sort', 'sort='+sort, function(){
-				
+				Messages.showSuccess('Updated Add On Ordering Successfully');
 			})
 		},
 		setupUI : function(){
@@ -759,8 +732,100 @@ var VendorMenu = {
 						}
 							
 					} });
-		}
+		},
+		editAddOn : function(id){
+			$.get('/menu/edit-item-add-ons', 'id='+id, function(html){
+				$('#custom-modal .modal-title').html('Edit Add-ons');
+				$('#custom-modal .modal-body').html(html);
+				$('#custom-modal').modal('show');	
+				$('.delete-menu-item-add-on').off('click');
+				$('.delete-menu-item-add-on').on('click', function(){
+					var itemAddOnId = $(this).data('menu-item-add-on-id');
+					var menuItemId = $(this).data('menu-item-id');
+					var type = $(this).data('type');
+					var menuCategoryId = $(this).data('menu-category-id');
+			    	 $.confirm({
+				            title: "Delete Item Add On?",
+				            content: "Are you sure you want to delete this item add on?",
+				            confirmButton: 'Yes, Remove',
+				            cancelButton:'No, Keep it',
+				            confirmButtonClass: 'btn-info',
+				            cancelButtonClass: 'btn-danger',
+				            confirm: function(){
+				            	$.post('/menu/delete-item-add-ons', 'id='+itemAddOnId, function(html){
+			    		    		//window.location.href = '/menu';
+			    		    		
+			    		    		//VendorMenu.openNewAddOn(menuItemId);
+			    		    		
+			    		    		if(type == 'menu-item'){
+			    		    			Messages.showSuccess('Menu Item Add On Deleted Successfully');
+			    		    			VendorMenu.openNewAddOn(menuItemId);
+			    		    		}else if(type == 'category'){
+			    		    			Messages.showSuccess('Menu Category Add On Deleted Successfully');
+			    		    			VendorMenu.openNewAddOnCategory(menuCategoryId);
+			    		    		}
+					    				
+			    		    		
+			    		    	})
+				            }
+				        });
+			    	
+			    });
+				
+				$('.add-menu-item-add-ons-internal').off('click');
+				$('.add-menu-item-add-ons-internal').on('click', function(){
+					var menuItemId = $(this).data('menu-item-id');
+					var type = $(this).data('type');
+					var menuCategoryId = $(this).data('menu-category-id');
+			    	 $.confirm({
+				            title: "New Add On",
+				            content: "Are you sure you want to add new add on?",
+				            confirmButton: 'Yes',
+				            cancelButton:'No',
+				            confirmButtonClass: 'btn-info',
+				            cancelButtonClass: 'btn-danger',
+				            confirm: function(){
+				            	
+				            	if(type == 'menu-item')
+				    				VendorMenu.openNewAddOn($(this).data('menu-item-id'));
+				    			else if(type == 'category'){
+				    				
+				    				VendorMenu.openNewAddOnCategory(menuCategoryId);
+				    			}
+				    				
+				            }
+				        });
+			    	
+			    });
+				
+				
+			})
+		},
+		newAddOn : function(){
+			if($(this).data('type') == 'menu-item')
+				VendorMenu.openNewAddOn($(this).data('menu-item-id'));
+			else if($(this).data('type') == 'category')
+				VendorMenu.openNewAddOnCategory($(this).data('menu-category-id'));
+	    },
+	    openNewAddOn : function(menuItemId){
+	    	//var sorting = $('.vendor-menu-item-add-on-'+menuItemId).length + 1;
+	    	$.get('/menu/add-item-add-ons', 'id='+menuItemId, function(html){
+	    		$('#custom-modal .modal-title').html('Add Menu Item - Add-ons');
+	    		$('#custom-modal .modal-body').html(html);
+	    		$('#custom-modal').modal('show');	    		
+	    	})
+	    },
+	    openNewAddOnCategory : function(menuCategoryId){
+	    	//var sorting = $('.vendor-menu-item-add-on-'+menuItemId).length + 1;
+	    	$.get('/menu/add-category-add-ons', 'id='+menuCategoryId, function(html){
+	    		$('#custom-modal .modal-title').html('Add Category - Add-ons');
+	    		$('#custom-modal .modal-body').html(html);
+	    		$('#custom-modal').modal('show');	    		
+	    	})
+	    }
 }
+
+
 var VendorSettings = {
 		validateSettings : function(){
 			$('.vendor-settings-form .has-error').removeClass('has-error');

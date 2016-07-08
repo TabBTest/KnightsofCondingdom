@@ -36,7 +36,24 @@ $finalAmount = 0;
             <?php echo $quantity?> <?php echo $menuItem->name?></td>
             <td>$<?php echo UtilityHelper::formatAmountForDisplay($totalAmount)?></td>
         </tr>
-        
+        <?php 
+        if(isset($params['AddOnsExclusive'][$orderKey])){
+            
+                $menuItemAddOn = VendorMenuItemAddOns::findOne($params['AddOnsExclusive'][$orderKey]);
+                $totalAddonAmount =  $quantity * $menuItemAddOn->amount;
+                $finalAmount += $totalAddonAmount;
+                ?>
+                    <tr class='order-<?php echo $orderKey?>'>
+                        <td></td>
+                        <td style='padding-left: 20px;'>
+                        <input type='hidden' name='AddOnsExclusive[<?php echo $orderKey?>]' value='<?php echo $menuItemAddOn->id?>' />
+                        Add-ons: <?php echo $quantity?> <?php echo $menuItemAddOn->name?></td>
+                        <td>$<?php echo UtilityHelper::formatAmountForDisplay($totalAddonAmount)?></td>
+                    </tr>
+                <?php 
+                    }
+                
+        ?>
         
     <?php
         if(isset($params['AddOns'][$orderKey])){

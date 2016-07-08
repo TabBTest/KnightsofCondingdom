@@ -136,7 +136,7 @@ class UtilityHelper {
                 $timeDisplay = '12:00 am';
             }else{
                 $timeInfo = date('H:i',$i);
-                $timeDisplay = date('h:i a',$i);
+                $timeDisplay = date('g:i a',$i);
         
             }
             $timeSlot[$timeInfo] = $timeDisplay;

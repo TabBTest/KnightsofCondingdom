@@ -52,8 +52,8 @@ foreach($vendorCategories as $category){
         <a class='vendor-menu-categories' role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
           <?php echo $category->name?>
         </a>
-                
-        <button class='btn btn-info btn-xs pull-right add-menu-item' data-category-id='<?php echo $category->id?>' data-id='<?php echo $menu->id?>'>Add Menu Item</button>
+        <button style='float: right; margin-right: 10px;' class='btn btn-info btn-xs pull-right add-menu-item-add-ons' data-type='category' type='button' data-menu-category-id='<?php echo $category->id?>'>Edit Add-ons</button>                
+        <button style='float: right; margin-right: 10px;' class='btn btn-info btn-xs pull-right add-menu-item' data-category-id='<?php echo $category->id?>' data-id='<?php echo $menu->id?>'>Add Menu Item</button>
         <button style='margin-right: 10px;' class='btn btn-info btn-xs pull-right edit-category-item' data-id='<?php echo $category->id?>'>Edit Category</button>&nbsp;&nbsp;&nbsp;
       </h4>
 
@@ -77,7 +77,10 @@ foreach($vendorCategories as $category){
                         <a class='vendor-menu-category-item-<?php echo $category->id?>' role="button" data-toggle="collapse" data-parent1="#accordion1" href="#menu<?php echo $item->id?>" aria-expanded="false" aria-controls="menu<?php echo $item->id?>">
                           <?php echo $item->name?>
                         </a>
-                        <label class='form-label' style='float: right; margin-right: 10px;'>$<?php echo $item->amount?></label>
+                        
+                        <button style='float: right; margin-right: 10px;' class='btn btn-info btn-xs pull-right add-menu-item-add-ons' data-type='menu-item' type='button' data-menu-item-id='<?php echo $item->id?>'>Edit Add-ons</button>
+                        <button style='float: right; margin-right: 10px;' class='btn btn-info btn-xs pull-right edit-menu-item' type='button' data-menu-item-id='<?php echo $item->id?>'>Edit Menu Item</button>                        
+                        <label class='form-label' style='float: right; margin-right: 10px;'>$<?php echo $item->amount?></label>    
                       </h4>
                     </div>
                     <div id="menu<?php echo $item->id?>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
@@ -93,39 +96,10 @@ foreach($vendorCategories as $category){
                         <div class='col-xs-4'>
                             <label class='form-label'><?php echo $item->description?></label>
                         </div>
-                         <div class='col-xs-2'>
-                            <button class='btn btn-info edit-menu-item' type='button' data-menu-item-id='<?php echo $item->id?>'>Edit</button>                            
+                         <div class='col-xs-3'>
+                                                        
                         </div>
-                        <div class='col-xs-3'>
-                            <div class='row'>
-                                <div class='col-xs-6'>
-                                <h4>Add-ons</h4>
-                                </div>
-                                <div class='col-xs-6'>
-                                <button class='btn btn-info btn-sm pull-right add-menu-item-add-ons' type='button' data-menu-item-id='<?php echo $item->id?>'>Add</button>
-                                </div>
-                            </div>
-                            <div class='row'>
-                             <div class='col-xs-12'>
-                             <ul class="list-group add-ons-list">
-                              <?php 
-                              $addOns =  $item->getAddOns();
-                              foreach($addOns as $addOn){
-                                ?>
-                              <li  data-toggle="popover" title="Description" data-menu-item-add-on-id='<?php echo $addOn->id?>' data-content="<?php echo $addOn->description?>" class="vendor-menu-item-add-on-<?php echo $item->id?> list-group-item add-ons-popover">
-                             <?php echo $addOn->name?>
-                             <a class='btn btn-xs btn-info pull-right edit-menu-item-add-on' href='javascript: void(0)' data-menu-item-add-on-id='<?php echo $addOn->id?>'>Edit</a>
-                             <label style='margin-right: 10px;' class='pull-right'>$<?php echo $addOn->amount?></label>
-                             
-                                 
-                               </li>
-                               <?php 
-                                }?>
-                            </ul>
-                               
-                            </div>
-                            </div>                       
-                        </div>
+                        
                        
                       </div>
                     </div>

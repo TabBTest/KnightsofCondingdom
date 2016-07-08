@@ -27,10 +27,44 @@ $key = strtotime('now');
     <?php if(count($addOns) > 0){
 ?>
     <div class='col-xs-12'>
-        <h3>Add-ons</h3>
+    <?php 
+    
+            
+            
+            
+                        
+            
+            
+            if(count($categoryExclusives) != 0 || count($itemExclusives) != 0){
+    ?>
+    <div class='col-xs-6'>
+        <label class='control-label'>Please Choose One</label>
         <ul class='list-group'>
     <?php 
-    foreach($addOns as $index => $addOn){
+    $allAddOns = array_merge($categoryExclusives, $itemExclusives);
+    foreach($allAddOns as $index => $addOn){
+        ?>
+      <li  data-toggle="popover" title="Description" data-menu-item-add-on-id='<?php echo $addOn->id?>' data-content="<?php echo $addOn->description?>" class="vendor-menu-item-add-on-<?php echo $item->id?> list-group-item add-ons-popover">
+            <input type='radio' name='AddOnsExclusive[<?php echo $key?>]' value='<?php echo $addOn->id?>' class='order-changes'/>&nbsp;&nbsp;&nbsp;
+            <label class='form-label'><?php echo $addOn->name?> - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amount)?></label>
+     
+         
+       </li>
+       <?php 
+        }
+        ?>
+        </ul>
+    </div>
+    <?php 
+            }
+            if(count($categoryNonExclusives) != 0 || count($itemNonExclusives) != 0){
+    ?>
+    <div class='col-xs-6'>
+        <label class='control-label'>Additions</label>
+        <ul class='list-group'>
+    <?php 
+    $allAddOns = array_merge($categoryNonExclusives, $itemNonExclusives);
+    foreach($allAddOns as $index => $addOn){
         ?>
       <li  data-toggle="popover" title="Description" data-menu-item-add-on-id='<?php echo $addOn->id?>' data-content="<?php echo $addOn->description?>" class="vendor-menu-item-add-on-<?php echo $item->id?> list-group-item add-ons-popover">
             <input type='checkbox' name='AddOns[<?php echo $key?>][<?php echo $addOn->id?>]' value='<?php echo $addOn->id?>' class='order-changes'/>&nbsp;&nbsp;&nbsp;
@@ -42,6 +76,11 @@ $key = strtotime('now');
         }
         ?>
         </ul>
+    </div>
+    <?php 
+            }
+    ?>
+        
         </div>
     <?php 
 }?>

@@ -237,6 +237,21 @@ class OrderingController extends CController
                             $orderDetails->notes = $notes;
                             $orderDetails->save();
                             
+                            if(isset($_POST['AddOnsExclusive'][$orderKey])){
+                                    $menuItemAddOn = VendorMenuItemAddOns::findOne($_POST['AddOnsExclusive'][$orderKey]);
+                            
+                                    $orderDetails = new OrderDetails();
+                                    $orderDetails->orderId = $order->id;
+                                    $orderDetails->vendorMenuItemId = 0;
+                                    $orderDetails->name = $menuItemAddOn->name;
+                                    $orderDetails->amount = $menuItemAddOn->amount;
+                                    $orderDetails->quantity = intval($quantity);
+                                    $orderDetails->totalAmount = intval($quantity) * $menuItemAddOn->amount;
+                                    $orderDetails->type = OrderDetails::TYPE_MENU_ITEM_ADD_ON;
+                                    $orderDetails->save();
+                               
+                            }
+                            
                             if(isset($_POST['AddOns'][$orderKey])){
                                 foreach($_POST['AddOns'][$orderKey] as $addOnId => $elem){
                                     $menuItemAddOn = VendorMenuItemAddOns::findOne($addOnId);
@@ -309,7 +324,22 @@ class OrderingController extends CController
     public function actionAddItem(){
         $menuItemId = $_REQUEST['menuItemId'];
         $vendorMenuItem = VendorMenuItem::findOne($menuItemId);
-        return $this->renderPartial('add-item', ['item' => $vendorMenuItem]);
+        
+
+        $categoryExclusiveAddOns = VendorMenuItemAddOns::find()->where('menuCategoryId = ' . $vendorMenuItem->menuCategoryId . ' and isArchived = 0 and isExclusive = 1 order by sorting asc')->all();
+        $categoryNonExclusiveAddOns =VendorMenuItemAddOns::find()->where('menuCategoryId = ' . $vendorMenuItem->menuCategoryId . ' and isArchived = 0 and isExclusive = 0 order by sorting asc')->all();
+        
+        $menuItemExclusiveAddOns = VendorMenuItemAddOns::find()->where('vendorMenuItemId = ' . $vendorMenuItem->id . ' and isArchived = 0 and isExclusive = 1 order by sorting asc')->all();
+        $menuItemNonExclusiveAddOns =VendorMenuItemAddOns::find()->where('vendorMenuItemId = ' . $vendorMenuItem->id . ' and isArchived = 0 and isExclusive = 0 order by sorting asc')->all();
+        
+        
+        
+        return $this->renderPartial('add-item', ['item' => $vendorMenuItem, 'categoryExclusives' => $categoryExclusiveAddOns,
+            'categoryExclusives' => $categoryExclusiveAddOns,
+            'categoryNonExclusives' => $categoryNonExclusiveAddOns,
+            'itemExclusives' => $menuItemExclusiveAddOns,
+            'itemNonExclusives' => $menuItemNonExclusiveAddOns,
+        ]);
     }
     public function actionItemOrderSummary(){
         return $this->renderPartial('item-order-summary', ['params' => $_POST]);

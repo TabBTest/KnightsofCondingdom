@@ -31,69 +31,46 @@ $this->params['breadcrumbs'][] = $this->title;
             <h1>Menu</h1>
         </div>
     <div class="panel-group categories-main-panel" id="accordion">
-    <?php 
-    foreach($vendorCategories as $category){
-    ?>
-        <div class='col-xs-6'>
+        <?php 
+        foreach($vendorCategories as $category){
+        ?>
+        <div class='col-xs-12'>
         <div class="panel panel-default" data-category-id='<?php echo $category->id?>'>
-            <div class="panel-heading">            
-           <h4 class="panel-title">
-            <a class='vendor-menu-categories' role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
-              <?php echo $category->name?>
-            </a>
-          </h4>
-    
-            </div>
-            <div id="category<?php echo $category->id?>" class="panel-collapse collapse in">
-                <div class="panel-body">
-                        
-                                          
-                      
-                      <table class='table table-condensed table-striped'>
-                        <thead>
-                            <tr>
-                                <th width='60%'>Name</th>
-                                <th width='20%'>Amount</th>
-                                <th width='20%'>&nbsp;</th>
-                            </tr>
-                        </thead>
-                        
-                        <?php 
-                        $menuItems = VendorMenuItem::find()->where('vendorMenuId = '. $menu->id . ' and menuCategoryId = ' . $category->id.' order by sorting asc')->all();
-                        ?>                                  
-                            
-                            <tbody>
-                        <?php foreach($menuItems as $item){
-                                if($item->isArchived == 1)
-                                    continue;
+                <div class="panel-heading">            
+                   <h4 class="panel-title">
+                    <a class='vendor-menu-categories' role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
+                      <?php echo $category->name?>
+                    </a>
+                  </h4>
+        
+                </div>
+                <div id="category<?php echo $category->id?>" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <ul class='list-group'>
+                           <?php 
+                            $menuItems = VendorMenuItem::find()->where('vendorMenuId = '. $menu->id . ' and menuCategoryId = ' . $category->id.' order by sorting asc')->all();
+                            ?>                                  
                                 
-                        ?>
-                                 <tr>
-                                    <td><?php echo $item->name?>&nbsp;&nbsp;&nbsp;<a class='btn btn-xs btn-info' href='javascript: VendorMenu.openMenuDetails("<?php echo md5($item->id)?>")'>Details</a>
-                                        <div class='menu-details-<?php echo md5($item->id)?>' style='display: none'>
-                                        <?php if($item->hasPhoto()){?>
-                                        <img src='/menu-images/<?php echo $item->getPhotoPath() ?>' width='150px' height='150px'/>
-                                        <?php }else{?>
-                                        <img src='/images/placeholder.png' width='150px' height='150px'/>
-                                        <?php }?>
-                                         <label class='form-label'><?php echo $item->description?></label>
-                                        </div>
-                                    </td>
-                                    <td>$<?php echo UtilityHelper::formatAmountForDisplay($item->amount)?></td>
-                                    <td>
-                                    <a href='javascript: void(0)' class='add-to-cart' data-menu-item-id="<?php echo $item->id?>"><i class="fa fa-plus" aria-hidden="true"></i></a>                               
-                                  
-                                </td>
-                                </tr>
-                        <?php 
-                              }
+                               
+                            <?php foreach($menuItems as $item){
+                                    if($item->isArchived == 1)
+                                        continue;
+                                    
                             ?>
-                        </tbody>
-                        </table>
+                            <li  class='list-group-item add-to-cart' data-menu-item-id="<?php echo $item->id?>">
+                                    <label class='form-label menu-name'><?php echo $item->name?> </label>
+                                    <span class='pull-right'>$<?php echo UtilityHelper::formatAmountForDisplay($item->amount)?></span>
+                                    <br />
+                                    <label class='form-label menu-description'><i><?php echo $item->description?></i></label>
+                            </li>                                 
+                            <?php 
+                                  }
+                                ?>
+                            
+                        </ul>
                     </div>
-    
-          </div>
-          
+              
+                </div>
             </div>
             </div>
             <?php }?>
@@ -112,3 +89,8 @@ $this->params['breadcrumbs'][] = $this->title;
         </form>
     </div>
 </div>
+<style>
+li.add-to-cart:hover{
+	border: 2px solid green;
+}
+</style>

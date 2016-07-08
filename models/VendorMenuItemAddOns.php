@@ -36,7 +36,7 @@ class VendorMenuItemAddOns extends \yii\db\ActiveRecord
             [['vendorMenuItemId', 'isArchived'], 'integer'],
             [['description'], 'string'],
             [['amount'], 'number'],
-            [['date_created', 'date_updated', 'sorting'], 'safe'],
+            [['date_created', 'date_updated', 'sorting', 'isExclusive', 'menuCategoryId'], 'safe'],
             [['name'], 'string', 'max' => 250],
         ];
     }

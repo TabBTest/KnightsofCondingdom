@@ -33,7 +33,7 @@ class MenuController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['add-item-add-ons','edit-item-add-ons', 'save-item-add-ons', 'delete-item-add-ons', 'index','add-category', 'save-category', 'edit-category', 'add-item','edit-item', 'save-item', 'delete-item','delete-category', 'save-menu-sort','save-menu-add-on-sort', 'save-category-sort'],
+                        'actions' => ['add-category-add-ons','edit-category-add-ons', 'save-category-add-ons', 'delete-category-add-ons', 'add-item-add-ons','edit-item-add-ons', 'save-item-add-ons', 'delete-item-add-ons', 'index','add-category', 'save-category', 'edit-category', 'add-item','edit-item', 'save-item', 'delete-item','delete-category', 'save-menu-sort','save-menu-add-on-sort', 'save-category-sort'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -145,20 +145,47 @@ class MenuController extends CController
         return $this->redirect('/menu');
     }
     
+    public function actionAddCategoryAddOns(){
+        $vendorCategoryId = $_REQUEST['id'];
+        $vendorMenuItemAddOns = new VendorMenuItemAddOns();
+        $vendorMenuItemAddOns->vendorMenuItemId = 0;
+        $vendorMenuItemAddOns->menuCategoryId = $vendorCategoryId;
+        
+        //$vendorMenuItemAddOns->sorting = $sorting;
+    
+        $exclusiveList = VendorMenuItemAddOns::find()->where('menuCategoryId = ' . $vendorMenuItemAddOns->menuCategoryId . ' and isArchived = 0 and isExclusive = 1 order by sorting asc')->all();
+        $nonExclusiveList =VendorMenuItemAddOns::find()->where('menuCategoryId = ' . $vendorMenuItemAddOns->menuCategoryId . ' and isArchived = 0 and isExclusive = 0 order by sorting asc')->all();
+    
+        return $this->renderPartial('add-item-add-ons', ['menuItemAddOns' => $vendorMenuItemAddOns, 'exclusiveList' => $exclusiveList, 'nonExclusiveList' => $nonExclusiveList]);
+    }
     
     public function actionAddItemAddOns(){
         $vendorMenuItemId = $_REQUEST['id'];
-        $sorting = $_REQUEST['sorting'];
+       
+        //$sorting = $_REQUEST['sorting'];
         $vendorMenuItemAddOns = new VendorMenuItemAddOns();
         $vendorMenuItemAddOns->vendorMenuItemId = $vendorMenuItemId;
-        $vendorMenuItemAddOns->sorting = $sorting;
-        return $this->renderPartial('add-item-add-ons', ['menuItemAddOns' => $vendorMenuItemAddOns]);
+        //$vendorMenuItemAddOns->sorting = $sorting;
+        
+        $exclusiveList = VendorMenuItemAddOns::find()->where('vendorMenuItemId = ' . $vendorMenuItemAddOns->vendorMenuItemId . ' and isArchived = 0 and isExclusive = 1 order by sorting asc')->all();
+        $nonExclusiveList =VendorMenuItemAddOns::find()->where('vendorMenuItemId = ' . $vendorMenuItemAddOns->vendorMenuItemId . ' and isArchived = 0 and isExclusive = 0 order by sorting asc')->all();
+        
+        return $this->renderPartial('add-item-add-ons', ['menuItemAddOns' => $vendorMenuItemAddOns, 'exclusiveList' => $exclusiveList, 'nonExclusiveList' => $nonExclusiveList]);
     }
     
     public function actionEditItemAddOns(){
         $vendorMenuItemAddOnId = $_REQUEST['id'];
         $vendorMenuItemAddOns = VendorMenuItemAddOns::findOne($vendorMenuItemAddOnId);
-        return $this->renderPartial('add-item-add-ons', ['menuItemAddOns' => $vendorMenuItemAddOns]);
+        $exclusiveList = [];
+        $nonExclusiveList = [];
+        if($vendorMenuItemAddOns->menuCategoryId > 0){
+            $exclusiveList = VendorMenuItemAddOns::find()->where('menuCategoryId = ' . $vendorMenuItemAddOns->menuCategoryId . ' and isArchived = 0 and isExclusive = 1 order by sorting asc')->all();
+            $nonExclusiveList =VendorMenuItemAddOns::find()->where('menuCategoryId = ' . $vendorMenuItemAddOns->menuCategoryId . ' and isArchived = 0 and isExclusive = 0 order by sorting asc')->all();
+        }else{
+            $exclusiveList = VendorMenuItemAddOns::find()->where('vendorMenuItemId = ' . $vendorMenuItemAddOns->vendorMenuItemId . ' and isArchived = 0 and isExclusive = 1 order by sorting asc')->all();
+            $nonExclusiveList =VendorMenuItemAddOns::find()->where('vendorMenuItemId = ' . $vendorMenuItemAddOns->vendorMenuItemId . ' and isArchived = 0 and isExclusive = 0 order by sorting asc')->all();
+        }
+        return $this->renderPartial('add-item-add-ons', ['menuItemAddOns' => $vendorMenuItemAddOns, 'exclusiveList' => $exclusiveList, 'nonExclusiveList' => $nonExclusiveList]);
     }
     
     public function actionDeleteItemAddOns(){
@@ -166,31 +193,50 @@ class MenuController extends CController
         $vendorMenuItemAddOn = VendorMenuItemAddOns::findOne($vendorMenuItemAddOnId);
         $vendorMenuItemAddOn->isArchived = 1;
         $vendorMenuItemAddOn->save();
-        \Yii::$app->getSession()->setFlash('success', 'Menu Item Add On Deleted Successfully');
+        die;
+        //\Yii::$app->getSession()->setFlash('success', 'Menu Item Add On Deleted Successfully');
     }
     
     public function actionSaveItemAddOns(){
     
+        $resp = [];
         if(count($_POST) > 0){
             $menuItemAddOnsId = $_POST['id'];
             $vendorMenuItemAddOn = VendorMenuItemAddOns::findOne($menuItemAddOnsId);
+            $type = '';
             if($vendorMenuItemAddOn == null){
                 $vendorMenuItemAddOn = new VendorMenuItemAddOns();
                 $vendorMenuItemAddOn->vendorMenuItemId = intval($_POST['vendorMenuItemId']);
+                $vendorMenuItemAddOn->menuCategoryId = intval($_POST['menuCategoryId']);
                 $vendorMenuItemAddOn->sorting = intval($_POST['sorting']);
+                
+                $allAddOns = [];
+                if($vendorMenuItemAddOn->menuCategoryId > 0){
+                    $allAddOns = VendorMenuItemAddOns::findAll(['menuCategoryId' => $vendorMenuItemAddOn->menuCategoryId , 'isArchived' => 0, 'isExclusive' => intval($_POST['isExclusive'])]);
+                    $type = 'category';
+                }else{
+                    $allAddOns = VendorMenuItemAddOns::findAll(['vendorMenuItemId' => $vendorMenuItemAddOn->vendorMenuItemId , 'isArchived' => 0, 'isExclusive' => intval($_POST['isExclusive'])]);
+                    $type = 'menu-item';
+                }
+                $vendorMenuItemAddOn->sorting = count($allAddOns)  + 1;
             }
     
             $vendorMenuItemAddOn->name = $_POST['name'];
             $vendorMenuItemAddOn->description = $_POST['description'];
             $vendorMenuItemAddOn->amount = floatval($_POST['amount']);
+            $vendorMenuItemAddOn->isExclusive = intval($_POST['isExclusive']);
             $vendorMenuItemAddOn->save();
     
             
     
             \Yii::$app->getSession()->setFlash('success', 'Menu Item Add On Saved Successfully');
-    
+            $resp['status'] = 1;
+            $resp['id'] = $vendorMenuItemAddOn->id;
+            $resp['type'] = $type;
         }
-        return $this->redirect('/menu');
+        echo json_encode($resp);
+        die;
+        //return $this->redirect('/menu');
     }
     
     public function actionAddCategory(){
