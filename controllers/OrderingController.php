@@ -22,6 +22,7 @@ use app\helpers\TenantHelper;
 use app\models\TenantInfo;
 use app\models\MenuCategories;
 use app\models\VendorMenuItemAddOns;
+use app\models\AppConfig;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -158,6 +159,13 @@ class OrderingController extends CController
                 $salesTaxAmount = $totalFinalAmount - $finalAmount;
                 $customerOrdersMetaData['sales tax'] = ['name' => 'sales tax', 'amount' => $salesTaxAmount];
                 
+                
+                $adminFee = floatval(UtilityHelper::getAppConfig(AppConfig::ADMIN_FEE, 0));
+                $totalFinalAmount += $adminFee;
+                
+                $deliveryFee = 0;
+                $totalFinalAmount += $deliveryFee;
+                
                 //still need to include delivery
                 //still need to check if cash payment
                 $paymentType = $_POST['paymentType'];
@@ -257,7 +265,7 @@ class OrderingController extends CController
                         $orderDetails->type = OrderDetails::TYPE_SALES_TAX;
                         $orderDetails->save();
                         
-                        $deliveryFee = 0;
+                        
                         $orderDetails = new OrderDetails();
                         $orderDetails->orderId = $order->id;
                         $orderDetails->vendorMenuItemId = 0;
@@ -268,7 +276,7 @@ class OrderingController extends CController
                         $orderDetails->type = OrderDetails::TYPE_DELIVERY_CHARGE;
                         $orderDetails->save();
                         
-                        $adminFee = 0;
+                        
                         $orderDetails = new OrderDetails();
                         $orderDetails->orderId = $order->id;
                         $orderDetails->vendorMenuItemId = 0;
@@ -281,8 +289,8 @@ class OrderingController extends CController
                         
                         \Yii::$app->getSession()->setFlash('success', 'Orders Submitted Successfully');
 
-//                         $redis = Yii::$app->redis;
-//                         $redis->executeCommand('PUBLISH', ['orders', 'New order']);
+                        $redis = Yii::$app->redis;
+                        $redis->executeCommand('PUBLISH', ['orders', 'New order']);
                     }
 //                 }
                     else{

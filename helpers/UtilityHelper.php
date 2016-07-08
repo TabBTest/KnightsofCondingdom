@@ -3,6 +3,7 @@ namespace app\helpers;
 
 use yii\helpers\Html;
 use app\models\User;
+use app\models\AppConfig;
 class UtilityHelper {
 /**
 	 * Check operating system
@@ -166,5 +167,12 @@ class UtilityHelper {
         });
         
         return $return;
+    }
+    public static function getAppConfig($code, $defaultVal){
+        $appConfig = AppConfig::findOne(['code' => $code]);
+        if($appConfig != null){
+            return $appConfig->val;
+        }
+        return $defaultVal;
     }
 }

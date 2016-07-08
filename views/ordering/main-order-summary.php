@@ -5,6 +5,7 @@ use app\models\VendorMenuItemAddOns;
 use app\helpers\TenantHelper;
 use app\models\TenantInfo;
 use app\models\Orders;
+use app\models\AppConfig;
 if(isset($params['Orders'])){                         
 ?>
 <div class='col-xs-12 text-center'>
@@ -64,7 +65,16 @@ $finalAmount = 0;
     Sales Tax</label></td>
     <td><label class='form-label'>$<?php echo UtilityHelper::formatAmountForDisplay($salesTax)?></label></td>
 </tr>
-
+<?php 
+$adminFee = floatval(UtilityHelper::getAppConfig(AppConfig::ADMIN_FEE, 0));
+$totalFinalAmount += $adminFee;
+?>
+<tr>
+    <td>&nbsp;</td>
+    <td><label class='form-label'>    
+    Web Fee</label></td>
+    <td><label class='form-label'>$<?php echo UtilityHelper::formatAmountForDisplay($adminFee)?></label></td>
+</tr>
 <tr>
     <td>&nbsp;</td>
     <td><label class='form-label'>Total</label></td>

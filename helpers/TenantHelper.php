@@ -5,6 +5,7 @@ namespace app\helpers;
 use app\models\User;
 use app\models\TenantInfo;
 use app\models\VendorMembership;
+use app\models\AppConfig;
 class TenantHelper {
     
     static public function isDefaultTenant(){
@@ -45,7 +46,7 @@ class TenantHelper {
     
     static function doMembershipPayment($userId){
         $respInfo = array();
-        $membershipPrice = User::MEMBERSHIP_PRICE;
+        $membershipPrice = UtilityHelper::getAppConfig(AppConfig::MONTHLY_MEMBERSHIP_FEE, User::MEMBERSHIP_PRICE);
         $startDate = false;
         $endDate = false;
     

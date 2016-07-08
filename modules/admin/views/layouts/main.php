@@ -11,8 +11,7 @@ use app\assets\AppAsset;
 use app\models\User;
 use app\helpers\TenantHelper;
 
-?>
-<?php $this->beginPage() ?>
+?><?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
@@ -40,8 +39,9 @@ use app\helpers\TenantHelper;
 
 
     NavBar::begin([
-        'brandLabel' => 'Restalutions',
-        'brandUrl' => Yii::$app->homeUrl,
+        'brandLabel' => Html::img('/images/logo.png'),
+        'brandOptions' => ['class' => 'navbar-brand'],
+        'brandUrl' => '/admin',
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
@@ -60,9 +60,10 @@ use app\helpers\TenantHelper;
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
-                ['label' => 'Dashboard', 'url' => ['/admin/home']],
-                ['label' => 'Vendors', 'url' => ['/admin/vendors']],
-                ['label' => 'Customer', 'url' => ['/admin/customers']],                
+                ['label' => 'Dashboard', 'url' => ['/admin/home'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'home') !== false ? true : false],
+                ['label' => 'Vendors', 'url' => ['/admin/vendors'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'vendors') !== false ? true : false],
+                ['label' => 'Customer', 'url' => ['/admin/customers'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'customers') !== false ? true : false],
+                ['label' => 'Settings', 'url' => ['/admin/settings'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? true : false],
             ],
         ]);
     }
@@ -97,7 +98,10 @@ use app\helpers\TenantHelper;
     NavBar::end();
     ?>
 
-    <div class="container">     
+    <div class="container">      
+        <?= Breadcrumbs::widget([
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        ]) ?>
         <?= $content ?>
     </div>
 </div>
@@ -110,7 +114,7 @@ use app\helpers\TenantHelper;
 
 <!-- Modal -->
 <div class="modal fade" id="custom-modal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -142,3 +146,4 @@ body > .wrap > .container {
 </style>
 </html>
 <?php $this->endPage() ?>
+
