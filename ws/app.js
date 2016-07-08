@@ -12,7 +12,7 @@ redis.on('message', function(channel, message) {
   io.emit(channel + ':newOrder', 'A new order has been placed.');
 });
 
-server.listen(process.env.NODEJS_LISTEN_PORT, process.env.NODEJS_LISTEN_IP, function() {
+server.listen(process.env.NODEJS_LISTEN_PORT, function() {
   if (!/^win/.test(process.platform)) {
     process.setgid(process.env.NODEJS_GID);
     process.setuid(process.env.NODEJS_UID);
