@@ -47,6 +47,9 @@ class OrderingController extends CController
                         'roles' => ['@'],
                     ],
                 ],
+                'denyCallback' => function ($rule, $action) {
+                   $this->redirect('/site/login');
+                }
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
