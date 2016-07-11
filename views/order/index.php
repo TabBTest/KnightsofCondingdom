@@ -10,8 +10,8 @@ $this->params['breadcrumbs'][] = $this->title;
 $pageJs = <<<JS
 var socket = io('{$params['nodejs_host']}' + ':' + '{$params['nodejs_port']}');
 
-socket.on('orders:newOrder', function() {
-  console.log('a new order was received.');
+socket.on('orders:new_order', function() {
+  Order.loadVendor();
 });
 JS;
 

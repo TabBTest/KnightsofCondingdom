@@ -7,10 +7,7 @@ var redis = new Redis(process.env.REDIS_PORT, process.env.REDIS_HOST);
 
 redis.subscribe('orders');
 
-redis.on('message', function(channel, message) {
-  console.log(channel + ':newOrder');
-  io.emit(channel + ':newOrder', 'A new order has been placed.');
-});
+var connections = [];
 
 server.listen(process.env.NODEJS_LISTEN_PORT, function() {
   if (!/^win/.test(process.platform)) {
@@ -18,3 +15,21 @@ server.listen(process.env.NODEJS_LISTEN_PORT, function() {
     process.setuid(process.env.NODEJS_UID);
   }
 });
+
+io.sockets.on('connection', function(socket) {
+
+  socket.once('disconnect', function() {
+    connections.splice(connections.indexOf(socket), 1);
+    socket.disconnect();
+    console.log("Disconnected: %s sockets remaining.", connections.length);
+  });
+
+  connections.push(socket);
+  console.log("Connected: %s sockets connected.", connections.length);
+
+  redis.on('message', function(channel, message) {
+    io.emit('orders:new_order');
+  });
+});
+
+console.log("WebSockets server is running at 'http://127.0.0.1:3000'");

@@ -481,7 +481,7 @@ var setupUi = function(){
 		         })
 		    });
 	    	if(Order.init == false){
-	    		setInterval(Order.loadVendor, Order.timeLimit); // it will call the function autoload() after each 30 seconds.	
+					Order.loadVendor();
 	    		Order.init = true;
 	    	}
 	}

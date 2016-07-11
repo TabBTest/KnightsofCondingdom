@@ -305,7 +305,12 @@ class OrderingController extends CController
                         \Yii::$app->getSession()->setFlash('success', 'Orders Submitted Successfully');
 
                         $redis = Yii::$app->redis;
-                        $redis->executeCommand('PUBLISH', ['orders', 'New order']);
+                        $redis->executeCommand('PUBLISH', ['orders',
+                                json_encode([
+                                    'orderId' => $order->id,
+                                    'vendorId' => $order->vendorId
+                                ])
+                        ]);
                     }
 //                 }
                     else{
