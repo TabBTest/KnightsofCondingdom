@@ -29,6 +29,7 @@ $totalCount = $orders['count'];
             <th>Name</th>
             <th>Order #</th>
             <th>Is Paid?</th>
+             <th>Type</th>
             <th>Time</th>
             <th>Status</th>
             <th>Confirmed Time</th>
@@ -44,22 +45,33 @@ $totalCount = $orders['count'];
              <td>
             <?php if($orderInfo->isPaid == 1){
             ?>
-                <i class="fa fa-check alert-success" aria-hidden="true"></i>
+                <i data-toggle="tooltip" data-placement="left" title="Order Paid"  class="fa fa-check alert-success" aria-hidden="true"></i>
             <?php 
             }else{
             ?>
-                <i class="fa fa-times alert-danger" aria-hidden="true"></i>
+                <i data-toggle="tooltip" data-placement="left" title="Unpaid Order"  class="fa fa-times alert-danger" aria-hidden="true"></i>
+            <?php 
+            }?>
+            </td>
+             <td>
+            <?php if($orderInfo->isDelivery == 1){
+            ?>
+                <i data-toggle="tooltip" data-placement="left" title="For Delivery" class="fa fa-truck" aria-hidden="true"></i>
+            <?php 
+            }else{
+            ?>
+                <i data-toggle="tooltip" data-placement="left" title="For Pickup" class="fa fa-shopping-cart" aria-hidden="true"></i>
             <?php 
             }?>
             </td>
             <td><?php echo  \Yii::$app->user->identity->showConvertedTime($orderInfo->date_created );?></td>
             <td>           
                 <?php if($orderInfo->status == Orders::STATUS_PROCESSED){?>
-                <i class="fa fa-check alert-success" aria-hidden="true"></i>                
+                <i data-toggle="tooltip" data-placement="left" title="Processed Order"  class="fa fa-check alert-success" aria-hidden="true"></i>                
                 <?php }else if($orderInfo->status == Orders::STATUS_PENDING){?>
-                <i class="fa fa-clock-o alert-warning" aria-hidden="true"></i>
+                <i data-toggle="tooltip" data-placement="left" title="Pending Order"  class="fa fa-clock-o alert-warning" aria-hidden="true"></i>
                 <?php }else if($orderInfo->status == Orders::STATUS_NEW){?>
-                <i class="fa fa-exclamation alert-danger" aria-hidden="true"></i>
+                <i data-toggle="tooltip" data-placement="left" title="New Order"  class="fa fa-exclamation alert-danger" aria-hidden="true"></i>
                 <?php }?>
             </td>
             <td>

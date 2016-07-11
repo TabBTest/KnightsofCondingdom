@@ -70,7 +70,7 @@ class VendorController extends CController
                 $model->save();
             }
 
-            if(Yii::$app->session->get('role') != null && Yii::$app->session->get('role') == User::ROLE_ADMIN){
+            if(Yii::$app->user->identity->role != null && Yii::$app->user->identity->role == User::ROLE_ADMIN){
                 $nextUrl = '/admin/vendors/settings?id='.$userId;
                
             }
@@ -105,10 +105,7 @@ class VendorController extends CController
             }
         }
        
-        
-        
-        
-        return $this->redirect($nextUrl);
+        return $this->redirect($nextUrl);      
     }
     
     public function actionBilling(){

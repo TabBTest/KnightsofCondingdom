@@ -126,6 +126,45 @@ class TenantHelper {
         }
         return false;
     }
+    static public function isVendorAllowDelivery($totalFinalAmount){
+        if(TenantHelper::isDefaultTenant() === false){
+            $subdomain = TenantHelper::getSubDomain();
+            $subdomain = TenantHelper::getSubDomain();
+            $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
+            if($tenantInfo){
+                $tenantInfo = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_HAS_DELIVERY]);
+                if($tenantInfo && $tenantInfo->val == 1){
+                    $tenantInfoAmount = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_DELIVERY_MINIMUM_AMOUNT]);
+                    if($tenantInfoAmount && $tenantInfoAmount->val != ''){
+                        $minAmount = floatval($tenantInfoAmount->val);
+                        if($totalFinalAmount >= $minAmount){
+                            return true;
+                        }
+                    }
+                
+                }    
+            }
+            
+        
+        }
+        return false;
+    }
+    static public function getDeliveryAmount(){
+        if(TenantHelper::isDefaultTenant() === false){
+            $subdomain = TenantHelper::getSubDomain();
+            $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
+           
+            
+            if($tenantInfo){
+                $tenantInfoAmount = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_DELIVERY_CHARGE]);
+                return floatval($tenantInfoAmount->val);
+                    
+                  
+            }
+        
+        }
+        return 0;
+    }
     /*
     static public function getTenantDataInfo($tenantId = false){
         

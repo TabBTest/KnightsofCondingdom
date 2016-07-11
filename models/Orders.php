@@ -47,7 +47,7 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['customerId', 'vendorId', 'status'], 'required'],
             [['customerId', 'vendorId', 'status'], 'integer'],
-            [['confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived'], 'safe'],
+            [['isDelivery', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived'], 'safe'],
         ];
     }
 
@@ -118,6 +118,9 @@ class Orders extends \yii\db\ActiveRecord
         if(isset($filters['orderId']) && $filters['orderId'] != ''){
             $extraSQL .= " and (id + ".self::MAGIC_NUMBER.") =  '".$filters['orderId']."'";
         }
+        if(isset($filters['isDelivery']) && $filters['isDelivery'] != ''){
+            $extraSQL .= " and isDelivery = ".$filters['isDelivery'];
+        }
         
         $resp = array();
         $resp['list'] = Orders::find()->where('isArchived = 0 and vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
@@ -140,6 +143,10 @@ class Orders extends \yii\db\ActiveRecord
         
         if(isset($filters['orderId']) && $filters['orderId'] != ''){
             $extraSQL .= " and (id + ".self::MAGIC_NUMBER.") =  '".$filters['orderId']."'";
+        }
+        
+        if(isset($filters['isDelivery']) && $filters['isDelivery'] != ''){
+            $extraSQL .= " and isDelivery = ".$filters['isDelivery'];
         }
         
         $resp = array();

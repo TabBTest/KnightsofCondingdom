@@ -18,19 +18,34 @@ $('#select-order-now-button').on('click', function() {
 $('#select-state').val('$model->state');
 
 if (!$("input[name='TenantCode[SUBDOMAIN_REDIRECT]']").is(":checked")) {
-    $("input[name='TenantCode[REDIRECT_URL]']").prop("disabled",true);
+      $(".row[data-key='REDIRECT_URL']").hide();
 }
 
 $("input[name='TenantCode[SUBDOMAIN_REDIRECT]']").click(function() {
-    $("input[name='TenantCode[REDIRECT_URL]']").prop("disabled", !this.checked)
+    if(this.checked){
+        $(".row[data-key='REDIRECT_URL']").show();
+    }
+    else{
+        $(".row[data-key='REDIRECT_URL']").hide();
+    }
+    
 });
 
-if (!$("input[name='TenantCode[HAS_DELIVERY]']").is(":checked")) {
-    $("input[name='TenantCode[DELIVERY_CHARGE]']").prop("disabled",true);
+if (!$("input[name='TenantCode[HAS_DELIVERY]']").is(":checked")) {    
+    $(".row[data-key='DELIVERY_CHARGE']").hide();
+    $(".row[data-key='DELIVERY_MINIMUM_AMOUNT']").hide();
+    
 }
 
 $("input[name='TenantCode[HAS_DELIVERY]']").click(function() {
-    $("input[name='TenantCode[DELIVERY_CHARGE]']").prop("disabled", !this.checked)
+    if(this.checked){
+        $(".row[data-key='DELIVERY_CHARGE']").show();
+        $(".row[data-key='DELIVERY_MINIMUM_AMOUNT']").show();
+    }
+    else{
+        $(".row[data-key='DELIVERY_CHARGE']").hide();
+        $(".row[data-key='DELIVERY_MINIMUM_AMOUNT']").hide();
+    }
 });
 JS;
 
@@ -58,7 +73,7 @@ $this->registerJs($pageJs, $this::POS_READY);
 <ul class="nav nav-tabs">
     
     <li class="active"><a data-toggle="tab" href="#tab-settings">Settings</a></li>
-    <li><a data-toggle="tab" href="#tab-profile">Profile</a></li>
+    <li><a data-toggle="tab" href="#tab-profile">Restaurant Info</a></li>
     <li><a data-toggle="tab" href="#billing-info">Billing Info</a></li>
     <?php if(Yii::$app->user->identity->role == User::ROLE_VENDOR){?>
     <li><a data-toggle="tab" href="#billing-history">Billing History</a></li>

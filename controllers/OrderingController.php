@@ -167,6 +167,10 @@ class OrderingController extends CController
                 $totalFinalAmount += $adminFee;
                 
                 $deliveryFee = 0;
+                if(isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1){
+                    $deliveryFee = TenantHelper::getDeliveryAmount();
+                }
+                
                 $totalFinalAmount += $deliveryFee;
                 
                 //still need to include delivery
@@ -178,7 +182,10 @@ class OrderingController extends CController
                 $order->status = Orders::STATUS_NEW;
                 $order->customerId = \Yii::$app->user->id;
                 $order->vendorId = $user->vendorId;
-               
+                
+                if(isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1){
+                    $order->isDelivery = 1;
+                }
                
                 $notes = '';
                 if(isset($_POST['notes'])){

@@ -13,7 +13,7 @@ if(isset($params['Orders'])){
     <tbody>
 <?php 
 $finalAmount = 0;
-
+$itemsFinalAmount = 0;
     foreach($params['Orders'] as  $orderKey => $menuItemId){
         $quantity = $params['OrdersQuantity'][$orderKey];
         $menuItem = VendorMenuItem::findOne($menuItemId);
@@ -73,6 +73,7 @@ $finalAmount = 0;
             }
         } 
     }
+    $itemsFinalAmount = $finalAmount;
     $totalFinalAmount = $finalAmount * $salesTax;
     $salesTax = $totalFinalAmount - $finalAmount;
 ?>
@@ -86,6 +87,22 @@ $finalAmount = 0;
 $adminFee = floatval(UtilityHelper::getAppConfig(AppConfig::ADMIN_FEE, 0));
 $totalFinalAmount += $adminFee;
 ?>
+<?php
+$deliveryAmount = 0; 
+if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
+    $deliveryAmount = isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? TenantHelper::getDeliveryAmount() : 0;
+    $totalFinalAmount += $deliveryAmount;
+    ?>
+<tr>
+    <td>&nbsp;</td>
+    <td><label class='form-label'>    
+    Delivery Charge</label></td>
+    <td><label class='form-label delivery-amount'>
+    $<?php echo UtilityHelper::formatAmountForDisplay($deliveryAmount)?>
+    </label></td>
+</tr>
+
+<?php }?>
 <tr>
     <td>&nbsp;</td>
     <td><label class='form-label'>    
@@ -95,7 +112,7 @@ $totalFinalAmount += $adminFee;
 <tr>
     <td>&nbsp;</td>
     <td><label class='form-label'>Total</label></td>
-    <td><label class='form-label'>$<?php echo UtilityHelper::formatAmountForDisplay($totalFinalAmount)?></label></td>
+    <td><label class='form-label final-amount' data-amount='<?php echo $totalFinalAmount-$deliveryAmount?>'>$<?php echo UtilityHelper::formatAmountForDisplay($totalFinalAmount)?></label></td>
 </tr>
 </tbody>
 </table>
@@ -104,6 +121,14 @@ $totalFinalAmount += $adminFee;
     <label>Instructions</label>
     <textarea class='form-control' rows='5' cols='25' name='notes' placeholder='Please add your extra instructions here...'><?php echo isset($params['notes']) ? $params['notes'] : ''?></textarea>    
 </div>
+<?php if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){?>
+<div class='col-xs-12'>
+    <label>Do you want it delivered?</label>
+   
+    <input type='checkbox' <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value='1' class='has-delivery' name='isDelivery' data-amount='<?php echo TenantHelper::getDeliveryAmount()?>'/>    
+</div>
+
+<?php }?>
 <div class='col-xs-12'>
     <label>How do you want to pay?</label>
             

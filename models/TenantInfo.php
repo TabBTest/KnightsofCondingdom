@@ -20,6 +20,7 @@ class TenantInfo extends \yii\db\ActiveRecord
     const CODE_REDIRECT_URL = 'REDIRECT_URL';
     const CODE_SALES_TAX = 'SALES_TAX';
     const CODE_HAS_DELIVERY = 'HAS_DELIVERY';
+    const CODE_DELIVERY_MINIMUM_AMOUNT = 'DELIVERY_MINIMUM_AMOUNT';
     const CODE_DELIVERY_CHARGE = 'DELIVERY_CHARGE';
     /**
      * @inheritdoc
@@ -51,6 +52,7 @@ class TenantInfo extends \yii\db\ActiveRecord
         
         $tenantCustom[self::CODE_SALES_TAX] = 'Sales Tax (in percentage)';
         $tenantCustom[self::CODE_HAS_DELIVERY] = 'Has Delivery?';
+        $tenantCustom[self::CODE_DELIVERY_MINIMUM_AMOUNT] = 'Delivery Minimum Amount';
         $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'Delivery Charge Amount';
 
         return $tenantCustom;
@@ -60,6 +62,8 @@ class TenantInfo extends \yii\db\ActiveRecord
         $tenantCustom = [];        
         $tenantCustom[self::CODE_SALES_TAX] = 'numeric';
         $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'numeric';
+        $tenantCustom[self::CODE_DELIVERY_MINIMUM_AMOUNT] = 'numeric';
+        
         
         return isset($tenantCustom[$code]) ? $tenantCustom[$code] : '';
     }

@@ -58,10 +58,10 @@ use app\helpers\TenantHelper;
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-left'],
             'items' => [
-                ['label' => 'Dashboard', 'url' => ['/dashboard']],
-                ['label' => 'Menu', 'url' => ['/menu'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'menu') !== false ? true : false],
-                ['label' => 'Customer', 'url' => ['/customer'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'customer') !== false ? true : false],
+                //['label' => 'Dashboard', 'url' => ['/dashboard']],
                 ['label' => 'Order', 'url' => ['/order'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'order') !== false ? true : false],
+                ['label' => 'Menu', 'url' => ['/menu'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'menu') !== false ? true : false],
+                ['label' => 'Customer', 'url' => ['/customer'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'customer') !== false ? true : false],                
                 ['label' => 'Promotion', 'url' => ['/promotion'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'promotion') !== false ? true : false],
                 ['label' => 'Settings', 'url' => ['/vendor/settings'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? true : false],
 

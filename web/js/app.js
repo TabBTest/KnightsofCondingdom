@@ -441,6 +441,21 @@ var Order = {
 			$('.delete-order-item').off('click');
 			$('.delete-order-item').on('click', Order.deleteOrderItem);
 			$('#item-order-summary').html('');
+			
+			if($('.has-delivery').length == 1){
+				$('.has-delivery').off('click');
+				$('.has-delivery').on('click', function(){
+					var deliveryCharge = parseFloat($(this).data('amount'));
+					var am = parseFloat($('.final-amount').data('amount'));
+					if($(this).is(':checked')){
+						$('.delivery-amount').html('$ '+ (deliveryCharge).toFixed(2));
+						$('.final-amount').html('$ '+ (am+deliveryCharge).toFixed(2));
+					}else{						
+						$('.final-amount').html('$ '+ (am));
+						$('.delivery-amount').html('$ 0.00');
+					}
+				});
+			}
 		})
 	},
 	deleteOrderItem : function(){
@@ -484,6 +499,7 @@ var setupUi = function(){
 					Order.loadVendor();
 	    		Order.init = true;
 	    	}
+	    	$('[data-toggle="tooltip"]').tooltip();
 	}
 	if( $('.vendor-order-archive-history-pagination').length != 0){
 	    // init bootpag
@@ -503,6 +519,7 @@ var setupUi = function(){
 	    		Order.init = true;
 	    	}
 	    	*/
+	    	$('[data-toggle="tooltip"]').tooltip();
 	}
 	if( $('.vendor-billing-pagination').length != 0){
 	    // init bootpag
@@ -830,7 +847,7 @@ var VendorSettings = {
 		validateSettings : function(){
 			$('.vendor-settings-form .has-error').removeClass('has-error');
 			$('.numeric').each(function(){
-				if($.isNumeric($(this).val()) == false && $(this).prop('disabled') == false){
+				if($.isNumeric($(this).val()) == false && $(this).parents('.row[data-key="'+$(this).data('key')+'"]').is(':visible')){
 					$(this).parent().addClass('has-error');
 				}
 			})

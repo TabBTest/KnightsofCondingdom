@@ -30,6 +30,9 @@ use app\models\User;
         <div class='col-xs-12'>
             <label class='form-label'>Payment Type: <?php echo $orderInfo->getPaymentType();?></label>
         </div>
+        <div class='col-xs-12'>
+            <label class='form-label'>Order Type: <?php echo $orderInfo->isDelivery == 1 ? 'For Delivery' : 'For Store Pick-up';?></label>
+        </div>
         <div class='col-xs-12' >
             <label class='form-label'>Is Paid? 
             <?php if($orderInfo->isPaid == 1){

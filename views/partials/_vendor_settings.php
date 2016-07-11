@@ -78,19 +78,19 @@ use app\models\VendorOperatingHours;
             ?>
             <?php if($codeKey == TenantInfo::CODE_SUBDOMAIN_REDIRECT || $codeKey == TenantInfo::CODE_HAS_DELIVERY){?>
 
-                <div class='row form-group'>
+                <div class='row form-group' data-key='<?php echo $codeKey?>'>
                     <div class='col-xs-12'>
                         <label class='form-label'><?php echo $codeDescription?></label>
                         <input type='hidden' value='0' name='TenantCode[<?php echo $codeKey?>]'/>
-                        <input type='checkbox' style='margin-left: 10px' class='' value='1' name='TenantCode[<?php echo $codeKey?>]' <?php echo TenantInfo::getTenantValue($userId, $codeKey) == 1 ? 'checked' : ''?>/>
+                        <input type='checkbox' style='margin-left: 10px' class='' value='1' data-key='<?php echo $codeKey?>' name='TenantCode[<?php echo $codeKey?>]' <?php echo TenantInfo::getTenantValue($userId, $codeKey) == 1 ? 'checked' : ''?>/>
                     </div>
                 </div>
             <?php }else{                 
                 ?>
-                <div class='row form-group'>
+                <div class='row form-group' data-key='<?php echo $codeKey?>'>
                     <div class='col-xs-12'>
                         <label class='form-label'><?php echo $codeDescription?></label>
-                        <input class='form-control <?php echo TenantInfo::getCustomClasses($codeKey)?>' type='text' name='TenantCode[<?php echo $codeKey?>]' value="<?php echo TenantInfo::getTenantValue($userId, $codeKey)?>"/>
+                        <input class='form-control <?php echo TenantInfo::getCustomClasses($codeKey)?>' data-key='<?php echo $codeKey?>' type='text' name='TenantCode[<?php echo $codeKey?>]' value="<?php echo TenantInfo::getTenantValue($userId, $codeKey)?>"/>
                     </div>
                 </div>
             <?php }?>

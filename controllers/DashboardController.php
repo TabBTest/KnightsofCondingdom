@@ -13,6 +13,7 @@ use yii\base\ViewContextInterface;
 use app\models\ApplicationTypeFormSetup;
 use app\models\Candidates;
 use yii\base\Application;
+use app\models\User;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -48,7 +49,11 @@ class DashboardController extends CController
      */
     public function actionIndex()
     {
-        
+        if(Yii::$app->user->identity->role == User::ROLE_CUSTOMER){
+            return $this->redirect('/ordering/menu');
+        }else if(Yii::$app->user->identity->role == User::ROLE_VENDOR){
+            return $this->redirect('/order');
+        }
         return $this->render('index');
     }
 }
