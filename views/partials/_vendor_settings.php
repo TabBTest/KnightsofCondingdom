@@ -14,15 +14,12 @@ use app\models\VendorOperatingHours;
             <label class='form-label'>Your Widget</label>
             <textarea class='form-control copy-content' id='widget-js' rows="5" cols="20">
 <script type="text/javascript" id="foodapp-js" src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/js/sdk.js"></script>
-<div class='restalutions-widget-button' style='position: absolute; top: 10px; right: 10px; height: 20px; width: 100px; -moz-user-select: none;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    font-size: 14px;
-    padding: 6px 12px;
-    text-align: center;background-color: #5cb85c; '>Show Menu
-</div>
-<div class="restalutions-widget" data-subdomain='<?php echo TenantHelper::getVendorSubdomain($model->id)?>' style='position: absolute; right: 10px; top: 50px; display: none'></div></textarea>
+<div class='restalutions-widget-button'>Show Menu</div>
+<div  class="modal-widget" style='display: none'>
+<div class="modal-content-widget" ><div class="modal-header-widget"><h2>Menu Order</h2></div>
+<div class="modal-body-widget restalutions-widget" data-subdomain='<?php echo TenantHelper::getVendorSubdomain($model->id)?>' ></div>
+<div class="modal-footer-widget"><button class='btn-widget btn-info pull-right-widget close-modal'>Close</button></div>
+</div></div></textarea>
 <br />
 <a href="javascript: void(0)" data-clipboard-target="#widget-js" class="btn btn-info btn-copy-widget" data-type='widget'><i class="fa fa-copy">Copy to Clipboard</i></a>
         </div>

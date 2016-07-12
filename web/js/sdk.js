@@ -29,16 +29,26 @@ var FoodApp = {
 			iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(html);
 			document.body.appendChild(iframe);
 			*/
+			injectFiles([FoodApp.getScriptContext() + "/widget/widget.css"], function() {
+
+			});
+			
 			FoodApp.jquery('.restalutions-widget-button').on('click', function(){
-				FoodApp.jquery('.restalutions-widget').toggle();
-				if(FoodApp.jquery('.restalutions-widget').is(':visible')){
+				//FoodApp.jquery('.modal-widget').show();
+				FoodApp.jquery('.close-widget, .close-modal').off('click');
+				FoodApp.jquery('.close-widget, .close-modal').on('click', function(){
+					FoodApp.jquery('.modal-widget').hide();
+					FoodApp.jquery('.restalutions-widget-button').html('Show Menu');
+				});
+				FoodApp.jquery('.modal-widget').toggle();
+				if(FoodApp.jquery('.modal-widget').is(':visible')){
 					FoodApp.jquery('.restalutions-widget-button').html('Hide Menu');
 				}else{
 					FoodApp.jquery('.restalutions-widget-button').html('Show Menu');
 				}
 			});
 			var subdomain = FoodApp.jquery('.restalutions-widget').data('subdomain');
-			FoodApp.jquery('<iframe id="foodapp-iframe" height="'+(window.innerHeight-100)+'" name="myFrame" src="http://'+subdomain+'/ordering/menu">').appendTo('.restalutions-widget');
+			FoodApp.jquery('.restalutions-widget').html('<iframe style="border: none" id="foodapp-iframe" height="100%" width="100%" name="myFrame" src="http://'+subdomain+'/ordering/menu">');
 			
 			
 			
