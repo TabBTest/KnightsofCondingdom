@@ -27,9 +27,16 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class='row'>
 
     <div class='col-xs-8'>
+        
         <div class='col-xs-12 text-center'>
             <h1>Menu</h1>
         </div>
+        
+        
+        <div class='col-xs-12 form-group'>
+            &nbsp;&nbsp;&nbsp;&nbsp;<a style='margin-left: 10px' href="#" class="btn btn-default openall pull-right">Expand All</a> &nbsp;&nbsp;<a href="#" class="btn btn-default closeall pull-right">Close All</a>
+        </div>
+        
     <div class="panel-group categories-main-panel" id="accordion">
         <?php 
         foreach($vendorCategories as $category){
