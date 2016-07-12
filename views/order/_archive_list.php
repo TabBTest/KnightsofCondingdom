@@ -7,18 +7,21 @@ $totalCount = $orders['count'];
 <table class="table table-striped table-condensed">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Order Details</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Order #</th>
+            <th>Is Paid?</th>
+             <th>Type</th>
             <th>Time</th>
             <th>Status</th>
             <th>Confirmed Time</th>
             <th>Start Time</th>
-            <th>Picked-up Time</th>            
+            <th>Picked-up Time</th>              
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td colspan='7'>No Archived Orders</td>
+            <td colspan='10'>No Archived Orders</td>
         </tr>
     </tbody>
 </table>
@@ -26,7 +29,8 @@ $totalCount = $orders['count'];
 <table class="table table-striped table-condensed">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Order #</th>
             <th>Is Paid?</th>
              <th>Type</th>
@@ -38,9 +42,12 @@ $totalCount = $orders['count'];
         </tr>
     </thead>
     <tbody>
-        <?php foreach($list as $orderInfo){?>
+        <?php foreach($list as $orderInfo){
+            $customer = $orderInfo->getCustomer();
+        ?>
         <tr class="" data-id="<?php echo $orderInfo->id?>">
-            <td><?php echo $orderInfo->getCustomerName()?></td>
+            <td><?php echo $customer->firstName?></td>
+            <td><?php echo $customer->lastName?></td>
             <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)"># <?php echo $orderInfo->getOrderId()?></a></td>
              <td>
             <?php if($orderInfo->isPaid == 1){

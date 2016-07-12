@@ -10,11 +10,7 @@ use yii\widgets\MaskedInput;
             $userId = $model->id;
             ?>
             <input type='hidden' value='<?php echo $userId?>' name='userId'/>
-            <div class='col-xs-12 form-group'>                
-                <label>Current Card: <?php echo 'XXXX-XXXX-XXXX-'.$model->cardLast4?></label>
-                <br />
-                <label>Current Card Expires: <?php echo date('M Y', strtotime($model->cardExpiry))?></label>
-                <br />
+            <div class='col-xs-12 form-group'>                                
 
                 <?php
                 $cardState = $model->getCardState();
@@ -70,7 +66,7 @@ use yii\widgets\MaskedInput;
             </div>
             <div class='col-xs-12 col-md-6 form-group'>
                 <label>Card Number</label>
-                <input type='text' class='form-control card-number' placeholder='Credit Card Number'/>
+                <input type='text' class='form-control card-number'  placeholder='<?php echo 'XXXX-XXXX-XXXX-'.$model->cardLast4?>'/>
             </div>
             <div class='col-xs-4 col-md-2  form-group'>
                 <label>Security Code</label>
@@ -84,18 +80,18 @@ use yii\widgets\MaskedInput;
                     <?php for($index = 1 ; $index < 13; $index++){
                         $indexVal = $index < 10 ? '0'.$index : $index;
                         ?>
-                        <option value="<?php echo $indexVal?>"><?php echo $indexVal?></option>
+                        <option <?php echo $indexVal == date('m', strtotime($model->cardExpiry)) ? 'selected' : ''?> value="<?php echo $indexVal?>"><?php echo $indexVal?></option>
                     <?php }?>
                 </select>
             </div>
             <div class='col-xs-4 col-md-2 form-group'>
                 <label>Expiry Year</label>
                 <select  class="form-control card-expiry-year">
-                    <option value=''>year</option>
+                    <option value=''>Year</option>
                     <?php
                     $curYear = date('Y');
                     for($index = $curYear ; $index < $curYear + 20; $index++){?>
-                        <option value="<?php echo $index?>"><?php echo $index?></option>
+                        <option <?php echo $index == date('Y', strtotime($model->cardExpiry)) ? 'selected' : ''?> value="<?php echo $index?>"><?php echo $index?></option>
                     <?php }?>
                 </select>
             </div>
@@ -103,5 +99,6 @@ use yii\widgets\MaskedInput;
                 <button type='button' class='btn btn-success btn-save-billing'>Save</button>
             </div>
 
+                
         </form>
     </div>

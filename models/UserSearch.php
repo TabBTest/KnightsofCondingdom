@@ -19,7 +19,7 @@ class UserSearch extends User
     {
         return [
             [['id', 'role', 'vendorId', 'isPasswordReset'], 'integer'],
-            [['email', 'password', 'name', 'streetAddress', 'phoneNumber', 'billingName', 'billingStreetAddress', 'date_created', 'date_updated', 'stripeId', 'cardLast4', 'cardExpiry', 'city', 'state', 'billingCity', 'billingState', 'billingPhoneNumber'], 'safe'],
+            [['email', 'password', 'firstName','lastName', 'streetAddress', 'phoneNumber', 'billingName', 'billingStreetAddress', 'date_created', 'date_updated', 'stripeId', 'cardLast4', 'cardExpiry', 'city', 'state', 'billingCity', 'billingState', 'billingPhoneNumber'], 'safe'],
         ];
     }
 
@@ -69,7 +69,8 @@ class UserSearch extends User
 
         $query->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'password', $this->password])
-            ->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'firstName', $this->firstName])
+            ->andFilterWhere(['like', 'lastName', $this->lastName])
             ->andFilterWhere(['like', 'streetAddress', $this->streetAddress])
             ->andFilterWhere(['like', 'phoneNumber', $this->phoneNumber])
             ->andFilterWhere(['like', 'billingName', $this->billingName])

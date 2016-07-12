@@ -111,8 +111,11 @@ class Orders extends \yii\db\ActiveRecord
             $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
         }
         
-        if(isset($filters['name']) && $filters['name'] != ''){
-            $extraSQL .= " and customerId in (select id from user where name like '%".mysql_escape_string($filters['name'])."%')";           
+        if(isset($filters['firstName']) && $filters['firstName'] != ''){
+            $extraSQL .= " and customerId in (select id from user where firstName like '%".mysql_escape_string($filters['firstName'])."%')";
+        }
+        if(isset($filters['lastName']) && $filters['lastName'] != ''){
+            $extraSQL .= " and customerId in (select id from user where lastName like '%".mysql_escape_string($filters['lastName'])."%')";
         }
         
         if(isset($filters['orderId']) && $filters['orderId'] != ''){
@@ -137,8 +140,11 @@ class Orders extends \yii\db\ActiveRecord
 //             $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
 //         }
         
-        if(isset($filters['name']) && $filters['name'] != ''){
-            $extraSQL .= " and customerId in (select id from user where name like '%".mysql_escape_string($filters['name'])."%')";
+        if(isset($filters['firstName']) && $filters['firstName'] != ''){
+            $extraSQL .= " and customerId in (select id from user where firstName like '%".mysql_escape_string($filters['firstName'])."%')";
+        }
+        if(isset($filters['lastName']) && $filters['lastName'] != ''){
+            $extraSQL .= " and customerId in (select id from user where lastName like '%".mysql_escape_string($filters['lastName'])."%')";
         }
         
         if(isset($filters['orderId']) && $filters['orderId'] != ''){
@@ -164,7 +170,11 @@ class Orders extends \yii\db\ActiveRecord
     }
     public function getCustomerName(){
         $user = User::findOne($this->customerId);
-        return $user->name;   
+        return $user->getFullName();   
+    }
+    public function getCustomer(){
+        $user = User::findOne($this->customerId);
+        return $user;
     }
     public function getPaymentType(){
         if($this->paymentType == self::PAYMENT_TYPE_CARD)

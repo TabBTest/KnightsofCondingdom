@@ -9,7 +9,8 @@ $totalCount = $customers['count'];
 <table class="table table-striped table-condensed">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
             <th>Phone</th>
             <th>Email</th>
             <th>Street Address</th>
@@ -22,7 +23,8 @@ $totalCount = $customers['count'];
     <tbody>
         <?php foreach($list as $customer){?>
         <tr class="" data-id="<?= $customer->id ?>">
-            <td><?= $customer->name ?></td>
+            <td><?= $customer->firstName ?></td>
+            <td><?= $customer->lastName ?></td>
             <td><a href='tel:<?php echo $customer->phoneNumber?>'><?= $customer->phoneNumber?></a></td>
             <td><a href='mailto:<?php echo $customer->email?>'><?= $customer->email ?></td>
             <td><?= $customer->streetAddress?></td>

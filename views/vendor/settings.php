@@ -31,14 +31,14 @@ $("input[name='TenantCode[SUBDOMAIN_REDIRECT]']").click(function() {
     
 });
 
-if (!$("input[name='TenantCode[HAS_DELIVERY]']").is(":checked")) {    
+if ($("select[name='TenantCode[HAS_DELIVERY]']").val() == 0) {    
     $(".row[data-key='DELIVERY_CHARGE']").hide();
     $(".row[data-key='DELIVERY_MINIMUM_AMOUNT']").hide();
     
 }
 
-$("input[name='TenantCode[HAS_DELIVERY]']").click(function() {
-    if(this.checked){
+$("select[name='TenantCode[HAS_DELIVERY]']").on('change', function() {
+    if($(this).val() == 1){
         $(".row[data-key='DELIVERY_CHARGE']").show();
         $(".row[data-key='DELIVERY_MINIMUM_AMOUNT']").show();
     }

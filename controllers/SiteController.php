@@ -146,7 +146,9 @@ class SiteController extends CController
                 //we register it already
                 $randomPassword = UtilityHelper::generateRandomPassword();
                 $user = new User();
-                $user->name = $userData['name'];
+                $user->businessName = $userData['businessName'];
+                $user->firstName = $userData['firstName'];
+                $user->lastName = $userData['lastName'];
                 $user->streetAddress = $userData['streetAddress'];
                 $user->city = $userData['city'];
                 $user->state = $userData['state'];
@@ -211,7 +213,8 @@ class SiteController extends CController
 
                 $randomPassword = UtilityHelper::generateRandomPassword();
                 $user = new User();
-                $user->name = $userData['name'];
+                $user->firstName = $userData['firstName'];
+                $user->lastName = $userData['lastName'];
                 $user->streetAddress = $userData['streetAddress'];
                 $user->city = $userData['city'];
                 $user->state = $userData['state'];

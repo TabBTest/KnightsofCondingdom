@@ -59,7 +59,8 @@ $this->registerJs($pageJs, $this::POS_READY);
                 <label> <input value='1' type='checkbox' name='filter[showCompleted]' id='showCompletedOrder'/>&nbsp;&nbsp;Show Completed Order</label>
             </div>
             <div class='col-xs-12 form-group'>
-                <label>Name:&nbsp;&nbsp; <input type='text' name='filter[name]' class='form-control' /> </label>
+                <label>First Name:&nbsp;&nbsp; <input type='text' name='filter[firstName]' class='form-control' /> </label>
+                <label>Last Name:&nbsp;&nbsp; <input type='text' name='filter[lastName]' class='form-control' /> </label>
                 <label>Order #:&nbsp;&nbsp; <input type='text' name='filter[orderId]' class='form-control' /> </label>
                 <label  style='position: relative; top: 27px;'  >Type #:&nbsp;&nbsp; <select   name='filter[isDelivery]' class='form-control' ><option value=''>All</option><option value='0'>For Pick-up</option><option value='1'>For Delivery</option></select> </label>
                 <label style='vertical-align: bottom'>&nbsp;<button type='button' class='btn btn-info' onclick='Order.search("current");'>Search</button></label>
@@ -73,7 +74,8 @@ $this->registerJs($pageJs, $this::POS_READY);
         <form id='archived-order-form'>
             
             <div class='col-xs-12 form-group'>
-                <label>Name:&nbsp;&nbsp; <input type='text' name='filter[name]' class='form-control' /> </label>
+                <label>First Name:&nbsp;&nbsp; <input type='text' name='filter[firstName]' class='form-control' /> </label>
+                <label>Last Name:&nbsp;&nbsp; <input type='text' name='filter[lastName]' class='form-control' /> </label>
                 <label>Order #:&nbsp;&nbsp; <input type='text' name='filter[orderId]' class='form-control' /> </label>
                 <label  style='position: relative; top: 27px;'  >Type #:&nbsp;&nbsp; <select name='filter[isDelivery]' class='form-control' ><option value=''>All</option><option value='0'>For Pick-up</option><option value='1'>For Delivery</option></select> </label>
                 <label style='vertical-align: bottom'>&nbsp;<button type='button' class='btn btn-info' onclick='Order.search("archived");'>Search</button></label>

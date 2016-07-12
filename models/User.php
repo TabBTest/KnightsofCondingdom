@@ -66,7 +66,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
             [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone', 'isOptIn'], 'safe'],
-            [['email', 'password', 'name', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId', 'orderButtonImage'], 'string', 'max' => 250],
+            [['email', 'password','businessName', 'firstName','lastName', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId', 'orderButtonImage'], 'string', 'max' => 250],
             [['state', 'billingState'], 'string', 'max' => 2],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg']
         ];
@@ -82,7 +82,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'email' => 'Email',
             'password' => 'Password',
             'role' => 'Role',
-            'name' => 'Name',
+            'Business Name' => 'Business Name',
+            'firstName' => 'First Name',
+            'lastName' => 'Last Name',
             'imgFile' => 'Image File',
             'streetAddress' => 'Street Address',
             'city' => 'City',
@@ -99,7 +101,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
     
     public function getFullName(){
-        return $this->name;
+        return $this->firstName.' '.$this->lastName;
     }
     public function getFullAddress(){
         return $this->billingStreetAddress.', '.$this->billingCity.', '.$this->billingState;
@@ -195,8 +197,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     public static function getVendorCustomers($userId, $resultsPerPage, $page, $filters){
         $extraSQL = '';
-        if(isset($filters['name']) && $filters['name'] != ''){
-            $extraSQL .= " and name like '%".mysql_escape_string($filters['name'])."%'";           
+        if(isset($filters['firstName']) && $filters['firstName'] != ''){
+            $extraSQL .= " and firstName like '%".mysql_escape_string($filters['firstName'])."%'";           
+        }
+        if(isset($filters['lastName']) && $filters['lastName'] != ''){
+            $extraSQL .= " and lastName like '%".mysql_escape_string($filters['lastName'])."%'";
         }
         
         if(isset($filters['email']) && $filters['email'] != ''){

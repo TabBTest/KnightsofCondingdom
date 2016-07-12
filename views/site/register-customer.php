@@ -25,8 +25,11 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
         <h1>REGISTER</h1>
         <h3>Step 1 - Account Information</h3>
         </div>
-        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <input type='text' class='form-control' name='User[name]' placeholder='Name'/>
+        <div class='col-xs-6 col-md-3 col-md-offset-3 form-group'>
+            <input type='text' class='form-control' name='User[firstName]' placeholder='First Name'/>
+        </div>
+        <div class='col-xs-6 col-md-3 form-group'>
+            <input type='text' class='form-control' name='User[lastName]' placeholder='Last Name'/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
             <input type='text' class='form-control' name='User[streetAddress]'  placeholder='Street Address'/>

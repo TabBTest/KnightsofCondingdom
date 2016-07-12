@@ -76,7 +76,7 @@ use app\models\VendorOperatingHours;
         <input type='hidden' value='<?= $model->orderButtonImage ?>' name='orderButtonImage' id="order-now-button-field"/>
         <?php foreach(TenantInfo::getTenantCodes() as $codeKey => $codeDescription){
             ?>
-            <?php if($codeKey == TenantInfo::CODE_SUBDOMAIN_REDIRECT || $codeKey == TenantInfo::CODE_HAS_DELIVERY){?>
+            <?php if($codeKey == TenantInfo::CODE_SUBDOMAIN_REDIRECT){?>
 
                 <div class='row form-group' data-key='<?php echo $codeKey?>'>
                     <div class='col-xs-12'>
@@ -85,7 +85,19 @@ use app\models\VendorOperatingHours;
                         <input type='checkbox' style='margin-left: 10px' class='' value='1' data-key='<?php echo $codeKey?>' name='TenantCode[<?php echo $codeKey?>]' <?php echo TenantInfo::getTenantValue($userId, $codeKey) == 1 ? 'checked' : ''?>/>
                     </div>
                 </div>
-            <?php }else{                 
+            <?php } else if($codeKey == TenantInfo::CODE_HAS_DELIVERY){
+            ?>
+             <div class='row form-group' data-key='<?php echo $codeKey?>'>
+                    <div class='col-xs-12'>
+                        <label class='form-label'><?php echo $codeDescription?></label>
+                        <select class='form-control short-input' data-key='<?php echo $codeKey?>' name='TenantCode[<?php echo $codeKey?>]'>
+                            <option <?php echo TenantInfo::getTenantValue($userId, $codeKey) == 0 ? 'selected' : ''?> value='0'>No</option>
+                            <option <?php echo TenantInfo::getTenantValue($userId, $codeKey) == 1 ? 'selected' : ''?> value='1'>Yes</option>
+                        </select>
+                    </div>
+                </div>
+            <?php 
+            }else{                 
                 ?>
                 <div class='row form-group' data-key='<?php echo $codeKey?>'>
                     <div class='col-xs-12'>

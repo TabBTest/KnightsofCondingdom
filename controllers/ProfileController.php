@@ -99,7 +99,11 @@ class ProfileController extends CController
                  \Yii::$app->getSession()->setFlash('error', 'Email should be unique');
             }else{
                 //we register it already
-                $model->name = $userData['name'];
+                $model->businessName = isset($userData['businessName']) ? $userData['businessName'] : '';
+                
+                $model->firstName = $userData['firstName'];
+                $model->lastName = $userData['lastName'];
+                
                 $model->streetAddress = $userData['streetAddress'];
                 $model->city = $userData['city'];
                 $model->state = $userData['state'];
@@ -107,7 +111,7 @@ class ProfileController extends CController
                 $model->timezone = $userData['timezone'];
                 $model->phoneNumber = $userData['phoneNumber'];
                 
-                if(Yii::$app->session->get('role') == User::ROLE_ADMIN){
+                if(Yii::$app->user->identity->role == User::ROLE_ADMIN){
                     $model->isActive = intval($userData['isActive']);
                 }
                 
