@@ -43,6 +43,6 @@ tinymce.init({
     </form>
     </div>
     <div class='form-group text-center'>
-    <button type='button' class='btn btn-info btn-send-promo' data-to='0'>Send to Self</button>
-    <button type='button' class='btn btn-info btn-send-promo' data-to='1'>Send to Customers</button>
+    <button type='button' class='btn btn-success btn-send-promo' data-to='0'>Send to Self</button>
+    <button type='button' class='btn btn-success btn-send-promo' data-to='1'>Send to Customers</button>
     </div>
