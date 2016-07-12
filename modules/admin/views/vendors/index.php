@@ -29,6 +29,12 @@ function extraLinks($model, $el)
             ]
         );
         array_push($rest, [
+        'label' => 'Edit Menu',
+        'url' => '/admin/vendors/menu?id=' . $model->id,
+        'ico' => 'fa-list-alt'
+            ]
+        );
+        array_push($rest, [
         'label' => 'View Payment History',
         'url' => '/admin/vendors/payments?id=' . $model->id,
         'ico' => 'fa-list-alt'
@@ -56,9 +62,11 @@ function extraLinks($model, $el)
             'email:email',
            // 'password',
            // 'role',
-            'name',
+            'businessName',
+            'firstName',
+            'lastName',
             // 'streetAddress',
-            'phoneNumber',
+            //'phoneNumber',
             // 'billingName',
             // 'billingStreetAddress',
             // 'vendorId',

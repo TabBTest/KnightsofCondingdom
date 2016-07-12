@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\models\VendorMembership;
+use app\models\VendorMenu;
+use app\models\MenuCategories;
 
 /**
  * VendorController implements the CRUD actions for User model.
@@ -23,7 +25,7 @@ class VendorsController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'customers', 'settings', 'payments', 'viewpage'],
+                        'actions' => ['index', 'customers', 'settings', 'payments', 'viewpage', 'menu'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -133,6 +135,22 @@ class VendorsController extends CController
         
         return $this->render('/../../../views/vendor/settings', ['model' => $model]);
         
+    }
+    
+    public function actionMenu(){
+        $user = User::findOne($_REQUEST['id']);
+        $vendorMenu = User::getVendorDefaultMenu($user);
+        if($vendorMenu === false){
+            $vendorMenu = new VendorMenu();
+            $vendorMenu->name = 'default menu';
+            $vendorMenu->vendorId = $user->id;
+            $vendorMenu->isDefault = 1;
+            $vendorMenu->save();
+        }
+        
+        $vendorCategories = MenuCategories::find()->where('isArchived = 0 and vendorId = '.$user->id.' order by sorting asc')->all();
+        
+        return $this->render('/../../../views/menu/index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
     }
     
     public function actionPayments(){

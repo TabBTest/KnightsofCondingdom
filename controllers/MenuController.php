@@ -102,8 +102,11 @@ class MenuController extends CController
         \Yii::$app->getSession()->setFlash('success', 'Menu Category Deleted Successfully');
     }
     public function actionSaveItem(){
-        
+        $nextUrl = '/menu';
         if(count($_POST) > 0){
+            
+            
+            
             $menuItemId = $_POST['id'];
             $vendorMenuItem = VendorMenuItem::findOne($menuItemId);
             if($vendorMenuItem == null){
@@ -118,6 +121,10 @@ class MenuController extends CController
             $vendorMenuItem->amount = floatval($_POST['amount']);
             $vendorMenuItem->save();
             
+            $menuCategory = MenuCategories::findOne($vendorMenuItem->menuCategoryId);
+            if(Yii::$app->user->identity->role == User::ROLE_ADMIN){
+                $nextUrl = '/admin/vendors/menu?id='.$menuCategory->vendorId;
+            }
             if(isset($_FILES['photo'])){
                  
                 $filename = $_FILES['photo']["name"];
@@ -142,7 +149,7 @@ class MenuController extends CController
             \Yii::$app->getSession()->setFlash('success', 'Menu Item Saved Successfully');
             
         }
-        return $this->redirect('/menu');
+        return $this->redirect($nextUrl);
     }
     
     public function actionAddCategoryAddOns(){
@@ -255,8 +262,10 @@ class MenuController extends CController
     }
     
     public function actionSaveCategory(){
-    
+        $nextUrl = '/menu';
         if(count($_POST) > 0){
+            
+            
             $categoryId = $_POST['id'];
             $category = MenuCategories::findOne($categoryId);
             if($category == null){
@@ -269,11 +278,14 @@ class MenuController extends CController
             $category->description = $_POST['description'];
             $category->save();
                 
+            if(Yii::$app->user->identity->role == User::ROLE_ADMIN){
+                $nextUrl = '/admin/vendors/menu?id='.$category->vendorId;
+            }
     
             \Yii::$app->getSession()->setFlash('success', 'Menu Category Saved Successfully');
     
         }
-        return $this->redirect('/menu');
+        return $this->redirect($nextUrl);
     }
     
     public function actionSaveMenuSort(){
