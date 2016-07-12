@@ -347,6 +347,22 @@ if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
     	})
     	
     });
+    
+    $("input[type='checkbox'][name='isStoreOpen']").bootstrapSwitch({'onText' : 'Open', 
+        'offText' : 'Close',
+        'onColor' : 'success',
+       'offColor' : 'danger',
+       'state' : $("input[type='checkbox'][name='isStoreOpen']").is(':checked'),
+        'labelText' : 'Store',
+        'onSwitchChange' : function(event, state){
+        	console.log(state);
+        	if(state == true){
+        		$('.store-close-reason').hide();
+        	}else{
+        		$('.store-close-reason').show();
+        	}
+        }});
+        
 });
 var Order = {
 	init : false,

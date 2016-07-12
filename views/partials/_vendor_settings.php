@@ -108,8 +108,23 @@ use app\models\VendorOperatingHours;
             <?php }?>
         <?php }?>
         <?php 
-        $operatingTime = UtilityHelper::getOperatingTime();                
+        $operatingTime = UtilityHelper::getOperatingTime();
+                        
         ?>
+        
+        <div class='row form-group'>
+             <div class='col-xs-12'>
+                <label class='form-label'>Is Store Open?</label>
+                <input type='hidden' name="isStoreOpen" value='0'/>
+                <input type="checkbox" name="isStoreOpen" <?php echo $model->isStoreOpen == 1 ? 'checked' : ''?> value='1'/>
+            </div>
+        </div>
+        <div class='row form-group store-close-reason' style='display: <?php echo $model->isStoreOpen == 1 ? 'none' : 'block'?>'>
+            <div class='col-xs-12'>
+                <label class='form-label'>Reason for Store Closing:</label>
+                <textarea class='form-control' name='storeCloseReason' rows='5' cols='20'><?php echo nl2br($model->storeCloseReason)?></textarea>
+            </div>
+        </div>
         <div class='row form-group  form-inline'>
             
             <div class='col-xs-8'>

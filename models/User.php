@@ -65,7 +65,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
-            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone', 'isOptIn'], 'safe'],
+            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone', 'isOptIn', 'isStoreOpen', 'storeCloseReason'], 'safe'],
             [['email', 'password','businessName', 'firstName','lastName', 'streetAddress', 'city','phoneAreaCode','phone3','phone4','phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity','billingPhoneAreaCode','billingPhone3','billingPhone4', 'billingPhoneNumber', 'stripeId', 'orderButtonImage'], 'string', 'max' => 250],
             [['state', 'billingState'], 'string', 'max' => 2],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg']
@@ -358,6 +358,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     */
     
     public function isVendorStoreOpen(){
+        
+        if($this->isStoreOpen == 0){
+            return false;
+        }
         //get the current day
         $vendorId = $this->id;
         

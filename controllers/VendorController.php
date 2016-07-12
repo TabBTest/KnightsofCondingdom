@@ -69,6 +69,14 @@ class VendorController extends CController
                 $model->orderButtonImage = $_POST['orderButtonImage'];
                 $model->save();
             }
+            
+            if(isset($_POST['isStoreOpen'])){
+                $model = User::findOne($userId);
+                $model->isStoreOpen = $_POST['isStoreOpen'];
+                $model->storeCloseReason = $_POST['storeCloseReason'];
+                $model->save();
+            }
+            
 
             if(Yii::$app->user->identity->role != null && Yii::$app->user->identity->role == User::ROLE_ADMIN){
                 $nextUrl = '/admin/vendors/settings?id='.$userId;
@@ -86,6 +94,7 @@ class VendorController extends CController
             } else {
                 \Yii::$app->getSession()->setFlash('error', 'Subdomain is already taken. Please select a different subdomain.');
             }
+            
             
             VendorOperatingHours::deleteAll(['vendorId' => $userId]);
             $startTimes = $_POST['startTime'];

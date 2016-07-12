@@ -111,7 +111,20 @@ class TenantHelper {
         }
         return false;
     }
-    
+    static public function getCloseReason(){
+        if(TenantHelper::isDefaultTenant() === false){
+            $subdomain = TenantHelper::getSubDomain();
+            $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
+            if($tenantInfo){
+                $userVendor = User::findOne($tenantInfo->userId);
+                if($userVendor->isStoreOpen == 0 && $userVendor->storeCloseReason != null && $userVendor->storeCloseReason != ''){
+                    return $userVendor->storeCloseReason;
+                }
+            }
+        
+        }
+        return '';
+    }
     static public function isVendorStoreClose(){
         if(TenantHelper::isDefaultTenant() === false){
             $subdomain = TenantHelper::getSubDomain();

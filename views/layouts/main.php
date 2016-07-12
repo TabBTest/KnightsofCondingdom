@@ -25,6 +25,7 @@ use app\helpers\TenantHelper;
     <link href="/css/font-awesome.min.css" rel="stylesheet">
     <link href="/css/jquery-confirm.min.css" rel="stylesheet">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-switch.min.css" rel="stylesheet">
     <link href="/css/site.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -163,6 +164,8 @@ use app\helpers\TenantHelper;
     <script src="/js/ga.js"></script>
     <script src="/js/clipboard.min.js"></script>
     <script src="/js/jquery-confirm.min.js"></script>
+    <script src="/js/bootstrap-switch.min.js"></script>
+    
     <script src="/js/app.js"></script>
 <style>
 body > .wrap > .container {
