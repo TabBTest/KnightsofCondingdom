@@ -91,13 +91,9 @@ use yii\widgets\MaskedInput;
            
         </div>
         <div class='col-xs-12 form-group'>
-            <label>New Password</label>
-            <input type='password' class='form-control' name='password'  value=''/>
+            <button type='button' class='btn btn-info btn-change-password' data-id='<?php echo md5($model->id)?>'>Change Password</button>
         </div>
-        <div class='col-xs-12 form-group'>
-            <label>Confirm New Password</label>
-            <input type='password' class='form-control' name='confirmPassword'  value=''/>
-        </div>
+        
         <div class='col-xs-12 form-group text-center'>
             <button class='btn btn-success'>Save</button>
         </div>

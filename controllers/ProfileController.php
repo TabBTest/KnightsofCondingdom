@@ -30,7 +30,7 @@ class ProfileController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'save', 'save-billing'],
+                        'actions' => ['index', 'save', 'save-billing', 'change-password', 'save-password'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -45,6 +45,29 @@ class ProfileController extends CController
         ];
     }
 
+    public function actionChangePassword(){
+        return $this->renderPartial('../partials/change-password', ['id' => ($_REQUEST['id'])]);
+    }
+    public function actionSavePassword(){
+        $resp = [];
+        $resp['status'] = 0;
+        if($_POST['password'] != ''){
+            $model = User::find()->where("md5(id) = '".$_POST['id']."'")->one();
+            if($model){
+                if($_POST['password'] == $_POST['confirmPassword']){
+                    $model->password = $_POST['password'];
+                    $model->confirmPassword = $_POST['password'];
+                    if($model->save()){
+                        $resp['status'] = 1;
+                    }
+                }
+            }
+        }
+        
+        echo json_encode($resp);
+        die;
+    }
+    
     /**
      * Lists all ApplicationType models.
      * @return mixed

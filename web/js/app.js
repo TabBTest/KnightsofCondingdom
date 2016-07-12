@@ -302,6 +302,51 @@ if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
           $(this).parent().next('.phone[data-key="'+$(this).parent().data('key')+'"]').find('.form-control').focus();
         }
     });
+    $('.btn-change-password').on('click', function(){
+    	
+		$.get('/profile/change-password', 'id='+$(this).data('id'), function(html){
+			$('#custom-modal .modal-title').html('Change Password');
+			$('#custom-modal .modal-body').html(html);
+			$('#custom-modal').modal('show');
+			$('.save-new-password').off('click');
+			$('.save-new-password').on('click', function(){
+				$('form#change-password .has-error').removeClass('has-error');
+				if($('input[name="password"]').val()  == ''){
+					$('input[name="password"]').parent().addClass('has-error');
+				}
+				if($('input[name="password"]').val().length < 6){
+					$('input[name="password"]').parent().addClass('has-error');
+				}
+				if($('input[name="password"]').val() != $('input[name="confirmPassword"]').val()){
+					$('input[name="confirmPassword"]').parent().addClass('has-error');
+				}
+				
+				if($('form#change-password .has-error').length == 0){
+					$.confirm({
+			            title: "Confirm Password Change",
+			            content: "Are you sure you want to change your password?",
+			            confirmButton: 'Yes, confirm',
+			            cancelButton:'No, Keep it',
+			            confirmButtonClass: 'btn-info',
+			            cancelButtonClass: 'btn-danger',
+			            confirm: function(){
+			            	$.post('/profile/save-password', $('form#change-password').serialize(), function(data){
+								var resp = $.parseJSON(data);
+								if(resp.status == 1){
+									Messages.showSuccess('Password Change Successfully');
+									$('#custom-modal').modal('hide');
+								}else if(resp.status == 1){
+									Messages.showError('Password Change Failed, please try again');
+								}
+							});
+			            }
+			        });
+					
+				}
+			});
+    	})
+    	
+    });
 });
 var Order = {
 	init : false,
