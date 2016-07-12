@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use app\helpers\UtilityHelper;
+use app\helpers\TenantHelper;
 
 /**
  * This is the model class for table "user".
@@ -65,7 +66,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
-            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone', 'isOptIn', 'isStoreOpen', 'storeCloseReason'], 'safe'],
+            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone', 'isOptIn', 'isStoreOpen', 'storeCloseReason', 'timeToPickUp'], 'safe'],
             [['email', 'password','businessName', 'firstName','lastName', 'streetAddress', 'city','phoneAreaCode','phone3','phone4','phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity','billingPhoneAreaCode','billingPhone3','billingPhone4', 'billingPhoneNumber', 'stripeId', 'orderButtonImage'], 'string', 'max' => 250],
             [['state', 'billingState'], 'string', 'max' => 2],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg']
@@ -392,5 +393,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             
         }
         return false;
+    }
+    
+    public function getTimeToPickUpDisplay(){
+        return TenantHelper::getTimeToPickUp()[$this->timeToPickUp];
+        
     }
 }

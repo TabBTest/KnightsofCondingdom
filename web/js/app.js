@@ -362,7 +362,16 @@ if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
         		$('.store-close-reason').show();
         	}
         }});
-        
+    $('select[name="timeToPickUp"]').on('change', function(){
+    	$.post('/vendor/save-time-to-pickup', 'id='+$(this).data('user-id')+'&timeToPickUp='+$(this).val(), function(data){
+    		var resp = $.parseJSON(data);
+    		if(resp.status == 1){
+    			Messages.showSuccess('Time to pickup updated successfully');
+    		}else{
+    			Messages.showError('Processing failed, please try again');
+    		}
+    	})
+    });  
 });
 var Order = {
 	init : false,

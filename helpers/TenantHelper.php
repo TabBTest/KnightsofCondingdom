@@ -125,6 +125,18 @@ class TenantHelper {
         }
         return '';
     }
+    
+    static public function getTimeToPickUp(){
+        return ['1' => '0 - 15 mins',
+            '2' => '15 - 30 mins',
+            '3' => '30 - 45 mins',
+            '4' => '45 - 60 mins',
+            '5' => '1hr - 1hr 15 mins',
+            '6' => '1hr 15 mins - 1hr 30 mins',
+            '7' => '1hr 30 mins - 1hr 45 mins',
+            '8' => '1hr 45 mins - 2hrs',
+        ];
+    }
     static public function isVendorStoreClose(){
         if(TenantHelper::isDefaultTenant() === false){
             $subdomain = TenantHelper::getSubDomain();

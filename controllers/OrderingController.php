@@ -86,7 +86,7 @@ class OrderingController extends CController
     
         $vendorCategories = MenuCategories::find()->where('isArchived = 0 and vendorId = '.$tenantInfo->userId.' order by sorting asc')->all();
         
-        return $this->render('index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
+        return $this->render('index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories, 'vendor' => $userVendor]);
     }
     
     

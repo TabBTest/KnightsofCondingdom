@@ -31,7 +31,7 @@ class VendorController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['settings', 'save-settings', 'profile', 'billing', 'view-page', 'preview-hours'],
+                        'actions' => ['settings', 'save-settings', 'profile', 'billing', 'view-page', 'preview-hours', 'save-time-to-pickup'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -57,6 +57,22 @@ class VendorController extends CController
         return $this->render('settings', ['model' => $model]);
     }
 
+    public function actionSaveTimeToPickup(){
+        $resp = [];
+        $resp['status'] = 0;
+        if(count($_POST) > 0){
+            $vendorId = $_POST['id'];
+            $vendor = User::findOne($vendorId);
+            if($vendor){
+                $vendor->timeToPickUp = intval($_POST['timeToPickUp']);
+                if($vendor->save()){
+                    $resp['status'] = 1;
+                }
+            }            
+        }
+        echo json_encode($resp);
+        die;
+    }
     public function actionSaveSettings(){
         
         $nextUrl = '/vendor/settings';

@@ -3,6 +3,8 @@
 use app\models\VendorMenuItem;
 use yii\widgets\MaskedInput;
 use app\helpers\UtilityHelper;
+use app\models\TenantInfo;
+use app\models\VendorOperatingHours;
 $this->title = 'Menu';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -22,7 +24,74 @@ $this->params['breadcrumbs'][] = $this->title;
  </div>
 <?php } ?>
 
-
+<div class='row'>
+    <div class='col-xs-12'>
+        <label class='form-label'>Name: <?php echo $vendor->businessName;?></label>
+    </div>
+    <div class='col-xs-12'>
+        <label class='form-label'>Contact Number: <?php echo $vendor->getContactNumber();?></label>
+    </div>
+    <div class='col-xs-12'>
+        <label class='form-label'>Time To Pickup: <?php echo $vendor->getTimeToPickUpDisplay();?></label>
+    </div>
+    <?php 
+    $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELIVERY) == 1 ? true : false;
+    ?>
+    <div class='col-xs-12'>
+        <label class='form-label'>Has Delivery: <?php echo  $hasDelivery ? 'Yes' : 'No';?></label>
+    </div>
+    <?php if($hasDelivery){?>
+    <div class='col-xs-12'>
+        <label class='form-label'>Minimum Delivery Amount: $<?php echo  UtilityHelper::formatAmountForDisplay(TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_DELIVERY_MINIMUM_AMOUNT));?></label>
+    </div>
+     <div class='col-xs-12'>
+        <label class='form-label'>Delivery Charge: $<?php echo  UtilityHelper::formatAmountForDisplay(TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_DELIVERY_CHARGE));?></label>
+    </div>
+    <?php }?>
+    <div class='col-xs-12'>
+        <label class='form-label'>Time To Pickup: <?php echo $vendor->getTimeToPickUpDisplay();?></label>
+    </div>
+    
+    
+    <div class='col-xs-4'>
+    <div class='col-xs-12' style='text-align: center'>
+        <label class='form-label'>Operating Hours <?php echo UtilityHelper::getTimeZoneDisplay($vendor->timezone)?></label>
+    </div>
+    <?php 
+    $operatingTime = UtilityHelper::getOperatingTime();
+    foreach(UtilityHelper::getDays() as $key => $val){
+        $operatingHours = VendorOperatingHours::getVendorOperatingHours($vendor->id, $key);
+    ?>
+    <div class='col-xs-12' style='margin-bottom: 10px'>
+         <div class='col-xs-3'>
+            <label for="inputEmail3" class="col-xs-2 control-label pull-right"><?php echo $val?></label>
+         </div>
+     
+         <div class='col-xs-8'>
+            <?php foreach($operatingHours as $operatingHour){
+                
+             ?>
+                <div class='col-xs-12'><label class='control-label pull-right'>
+                <?php foreach($operatingTime as $val => $display){?>
+                <?php echo $val == $operatingHour->startTime ?  $display : ''?>
+                <?php }?>
+                -
+                <?php foreach($operatingTime as $val => $display){?>
+                <?php echo $val == $operatingHour->endTime ?  $display : ''?>
+                <?php }?>
+                </label></div>
+             <?php
+             }
+             ?>
+         </div>
+    </div>
+        
+                    
+    <?php 
+    }      
+    ?>
+    </div>
+</div>
 
 <div class='row'>
 

@@ -144,7 +144,14 @@ class UtilityHelper {
         }
         return $timeSlot;
     }  
-    
+    public static function getTimeZoneDisplay($vendorTimeZone){
+        foreach(self::getAvailableTimezones() as $key => $timezone){
+            if($vendorTimeZone == $timezone['timezone']){
+                return $timezone['textDisplay'];
+            }
+        }
+        return '';
+    }
     public static function getAvailableTimezones(){
 
         $return = array();
