@@ -45,13 +45,14 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             <?php }?>
             </select>
         </div>
-        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <?php
-            echo MaskedInput::widget([
-                'name' => 'User[phoneNumber]',
-                'mask' => '999-999-9999',
-            ]);
-            ?>
+        <div class='col-xs-12 col-md-2 col-md-offset-3 form-group phone' data-key='phone'>
+            <input type='tel' class='form-control short-input' name='User[phoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
+        </div>
+        <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+            <input type='tel' class='form-control short-input' name='User[phone3]' maxlength="3" placeholder='XXX'/>
+        </div>
+        <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+            <input type='tel' class='form-control short-input' name='User[phone4]' maxlength="4" placeholder='XXXX'/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
             <input type='text' class='form-control' name='User[email]' id='email'  placeholder='Email'/>
@@ -96,13 +97,14 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             <?php }?>
             </select>
         </div>
-        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <?php
-            echo MaskedInput::widget([
-                'name' => 'User[billingPhoneNumber]',
-                'mask' => '999-999-9999',
-            ]);
-            ?>
+         <div class='col-xs-12 col-md-2 col-md-offset-3 form-group phone' data-key='billing-phone'>
+            <input type='tel' class='form-control short-input' name='User[billingPhoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
+        </div>
+        <div class='col-xs-12 col-md-2 form-group phone' data-key='billing-phone'>
+            <input type='tel' class='form-control short-input' name='User[billingPhone3]' maxlength="3" placeholder='XXX'/>
+        </div>
+        <div class='col-xs-12 col-md-2 form-group phone' data-key='billing-phone'>
+            <input type='tel' class='form-control short-input' name='User[billingPhone4]' maxlength="4" placeholder='XXXX'/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
             <input type='text' class='form-control card-number' placeholder='Credit Card Number'/>
@@ -137,4 +139,3 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
         </div>
     </div>
     </form>
-</form>

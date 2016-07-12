@@ -109,7 +109,10 @@ class ProfileController extends CController
                 $model->state = $userData['state'];
                 $model->email = $userData['email'];
                 $model->timezone = $userData['timezone'];
-                $model->phoneNumber = $userData['phoneNumber'];
+                $model->phoneAreaCode = $userData['phoneAreaCode'];
+                $model->phone3 = $userData['phone3'];
+                $model->phone4 = $userData['phone4'];
+                
                 
                 if(Yii::$app->user->identity->role == User::ROLE_ADMIN){
                     $model->isActive = intval($userData['isActive']);
@@ -184,8 +187,10 @@ class ProfileController extends CController
                 $model->billingStreetAddress = $userData['billingStreetAddress'];
                 $model->billingCity = $userData['billingCity'];
                 $model->billingState = $userData['billingState'];
-                $model->billingPhoneNumber = $userData['billingPhoneNumber'];
-
+                //$model->billingPhoneNumber = $userData['billingPhoneNumber'];
+                $model->billingPhoneAreaCode = $userData['billingPhoneAreaCode'];
+                $model->billingPhone3 = $userData['billingPhone3'];
+                $model->billingPhone4 = $userData['billingPhone4'];
 
                 \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
                 

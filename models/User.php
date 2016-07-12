@@ -66,7 +66,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
             [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone', 'isOptIn'], 'safe'],
-            [['email', 'password','businessName', 'firstName','lastName', 'streetAddress', 'city', 'phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity', 'billingPhoneNumber', 'stripeId', 'orderButtonImage'], 'string', 'max' => 250],
+            [['email', 'password','businessName', 'firstName','lastName', 'streetAddress', 'city','phoneAreaCode','phone3','phone4','phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity','billingPhoneAreaCode','billingPhone3','billingPhone4', 'billingPhoneNumber', 'stripeId', 'orderButtonImage'], 'string', 'max' => 250],
             [['state', 'billingState'], 'string', 'max' => 2],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg']
         ];
@@ -107,7 +107,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $this->billingStreetAddress.', '.$this->billingCity.', '.$this->billingState;
     }
     public function getContactNumber(){
-        return $this->billingPhoneNumber;
+        //return $this->billingPhoneNumber;
+        return '('.$this->phoneAreaCode.') '.$this->phone3.'-'.$this->phone4;
+    }
+    public function getBillingContactNumber(){
+        //return $this->billingPhoneNumber;
+        return '('.$this->billingPhoneAreaCode.') '.$this->billingPhone3.'-'.$this->billingPhone4;
     }
     /**
      * @inheritdoc

@@ -54,15 +54,17 @@ use yii\widgets\MaskedInput;
                     <?php }?>
                 </select>
             </div>
-            <div class='col-xs-12 form-group'>
-                <label>Phone</label>
-                <?php
-                echo MaskedInput::widget([
-                    'name' => 'User[billingPhoneNumber]',
-                    'mask' => '999-999-9999',
-                    'value' => $model->billingPhoneNumber
-                ]);
-                ?>
+            <div class='col-xs-12 form-group' style='margin: 0'>
+                <label>Phone</label>            
+            </div>
+            <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+                <input type='tel' class='form-control short-input' name='User[billingPhoneAreaCode]' value='<?php echo $model->billingPhoneAreaCode?>' maxlength="3" placeholder='Area Code'/>
+            </div>
+            <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+                <input type='tel' class='form-control short-input' name='User[billingPhone3]' value='<?php echo $model->billingPhone3?>' maxlength="3" placeholder='XXX'/>
+            </div>
+            <div class='col-xs-12 col-md-8 form-group phone' data-key='phone'>
+                <input type='tel' class='form-control short-input' name='User[billingPhone4]' value='<?php echo $model->billingPhone4?>' maxlength="4" placeholder='XXXX'/>
             </div>
             <div class='col-xs-12 col-md-6 form-group'>
                 <label>Card Number</label>

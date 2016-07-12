@@ -296,6 +296,12 @@ if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
     if($('.preview-operating-hours').length == 1){
     	VendorSettings.previewHours();
     }
+    
+    $(".phone .form-control").on('keyup', function () {
+        if ($(this).val().length == $(this).attr('maxlength')) {
+          $(this).parent().next('.phone[data-key="'+$(this).parent().data('key')+'"]').find('.form-control').focus();
+        }
+    });
 });
 var Order = {
 	init : false,

@@ -153,12 +153,19 @@ class SiteController extends CController
                 $user->city = $userData['city'];
                 $user->state = $userData['state'];
                 $user->email = $userData['email'];
-                $user->phoneNumber = $userData['phoneNumber'];
+                $user->phoneAreaCode = $userData['phoneAreaCode'];
+                $user->phone3 = $userData['phone3'];
+                $user->phone4 = $userData['phone4'];
+                
                 $user->billingName = $userData['billingName'];
                 $user->billingStreetAddress = $userData['billingStreetAddress'];
                 $user->billingCity = $userData['billingCity'];
                 $user->billingState = $userData['billingState'];
-                $user->billingPhoneNumber = $userData['billingPhoneNumber'];
+                //$user->billingPhoneNumber = $userData['billingPhoneNumber'];
+                $user->billingPhoneAreaCode = $userData['billingPhoneAreaCode'];
+                $user->billingPhone3 = $userData['billingPhone3'];
+                $user->billingPhone4 = $userData['billingPhone4'];
+                
                 $user->password = $randomPassword;
                 $user->confirmPassword = $randomPassword;
                 $user->role = User::ROLE_VENDOR;
@@ -219,12 +226,20 @@ class SiteController extends CController
                 $user->city = $userData['city'];
                 $user->state = $userData['state'];
                 $user->email = $userData['email'];
-                $user->phoneNumber = $userData['phoneNumber'];
+                //$user->phoneNumber = $userData['phoneNumber'];
+                $user->phoneAreaCode = $userData['phoneAreaCode'];
+                $user->phone3 = $userData['phone3'];
+                $user->phone4 = $userData['phone4'];
+                
                 $user->billingName = $userData['billingName'];
                 $user->billingStreetAddress = $userData['billingStreetAddress'];
                 $user->billingCity = $userData['billingCity'];
                 $user->billingState = $userData['billingState'];
-                $user->billingPhoneNumber = $userData['billingPhoneNumber'];
+                //$user->billingPhoneNumber = $userData['billingPhoneNumber'];
+                $user->billingPhoneAreaCode = $userData['billingPhoneAreaCode'];
+                $user->billingPhone3 = $userData['billingPhone3'];
+                $user->billingPhone4 = $userData['billingPhone4'];
+                
                 $user->password = $randomPassword;
                 $user->confirmPassword = $randomPassword;
                 $user->role = User::ROLE_CUSTOMER;
