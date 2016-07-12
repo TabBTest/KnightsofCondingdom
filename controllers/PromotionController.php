@@ -98,7 +98,7 @@ class PromotionController extends CController
                 $promo->sendToType = VendorPromotion::SEND_TO_CUSTOMERS;
                 $promo->save();
                 //to all customers
-                $users = User::findAll(['isActive' => 1, 'vendorId' =>  \Yii::$app->user->id]);
+                $users = User::findAll(['isActive' => 1,'isOptIn' => 1,  'vendorId' =>  \Yii::$app->user->id]);
                 
                 foreach($users as $user){
                     $promoUser = new PromotionUserStatus();

@@ -93,6 +93,8 @@ class NotificationHelper {
                 $user = User::findOne($promoUser->userId);
                 $emails[] = $user->email;
             }
+            
+            //$unsub = "Click <a href='/unsub?id=".."'>here</a> to unsubscribe from the mailing list";
                  
             $message = \Yii::$app->mailer->compose()->setHtmlBody($promo->html)
             ->setFrom(\Yii::$app->params['adminEmail'])

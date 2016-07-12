@@ -226,6 +226,7 @@ class SiteController extends CController
                 $user->confirmPassword = $randomPassword;
                 $user->role = User::ROLE_CUSTOMER;
                 $user->vendorId = $tenantInfo->userId;
+                $user->isOptIn = intval($_POST['isOptIn']);
                 $user->isPasswordReset = 1;
                 if($user->save()){
 

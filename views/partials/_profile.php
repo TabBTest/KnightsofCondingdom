@@ -26,7 +26,7 @@ use yii\widgets\MaskedInput;
             <input type="hidden" name="User[imageFile]" value=""><input type="file" id="user-imagefile" name="User[imageFile]" accept="image/jpeg|image/png">
         </div>
         <div class='col-xs-12 form-group'>
-            <label>Name</label>
+            <label><?php echo $model->role == User::ROLE_VENDOR ? 'Business Name' : 'Name'?></label>
             <input type='text' class='form-control' name='User[name]' value='<?= $model->name?>'/>
         </div>
         <div class='col-xs-12 form-group'>

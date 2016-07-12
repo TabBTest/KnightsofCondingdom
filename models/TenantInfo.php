@@ -51,7 +51,7 @@ class TenantInfo extends \yii\db\ActiveRecord
         $tenantCustom[self::CODE_REDIRECT_URL] = 'Redirect URL';
         
         $tenantCustom[self::CODE_SALES_TAX] = 'Sales Tax (in percentage)';
-        $tenantCustom[self::CODE_HAS_DELIVERY] = 'Has Delivery?';
+        $tenantCustom[self::CODE_HAS_DELIVERY] = 'Do you have delivery?';
         $tenantCustom[self::CODE_DELIVERY_MINIMUM_AMOUNT] = 'Delivery Minimum Amount';
         $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'Delivery Charge Amount';
 

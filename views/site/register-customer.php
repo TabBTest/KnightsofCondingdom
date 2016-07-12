@@ -56,6 +56,11 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
             <input type='text' class='form-control' name='confirmEmail' id='confirmEmail'  placeholder='Confirm Email'/>
         </div>
+        
+        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+            <input type='hidden' name='isOptIn' value='0'/>
+            <input type='checkbox' class='' value='1' name='isOptIn'/>&nbsp;&nbsp;&nbsp;I want to receive promotional emails
+        </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
             <div align="center" class="g-recaptcha" data-sitekey="<?= $params['recaptcha_site_key'] ?>"></div>
             <script type="text/javascript"
