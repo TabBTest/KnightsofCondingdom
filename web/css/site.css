@@ -165,6 +165,18 @@ body {
     color: #333;
 }
 
+.popover, .tooltip-inner {
+    background-color: #f9f9f9;
+}
+
+.alert-success {
+    color: #3c763d;
+}
+
+.alert-danger {
+    color: #a94442;
+}
+
 table tr th, table tr td{
 	text-align: center;
 }
