@@ -1,4 +1,6 @@
 $(document).ready(function() {
+  $.material.init();
+
 	//if($("#phone").length == 1)
 		//$('#phone').mask("(999) 999-9999");
 	$(".order-quantity[type='number']").keypress(function (evt) {

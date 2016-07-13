@@ -21,7 +21,7 @@ use app\models\VendorOperatingHours;
 <div class="modal-footer-widget"><button class='btn-widget btn-info pull-right-widget close-modal'>Close</button></div>
 </div></div></textarea>
 <br />
-<a href="javascript: void(0)" data-clipboard-target="#widget-js" class="btn btn-info btn-copy-widget" data-type='widget'><i class="fa fa-copy">Copy to Clipboard</i></a>
+<a href="javascript: void(0)" data-clipboard-target="#widget-js" class="btn btn-info btn-copy-widget" data-type='widget'>Copy to Clipboard</a>
         </div>
     </div>
 
@@ -33,7 +33,7 @@ use app\models\VendorOperatingHours;
             <a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a>
             <textarea class='form-control copy-content' id='widget-button' rows="5" cols="20"><a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a></textarea>
             <br />
-<a href="javascript: void(0)" data-clipboard-target="#widget-button" class="btn btn-info btn-copy-widget" data-type='button'><i class="fa fa-copy">Copy to Clipboard</i></a>
+<a href="javascript: void(0)" data-clipboard-target="#widget-button" class="btn btn-info btn-copy-widget" data-type='button'>Copy to Clipboard</a>
             <button type="button" class="btn btn-info" data-toggle="modal" data-target="#change-button-modal">
                 Change Order Now Button
             </button>
