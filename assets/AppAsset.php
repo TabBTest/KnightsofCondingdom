@@ -30,7 +30,6 @@ class AppAsset extends AssetBundle
         'js/jquery-ui.min.js',
         'js/jquery.flexslider-min.js',
         'js/jquery.bootpag.min.js',
-        'js/jquery-confirm.min.js',
         'js/bootstrap-switch.min.js',
         'js/clipboard.min.js',
         'js/ga.js',
@@ -41,5 +40,6 @@ class AppAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
         'app\assets\BootstrapMaterialDesignAsset',
+        'app\assets\AlertConfirmAsset',
     ];
 }

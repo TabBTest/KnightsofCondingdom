@@ -42,11 +42,11 @@ $totalCount = $customers['count'];
             <div style="display: none" class="pop-content">
                 <ul style="list-style-type: none; margin: 0; padding: 0;">                       
                     <li>
-                        <a href='/ordering/history/?id=<?php echo base64_encode($customer->id )?>'><i style="width:15px" class="fa fa-list" aria-hidden="true"></i><span style="font-size: 14px;"> View Orders</span></a>
+                        <a href='/ordering/history/?id=<?php echo base64_encode($customer->id )?>'><i style="width:15px" class="fa fa-list" aria-hidden="true"></i><span style="font-size: 14px;">View Orders</span></a>
                     </li>
                     <li>
                         <?php if($customer->isActive == 1){?>
-                        <a href="javascript: Customer.deactivate('<?php echo base64_encode($customer->id)?>')" class=""><i style="width:15px" class="fa fa-thumbs-down"></i><span style="font-size: 14px;"> De-activate Account</span></a>
+                        <a href="javascript: Customer.deactivate('<?php echo base64_encode($customer->id)?>')" class=""><i style="width:15px" class="fa fa-thumbs-down"></i><span style="font-size: 14px;">Deactivate Account</span></a>
                         <?php }else{?>
                         <a href="javascript: Customer.activate('<?php echo base64_encode($customer->id)?>')" class=""><i style="width:15px" class="fa fa-thumbs-up"></i><span style="font-size: 14px;"> Activate Account</span></a>
                         <?php }?>
