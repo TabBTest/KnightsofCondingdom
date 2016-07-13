@@ -9,6 +9,8 @@ class m160712_053204_migrate_billing_phone extends Migration
     { 
         $this->execute(" alter table user add column timeToPickUp int(11) null default 1;");
         $this->execute(" alter table user add column isStoreOpen int(11) null default 1;");
+        $this->execute(" alter table user add column storeCloseReason text null;");
+        
         $allUsers = User::find()->where('')->all();
         foreach($allUsers as $user){
             $numbers = explode('-', $user->billingPhoneNumber);
