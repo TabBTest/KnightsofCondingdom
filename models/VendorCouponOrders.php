@@ -57,4 +57,38 @@ class VendorCouponOrders extends \yii\db\ActiveRecord
             return false;
         }
     }
+    public function getOrder(){
+        return Orders::findOne($this->orderId);
+    }
+    public static function getOrders($id, $resultsPerPage, $page, $filters){
+    
+        $extraSQL = '';
+        /*
+        if(isset($filters['showCompleted'])){
+            if( $filters['showCompleted'] == 0){
+                $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
+            }
+        }else{
+            $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
+        }
+    
+        if(isset($filters['firstName']) && $filters['firstName'] != ''){
+            $extraSQL .= " and customerId in (select id from user where firstName like '%".mysql_escape_string($filters['firstName'])."%')";
+        }
+        if(isset($filters['lastName']) && $filters['lastName'] != ''){
+            $extraSQL .= " and customerId in (select id from user where lastName like '%".mysql_escape_string($filters['lastName'])."%')";
+        }
+    
+        if(isset($filters['orderId']) && $filters['orderId'] != ''){
+            $extraSQL .= " and (id + ".self::MAGIC_NUMBER.") =  '".$filters['orderId']."'";
+        }
+        if(isset($filters['isDelivery']) && $filters['isDelivery'] != ''){
+            $extraSQL .= " and isDelivery = ".$filters['isDelivery'];
+        }
+        */
+        $resp = array();
+        $resp['list'] = VendorCouponOrders::find()->where('vendorCouponId = '.$id.' '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = VendorCouponOrders::find()->where('vendorCouponId = '.$id.' '.$extraSQL)->count();
+        return $resp;
+    }
 }

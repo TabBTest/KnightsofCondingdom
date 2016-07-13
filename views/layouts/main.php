@@ -45,7 +45,7 @@ AppAsset::register($this);
     <?php 
     }else  if(Yii::$app->user->identity->role == User::ROLE_VENDOR){       
     ?>
-     <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'order') !== false ? 'active' : ''?>"><a href="/order">Order</a></li>
+     <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'order') !== false && strpos(\Yii::$app->controller->getRoute(), 'coupon') === false ? 'active' : ''?>"><a href="/order">Order</a></li>
      <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'menu') !== false ? 'active' : ''?>"><a href="/menu">Menu</a></li>
      <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'customer') !== false ? 'active' : ''?>"><a href="/customer">Customer</a></li>
      

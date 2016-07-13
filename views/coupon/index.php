@@ -24,6 +24,10 @@ function extraLinks($model, $el)
         $ret .= '<li><a class="coupon-archive" href="javascript: void(0);" data-next="0" data-id="'. $model->id .'">';
         $ret .= '<i class="fa fa-trash" style="width:15px"></i>Un-Archive</a></li>';
     }
+    
+    $ret .= '<li><a href="/coupon/orders?id='.$model->id.'" data-id="'. $model->id .'">';
+    $ret .= '<i class="fa fa-eye" style="width:15px"></i>View Orders</a></li>';
+    
     return $ret;
 }
 

@@ -9,21 +9,7 @@ $this->title = 'Menu';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?php if(\Yii::$app->getSession()->hasFlash('error')){?>
- <div class="">
-<div class="alert alert-danger">
-    <?php echo \Yii::$app->getSession()->getFlash('error'); ?>
-</div>
- </div>
-<?php } ?>
-<?php if(\Yii::$app->getSession()->hasFlash('success')){?>
- <div class="">
-<div class="alert alert-success">
-    <?php echo \Yii::$app->getSession()->getFlash('success'); ?>
-</div>
- </div>
-<?php } ?>
-
+<?php echo $this->render('//partials/_show_message', []);?>
 <div class='row'>
     <div class='col-xs-12'>
         <label class='form-label'>Name: <?php echo $vendor->businessName;?></label>

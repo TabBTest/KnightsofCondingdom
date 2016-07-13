@@ -124,12 +124,12 @@ body {
     background-color: #FFFFFF;
     border-color: #FFFFFF;
 }
-
+/*
 .navbar.navbar-inverse .navbar-nav > .active > a {
     color: #000000;
     background-color: #FFFFFF;
 }
-
+*/
 .navbar .navbar-nav>li>a {
     color: #777;
     background-color: #FFFFFF;
@@ -152,7 +152,10 @@ body {
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover {
     background-color: #bababa;
 }
-
+.navbar .navbar-nav > .open > a, .navbar .navbar-nav > .open > a:focus, .navbar .navbar-nav > .open > a:hover {
+    background-color: #bebebe;
+    color: inherit;
+}
 .navbar-inverse .btn-link:hover {
     background-color: #bababa;
 }

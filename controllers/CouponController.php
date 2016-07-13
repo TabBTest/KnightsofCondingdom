@@ -9,6 +9,8 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use app\models\Orders;
+use app\models\VendorCouponOrders;
 
 /**
  * CouponController implements the CRUD actions for VendorCoupons model.
@@ -31,7 +33,7 @@ class CouponController extends Controller
                     ],
                     
                     [
-                        'actions' => ['index', 'view', 'create', 'update', 'archive', 'check'],
+                        'actions' => ['index', 'view', 'create', 'update', 'archive', 'check', 'orders', 'viewpage'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -48,7 +50,19 @@ class CouponController extends Controller
             ],
         ];
     }
-
+    public function actionOrders()
+    {
+        $orders = VendorCouponOrders::getOrders($_REQUEST['id'], 20, 1, []);
+        return $this->render('orders', ['orders' => $orders,  'vendorCouponId' => $_REQUEST['id'], 'url' => '/coupon/viewpage']);
+    }
+    
+    public function actionViewpage(){
+        $page = $_REQUEST['page'];
+        $vendorCouponId = $_REQUEST['vendorCouponId'];
+        $orders = VendorCouponOrders::getOrders($vendorCouponId, 20, $page, $_REQUEST['filter']);
+        return $this->renderPartial('_list', ['orders' => $orders, 'currentPage' => $page, 'vendorCouponId' => $vendorCouponId]);
+    }
+    
     public function actionCheck(){
         $code = $_REQUEST['code'];
         $vendorId = $_REQUEST['vendorId'];
