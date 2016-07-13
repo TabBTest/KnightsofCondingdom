@@ -7,7 +7,7 @@ class m160712_153553_add_store_close extends Migration
     public function up()
     {
         $this->execute(" alter table user add column isStoreClose int(11) null default 0;");
-        $this->execute(" alter table user add column storeCloseReason text null;");
+//         $this->execute(" alter table user add column storeCloseReason text null;");
         
     }
 
