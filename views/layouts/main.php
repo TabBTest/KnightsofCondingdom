@@ -12,6 +12,7 @@ use app\models\User;
 use app\helpers\TenantHelper;
 use app\helpers\UtilityHelper;
 
+AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -22,17 +23,6 @@ use app\helpers\UtilityHelper;
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-    <link href="/css/jquery-ui.min.css" rel="stylesheet">
-    <link href="/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/css/jquery-confirm.min.css" rel="stylesheet">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/bootstrap-switch.min.css" rel="stylesheet">
-    <link href="/css/site.css" rel="stylesheet">
-    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <script src="/js/jquery.js"></script> 
-
-
 </head>
 <body>
 <?php $this->beginBody() ?>
@@ -169,23 +159,5 @@ use app\helpers\UtilityHelper;
 
 <?php $this->endBody() ?>
 </body>
-
-    <!--  -->
-    <script src="/js/jquery.flexslider-min.js"></script>
-    <script src="/js/jquery.bootpag.min.js"></script>
-    <script src="/js/jquery-ui.min.js"></script>
-    <script src="/js/ga.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/clipboard.min.js"></script>
-    <script src="/js/jquery-confirm.min.js"></script>
-    <script src="/js/bootstrap-switch.min.js"></script>
-    
-    <script src="/js/app.js"></script>
-<style>
-body > .wrap > .container {
-    min-height: 500px;
-    padding: 60px 15px 0;
-}
-</style>
 </html>
 <?php $this->endPage() ?>

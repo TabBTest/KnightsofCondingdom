@@ -64,6 +64,19 @@ $config = [
         'session' => [
             'class' => 'yii\redis\Session',
         ],
+        'assetManager' => [
+            'bundles' => [
+                'yii\bootstrap\BootstrapAsset' => [
+                    'sourcePath' => '@bower/bootstrap/dist',
+                    'css' => [
+                        'css/bootstrap.min.css',
+                    ],
+                    'js' => [
+                        'js/bootstrap.min.js',
+                    ],
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];
