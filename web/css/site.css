@@ -150,11 +150,15 @@ body {
 }
 
 .navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover {
- 	background-color: #bababa;
+    background-color: #bababa;
 }
 
 .navbar-inverse .btn-link:hover {
     background-color: #bababa;
+}
+
+.navbar.navbar-inverse .dropdown-menu li>a:hover {
+    color: #009688;
 }
 
 .form-group .checkbox label, .form-group .radio label, .form-group label {
@@ -175,6 +179,10 @@ body {
 
 .alert-danger {
     color: #a94442;
+}
+
+.navbar .navbar-nav>.open>a, .navbar .navbar-nav>.open>a:focus, .navbar .navbar-nav>.open>a:hover {
+    color: #000;
 }
 
 table tr th, table tr td{
