@@ -25,7 +25,7 @@ class CouponController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index', 'view', 'create', 'update', 'archive'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -78,9 +78,10 @@ class CouponController extends Controller
     public function actionCreate()
     {
         $model = new VendorCoupons();
-
+        $model->vendorId = \Yii::$app->user->identity->id;
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            \Yii::$app->getSession()->setFlash('success', 'Coupon Saved Successfully');
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -99,7 +100,8 @@ class CouponController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            \Yii::$app->getSession()->setFlash('success', 'Coupon Saved Successfully');
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -107,19 +109,23 @@ class CouponController extends Controller
         }
     }
 
-    /**
-     * Deletes an existing VendorCoupons model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
+    
+    public function actionArchive()
     {
-        $this->findModel($id)->delete();
-
+        //$this->findModel($id)->delete();
+        $id = $_POST['id'];
+        $archiveVal = $_POST['archive'];
+        $model = $this->findModel($id);//->delete();
+        $model->isArchived = intval($archiveVal);
+        $model->save();
+        $message = 'Coupon Un-archived Successfully';
+        if($archiveVal == 0){
+            $message = 'Coupon Archived Successfully';
+        }
+        \Yii::$app->getSession()->setFlash('success', $message);
         return $this->redirect(['index']);
     }
-
+    
     /**
      * Finds the VendorCoupons model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

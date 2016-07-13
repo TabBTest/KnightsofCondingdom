@@ -28,7 +28,7 @@ use app\helpers\TenantHelper;
     <link href="/css/site.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-
+    <script src="/js/jquery.js"></script> 
 
 
 </head>

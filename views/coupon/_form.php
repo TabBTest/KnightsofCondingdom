@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\models\VendorCoupons;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\VendorCoupons */
@@ -11,20 +12,14 @@ use yii\widgets\ActiveForm;
 <div class="vendor-coupons-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
+    <input type='hidden' name='VendorCoupons[vendorId]' value='<?php echo $model->vendorId?>'/>
+    <?= $form->field($model, 'code')->textInput(['maxlength' => true, 'class' => 'form-control short-input']) ?>
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'vendorId')->textInput() ?>
+    <?= $form->field($model, 'discountType')->dropDownList(VendorCoupons::getCouponType(),['class' => 'form-control short-input']) ?>
 
-    <?= $form->field($model, 'isArchived')->textInput() ?>
-
-    <?= $form->field($model, 'discountType')->textInput() ?>
-
-    <?= $form->field($model, 'discount')->textInput() ?>
-
-    <?= $form->field($model, 'date_created')->textInput() ?>
+    <?= $form->field($model, 'discount')->textInput(['class' => 'form-control short-input']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

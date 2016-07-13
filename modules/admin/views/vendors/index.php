@@ -11,7 +11,7 @@ use app\helpers\UtilityHelper;
 $this->title = 'Vendors';
 $this->params['breadcrumbs'][] = $this->title;
 
-function extraLinks($model, $el)
+function extraLinks($model)
 {
     $rest = [
         [
@@ -87,7 +87,7 @@ function extraLinks($model, $el)
             'format' => 'raw',
             'headerOptions' => ['class' => 'action-cell'],
             'value' => function ($model) {
-                return UtilityHelper::buildActionWrapper('/admin/vendors', $model->id, false, extraLinks($model, $this), false , false);
+                return UtilityHelper::buildActionWrapper('/admin/vendors', $model->id, false, extraLinks($model), false , false);
             },
             ],
         ],

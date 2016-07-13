@@ -18,6 +18,14 @@ use Yii;
  */
 class VendorCoupons extends \yii\db\ActiveRecord
 {
+    const TYPE_PERCENTAGE = 1;
+    const TYPE_AMOUNT = 2;
+    
+    public static function getCouponType(){
+        return [self::TYPE_PERCENTAGE => 'Percentage',
+            self::TYPE_AMOUNT => 'Amount',
+        ];
+    }
     /**
      * @inheritdoc
      */
@@ -56,5 +64,16 @@ class VendorCoupons extends \yii\db\ActiveRecord
             'discount' => 'Discount',
             'date_created' => 'Date Created',
         ];
+    }
+    
+    public function beforeSave($insert)
+    {
+        if(parent::beforeSave($insert)){
+            if($this->isNewRecord)
+                $this->date_created=date('Y-m-d H:i:s', strtotime('now'));
+            return true;
+        }else{
+            return false;
+        }
     }
 }

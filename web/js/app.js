@@ -373,6 +373,39 @@ if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
     		}
     	})
     });  
+    
+    
+    $(document).on('click','.coupon-archive', function(e){
+        e.preventDefault();
+        var id = $(this).data('id');
+        var next = $(this).data('next');
+        	
+        var titleText = '';
+        var contentText = '';
+        
+        if(next == 0){
+        	titleText = 'Un-archive Coupon';
+        	contentText = 'Are you sure you want to un-archive the coupon code?';
+        }else{
+        	titleText = 'Archive Coupon';
+        	contentText = 'Are you sure you want to archive the coupon code?';
+        }
+      
+            $.confirm({
+                title : titleText,
+                content: contentText,
+                confirm : function(){
+                    $('#form-archive-coupon #id').val(id);
+                    $('#form-archive-coupon #archive').val(next);
+                    $('#form-archive-coupon').submit();
+                    
+                 }
+            });
+
+            
+        
+    });
+    
 });
 var Order = {
 	init : false,

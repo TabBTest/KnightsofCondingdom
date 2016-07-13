@@ -55,20 +55,7 @@ $this->registerJs($pageJs, $this::POS_READY);
 
 <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
-<?php if(\Yii::$app->getSession()->hasFlash('error')){?>
-    <div class="">
-        <div class="alert alert-danger">
-            <?php echo \Yii::$app->getSession()->getFlash('error'); ?>
-        </div>
-    </div>
-<?php } ?>
-<?php if(\Yii::$app->getSession()->hasFlash('success')){?>
-    <div class="">
-        <div class="alert alert-success">
-            <?php echo \Yii::$app->getSession()->getFlash('success'); ?>
-        </div>
-    </div>
-<?php } ?>
+<?php echo $this->render('//partials/_show_message', []);?>
 
 <ul class="nav nav-tabs">
     
