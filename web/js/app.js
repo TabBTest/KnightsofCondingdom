@@ -277,7 +277,8 @@ if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
     }
     setupUi();
     listLinkActions();
-    $('.add-ons-popover').popover({'placement' : 'left', 'trigger' : 'hover'});
+    if($('.add-ons-popover').length > 0)
+    	$('.add-ons-popover').popover({'placement' : 'left', 'trigger' : 'hover'});
     
     $('.add-to-cart').on('click', function(){
     	var sorting = $('.vendor-menu-categories').length + 1;

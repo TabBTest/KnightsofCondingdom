@@ -7,7 +7,7 @@ use app\helpers\TenantHelper;
 use app\models\VendorOperatingHours;
 ?>
 
-<div id="tab-settings" class="tab-pane fade in active">
+<div id="tab-settings" class="tab-pane <?php echo $_REQUEST['view'] == 'settings' ? 'active' : ''?>">
         <br>
         <div class='row form-group'>
         <div class='col-xs-12'>

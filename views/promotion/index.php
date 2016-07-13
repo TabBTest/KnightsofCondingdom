@@ -17,12 +17,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
     
 <ul class="nav nav-tabs">    
-    <li class="active"><a data-toggle="tab" href="#tab-promo-email">Email</a></li>
-    <li><a data-toggle="tab" href="#tab-promo-sms">SMS</a></li>
+    <li class="<?php echo $_REQUEST['view'] == 'email' ? 'active' : ''?>"><a data-toggle="tab" href="#tab-promo-email">Email</a></li>
+    <li class="<?php echo $_REQUEST['view'] == 'sms' ? 'active' : ''?>"><a data-toggle="tab" href="#tab-promo-sms">SMS</a></li>
 </ul>
 
 <div class="tab-content">
-    <div id="tab-promo-email" class="tab-pane active" style='margin-top: 10px'>    
+    <div id="tab-promo-email" class="tab-pane <?php echo $_REQUEST['view'] == 'email' ? 'active' : ''?>" style='margin-top: 10px'>    
          
         <div class="col-xs-12">
             <?php echo $this->render('email',[]);?>
@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php echo $this->render('_email_list', ['items' => $emailList, 'userId' => $vendorId]);?>
         </div>
     </div>
-    <div id="tab-promo-sms" class="tab-pane fade" style='margin-top: 10px'>
+    <div id="tab-promo-sms" class="tab-pane <?php echo $_REQUEST['view'] == 'sms' ? 'active' : ''?>" style='margin-top: 10px'>
         <div class="col-xs-12">
             <?php echo $this->render('sms', []);?>
         </div>

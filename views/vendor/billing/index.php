@@ -4,7 +4,7 @@ use app\models\VendorMembership;
 // $this->title = 'Billing History';
 // $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div id="billing-history" class="tab-pane fade">
+<div id="billing-history" class="tab-pane <?php echo $_REQUEST['view'] == 'history' ? 'active' : ''?>">
         <br />
 <?php if(\Yii::$app->getSession()->hasFlash('error')){?>
  <div class="">

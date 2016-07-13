@@ -3,7 +3,7 @@ use app\models\User;
 use app\helpers\UtilityHelper;
 use yii\widgets\MaskedInput;
 ?>
-<div id="billing-info" class="tab-pane fade">
+<div id="billing-info" class="tab-pane <?php echo $_REQUEST['view'] == 'billing' ? 'active' : ''?>">
         <br />
         <form action='/profile/save-billing' method='POST' id='billing-form'>
             <?php

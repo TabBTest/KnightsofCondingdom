@@ -182,4 +182,7 @@ class UtilityHelper {
         }
         return $defaultVal;
     }
+    public static function isSuperAdmin(){
+        return false;
+    }
 }

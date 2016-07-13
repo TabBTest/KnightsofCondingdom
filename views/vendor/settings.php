@@ -72,11 +72,11 @@ $this->registerJs($pageJs, $this::POS_READY);
 
 <ul class="nav nav-tabs">
     
-    <li class="active"><a data-toggle="tab" href="#tab-settings">Settings</a></li>
-    <li><a data-toggle="tab" href="#tab-profile">Restaurant Info</a></li>
-    <li><a data-toggle="tab" href="#billing-info">Billing Info</a></li>
+    <li class="<?php echo $_REQUEST['view'] == 'settings' ? 'active' : ''?>"><a data-toggle="tab" href="#tab-settings">Settings</a></li>
+    <li class="<?php echo $_REQUEST['view'] == 'info' ? 'active' : ''?>"><a data-toggle="tab" href="#tab-profile">Restaurant Info</a></li>
+    <li class="<?php echo $_REQUEST['view'] == 'billing' ? 'active' : ''?>"><a data-toggle="tab" href="#billing-info">Billing Info</a></li>
     <?php if(Yii::$app->user->identity->role == User::ROLE_VENDOR){?>
-    <li><a data-toggle="tab" href="#billing-history">Billing History</a></li>
+    <li class="<?php echo $_REQUEST['view'] == 'history' ? 'active' : ''?>"><a data-toggle="tab" href="#billing-history">Billing History</a></li>
     <?php }?>
 </ul>
 
@@ -85,7 +85,7 @@ $this->registerJs($pageJs, $this::POS_READY);
     <?php echo $this->render('//partials/_profile', ['model' => $model, 'show' => false]);?>
     <?php echo $this->render('//partials/_billing', ['model' => $model]);?>
     <?php if(Yii::$app->user->identity->role == User::ROLE_VENDOR){?>
-                    <?php echo $this->render('billing/index', ['transactions' =>  VendorMembership::getVendorMemberships($model->id, 20, 1), 'url' => '/vendor/viewpage', 'userId' => $model->id]);?>
+    <?php echo $this->render('billing/index', ['transactions' =>  VendorMembership::getVendorMemberships($model->id, 20, 1), 'url' => '/vendor/viewpage', 'userId' => $model->id]);?>
     <?php }?>
     
     

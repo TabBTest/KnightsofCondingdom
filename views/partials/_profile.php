@@ -4,7 +4,7 @@ use app\helpers\UtilityHelper;
 use yii\widgets\ActiveForm;
 use yii\widgets\MaskedInput;
 ?>
-<div id="tab-profile" class="tab-pane fade <?php echo isset($show) && $show ? 'in active' : ''?>">
+<div id="tab-profile" class="tab-pane <?php echo $_REQUEST['view'] == 'info' ? 'active' : ''?>">
     <br>
     <form action='/profile/save' method='POST' enctype="multipart/form-data">
         <?php

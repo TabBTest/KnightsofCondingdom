@@ -10,6 +10,7 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\User;
 use app\helpers\TenantHelper;
+use app\helpers\UtilityHelper;
 
 ?>
 <?php $this->beginPage() ?>
@@ -37,91 +38,103 @@ use app\helpers\TenantHelper;
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <?php 
-    NavBar::begin([
-        'brandLabel' => Html::img('/images/logo.png'),
-        'brandOptions' => ['class' => 'navbar-brand'],
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    if(Yii::$app->user->isGuest){
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-left'],
-            'items' => [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'About', 'url' => ['/site/about']],
-                ['label' => 'Products', 'url' => ['/site/products']],
-            ],
-        ]);
-    }else if(Yii::$app->user->identity->role == User::ROLE_VENDOR){
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-left'],
-            'items' => [
-                //['label' => 'Dashboard', 'url' => ['/dashboard']],
-                ['label' => 'Order', 'url' => ['/order'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'order') !== false ? true : false],
-                ['label' => 'Menu', 'url' => ['/menu'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'menu') !== false ? true : false],
-                ['label' => 'Customer', 'url' => ['/customer'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'customer') !== false ? true : false],                
-                ['label' => 'Promotion', 'url' => ['/promotion'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'promotion') !== false ? true : false],
-                ['label' => 'Settings', 'url' => ['/vendor/settings'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? true : false],
-
-            ],
-        ]);
-    }else if(Yii::$app->user->identity->role== User::ROLE_CUSTOMER){
-
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-left'],
-            'items' => [
-                ['label' => 'Dashboard', 'url' => ['/dashboard']],
-                ['label' => 'New Order', 'url' => ['/ordering'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'ordering') !== false && strpos(\Yii::$app->controller->getRoute(), 'history') === false ? true : false],
-                ['label' => 'Order History', 'url' => ['/ordering/history'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'history') !== false ? true : false],
-                ['label' => 'Profile', 'url' => ['/my/profile'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'profile') !== false ? true : false],
-                //['label' => 'Profile', 'url' => ['/vendor']],
-            ],
-        ]);
-    }
     
+ <nav class="navbar-inverse navbar-fixed-top navbar">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand"><img alt="" src="/images/logo.png"></a>
+    </div>
+    <ul class="nav navbar-nav navbar-left">
+    <?php 
+    if(Yii::$app->user->isGuest){        
+    ?>
+    
+     <li class=""><a href="/site/index">Home</a></li>
+     <li class=""><a href="/site/about">About</a></li>
+     <li class=""><a href="/site/products">Products</a></li>
+    <?php 
+    }else  if(Yii::$app->user->identity->role == User::ROLE_VENDOR){       
+    ?>
+     <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'order') !== false ? 'active' : ''?>"><a href="/order">Order</a></li>
+     <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'menu') !== false ? 'active' : ''?>"><a href="/menu">Menu</a></li>
+     <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'customer') !== false ? 'active' : ''?>"><a href="/customer">Customer</a></li>
+     
+     <li class="dropdown <?php echo  strpos(\Yii::$app->controller->getRoute(), 'promotion') !== false || strpos(\Yii::$app->controller->getRoute(), 'coupon') !== false ? 'active' : ''?> ">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Promotion
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/promotion?view=email">Email</a></li>
+          <li><a href="/promotion?view=sms">SMS</a></li>
+          <li><a href="/coupon">Coupons</a></li>
+        </ul>
+      </li>
+      
+     
+     <li class="dropdown  <?php echo  strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? 'active' : ''?>">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Profile
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/vendor/settings?view=settings">Settings</a></li>
+          <li><a href="/vendor/settings?view=info">Restaurant Info</a></li>
+          <li><a href="/vendor/settings?view=billing">Billing Info</a></li>
+          <li><a href="/vendor/settings?view=history">Billing History</a></li>
+        </ul>
+      </li>
+      
+    <?php 
+    }else if(Yii::$app->user->identity->role== User::ROLE_CUSTOMER){
+       
+    ?>
+    <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'ordering') !== false && strpos(\Yii::$app->controller->getRoute(), 'history') === false ? 'active' : ''?>"><a href="/ordering">New Order</a></li>
+    <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'history') !== false ? 'active' : ''?>"><a href="/ordering/history">Order History</a></li>
+    
+    <li class="dropdown  <?php echo  strpos(\Yii::$app->controller->getRoute(), 'profile') !== false ? 'active' : ''?>">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Profile
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/my/profile?view=info">Profile Info</a></li>
+          <li><a href="/my/profile?view=billing">Billing Info</a></li>
+        </ul>
+      </li>
+      
+    <?php 
+    }
+    ?>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+    <?php 
     if(Yii::$app->user->isGuest){
 
-        if(TenantHelper::isDefaultTenant()){
-
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    ['label' => 'Register', 'url' => ['/site/reg-vendor']],
-                    ['label' => 'Login', 'url' => ['/site/login']],
-                ],
-            ]);
+        if(TenantHelper::isDefaultTenant()){          
+        ?>
+        <li><a href="/site/reg-vendor"><span class="glyphicon glyphicon-user"></span> Register</a></li>
+        <li><a href="/site/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <?php 
         }else{
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    ['label' => 'Register', 'url' => ['/site/reg-customer']],
-                    ['label' => 'Login', 'url' => ['/site/login']],
-                ],
-            ]);
+            
+        ?>
+        <li><a href="/site/reg-customer"><span class="glyphicon glyphicon-user"></span> Register</a></li>
+        <li><a href="/site/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <?php 
         }
     }else{
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-               (
-                    '<li>'
-                    . Html::beginForm(['/site/logout'], 'post', ['class' => 'navbar-form'])
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->email . ')',
-                        ['class' => 'btn btn-link']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-                )
-            ],
-        ]);
-    }
-
-    NavBar::end();
+        
     ?>
+    <li><a href="/site/logout"><span class="glyphicon glyphicon-user"></span> <?php echo 'Logout (' . Yii::$app->user->identity->email . ')' ?></a></li>
+    <?php 
+    }
+        
+    ?>
+    </ul>
+      
+      
+  </div>
+</nav>
+<?php 
+  
+    ?>
+
+    
 
     <div class="container">
       <?php echo $this->render('_card_warning', []);?>
@@ -158,10 +171,12 @@ use app\helpers\TenantHelper;
 </body>
 
     <!--  -->
+    <script src="/js/jquery.js"></script> 
     <script src="/js/jquery.flexslider-min.js"></script>
     <script src="/js/jquery.bootpag.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/ga.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <script src="/js/clipboard.min.js"></script>
     <script src="/js/jquery-confirm.min.js"></script>
     <script src="/js/bootstrap-switch.min.js"></script>

@@ -38,12 +38,12 @@ $this->registerJs($jsSelectState, $this::POS_READY);
 <?php } ?>
 
 <ul class="nav nav-tabs">    
-    <li class="active"><a data-toggle="tab" href="#tab-profile">Profile</a></li>
-    <li><a data-toggle="tab" href="#billing-info">Billing Info</a></li>
+    <li class="<?php echo $_REQUEST['view'] == 'info' ? 'active' : ''?>"><a data-toggle="tab" href="#tab-profile">Profile</a></li>
+    <li class="<?php echo $_REQUEST['view'] == 'billing' ? 'active' : ''?>"><a data-toggle="tab" href="#billing-info">Billing Info</a></li>
 </ul>
 
 <div class="tab-content">
-    <?php echo $this->render('//partials/_profile', ['model' => $model, 'show' => true]);?>
+    <?php echo $this->render('//partials/_profile', ['model' => $model]);?>
     <?php echo $this->render('//partials/_billing', ['model' => $model]);?>
     
 </div>
