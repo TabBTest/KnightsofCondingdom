@@ -123,7 +123,13 @@ use app\models\User;
                     <td>
                     
                     <?php echo $detail->type == OrderDetails::TYPE_MENU_ITEM_ADD_ON || $detail->type == OrderDetails::TYPE_MENU_ITEM ? $detail->quantity : ''?></td>
-                    <td>$<?php echo UtilityHelper::formatAmountForDisplay($detail->totalAmount)?></td>
+                    <td>
+                    <?php if($detail->type != OrderDetails::TYPE_COUPON){?>
+                        $<?php echo UtilityHelper::formatAmountForDisplay($detail->totalAmount)?>
+                    <?php }else{?>
+                    ($<?php echo UtilityHelper::formatAmountForDisplay($detail->totalAmount)?>)
+                    <?php }?>
+                    </td>
                 </tr>
                 <?php }?>
                 <tr>

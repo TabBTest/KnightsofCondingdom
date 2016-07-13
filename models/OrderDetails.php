@@ -23,6 +23,7 @@ class OrderDetails extends \yii\db\ActiveRecord
     const TYPE_SALES_TAX = 3;
     const TYPE_DELIVERY_CHARGE = 4;
     const TYPE_ADMIN_FEE = 5;
+    const TYPE_COUPON = 6;
     /**
      * @inheritdoc
      */

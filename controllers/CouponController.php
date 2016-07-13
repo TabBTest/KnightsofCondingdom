@@ -25,7 +25,13 @@ class CouponController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'create', 'update', 'archive'],
+                    'actions' => ['check'],
+                    'allow' => true,
+                    'roles' => ['?'],
+                    ],
+                    
+                    [
+                        'actions' => ['index', 'view', 'create', 'update', 'archive', 'check'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -43,6 +49,18 @@ class CouponController extends Controller
         ];
     }
 
+    public function actionCheck(){
+        $code = $_REQUEST['code'];
+        $vendorId = $_REQUEST['vendorId'];
+        $resp = [];
+        $vendorCoupon = VendorCoupons::isValidCoupon($code, $vendorId);
+        $resp['status'] = 0;
+        if($vendorCoupon){
+            $resp['status'] = 1;
+        }
+        echo json_encode($resp);
+        die;
+    }
     /**
      * Lists all VendorCoupons models.
      * @return mixed

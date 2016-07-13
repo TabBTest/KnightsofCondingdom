@@ -23,6 +23,8 @@ use app\models\TenantInfo;
 use app\models\MenuCategories;
 use app\models\VendorMenuItemAddOns;
 use app\models\AppConfig;
+use app\models\VendorCoupons;
+use app\models\VendorCouponOrders;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -155,6 +157,7 @@ class OrderingController extends CController
                     if($salesTaxInfo && $salesTaxInfo->val > 0){
                         $salesTax = 1 + (floatval($salesTaxInfo->val) / 100);
                         $salesTaxPercent = $salesTaxInfo->val;
+                        
                     }
                 }
                 
@@ -172,6 +175,30 @@ class OrderingController extends CController
                 }
                 
                 $totalFinalAmount += $deliveryFee;
+                $discount = false;
+                $couponDiscountDisplay = false;
+                $vendorCoupon = false;
+                if(isset($_POST['couponCode']) && $_POST['couponCode'] != ''){
+                    $couponCode = $_POST['couponCode'];
+                    $vendorCoupon = VendorCoupons::isValidCoupon($couponCode, $tenantInfo->userId);
+                
+                    if($vendorCoupon->discountType == VendorCoupons::TYPE_AMOUNT){
+                        $couponDiscountDisplay = 'Coupon Discount ($'.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).')';
+                        $discount = floatval($vendorCoupon->discount);
+                        
+                    }else if($vendorCoupon->discountType == VendorCoupons::TYPE_PERCENTAGE){
+                        $couponDiscountDisplay = 'Coupon Discount ('.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).'%)';
+                        $discount = $totalFinalAmount * (floatval($vendorCoupon->discount) / 100);
+                    }
+                    
+                    if($discount !== false){
+                        if($totalFinalAmount >= $discount){
+                            $totalFinalAmount = $totalFinalAmount - $discount;
+                        }else{
+                            $totalFinalAmount = 0;
+                        }
+                    }
+                }
                 
                 //still need to include delivery
                 //still need to check if cash payment
@@ -284,9 +311,9 @@ class OrderingController extends CController
                         $orderDetails->orderId = $order->id;
                         $orderDetails->vendorMenuItemId = 0;
                         $orderDetails->name = 'Sales Tax ('.$salesTaxPercent.'%)';
-                        $orderDetails->amount = $salesTax;
+                        $orderDetails->amount = $salesTaxAmount;
                         $orderDetails->quantity = 1;
-                        $orderDetails->totalAmount = $salesTax;
+                        $orderDetails->totalAmount = $salesTaxAmount;
                         $orderDetails->type = OrderDetails::TYPE_SALES_TAX;
                         $orderDetails->save();
                         
@@ -305,12 +332,29 @@ class OrderingController extends CController
                         $orderDetails = new OrderDetails();
                         $orderDetails->orderId = $order->id;
                         $orderDetails->vendorMenuItemId = 0;
-                        $orderDetails->name = 'Admin Fee';
+                        $orderDetails->name = 'Web Fee';
                         $orderDetails->amount = $adminFee;
                         $orderDetails->quantity = 1;
                         $orderDetails->totalAmount = $adminFee;
                         $orderDetails->type = OrderDetails::TYPE_ADMIN_FEE;
                         $orderDetails->save();
+                        
+                        if($discount){
+                            $orderDetails = new OrderDetails();
+                            $orderDetails->orderId = $order->id;
+                            $orderDetails->vendorMenuItemId = 0;
+                            $orderDetails->name = $couponDiscountDisplay;
+                            $orderDetails->amount = $discount;
+                            $orderDetails->quantity = 1;
+                            $orderDetails->totalAmount = $discount;
+                            $orderDetails->type = OrderDetails::TYPE_COUPON;
+                            $orderDetails->save();
+                            
+                            $vendorCouponOrder = new VendorCouponOrders();
+                            $vendorCouponOrder->orderId = $order->id;
+                            $vendorCouponOrder->vendorCouponId = $vendorCoupon->id;
+                            $vendorCouponOrder->save();
+                        }
                         
                         \Yii::$app->getSession()->setFlash('success', 'Orders Submitted Successfully');
 
@@ -334,7 +378,7 @@ class OrderingController extends CController
             
             
         }
-        return $this->redirect('/ordering');
+        return $this->redirect('/ordering/menu');
     }
     public function actionAddItem(){
         $menuItemId = $_REQUEST['menuItemId'];

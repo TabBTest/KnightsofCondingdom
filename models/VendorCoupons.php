@@ -20,7 +20,12 @@ class VendorCoupons extends \yii\db\ActiveRecord
 {
     const TYPE_PERCENTAGE = 1;
     const TYPE_AMOUNT = 2;
-    
+    public static function isValidCoupon($code, $vendorId){
+        $vendorCoupon = VendorCoupons::findOne(['code' => $code, 'isArchived' => 0, 'vendorId' => $vendorId]);
+        if($vendorCoupon)
+            return $vendorCoupon;
+        return false; 
+    }
     public static function getCouponType(){
         return [self::TYPE_PERCENTAGE => 'Percentage',
             self::TYPE_AMOUNT => 'Amount',

@@ -555,15 +555,16 @@ var Order = {
 			if($('.has-delivery').length == 1){
 				$('.has-delivery').off('click');
 				$('.has-delivery').on('click', function(){
-					var deliveryCharge = parseFloat($(this).data('amount'));
-					var am = parseFloat($('.final-amount').data('amount'));
-					if($(this).is(':checked')){
-						$('.delivery-amount').html('$ '+ (deliveryCharge).toFixed(2));
-						$('.final-amount').html('$ '+ (am+deliveryCharge).toFixed(2));
-					}else{						
-						$('.final-amount').html('$ '+ (am));
-						$('.delivery-amount').html('$ 0.00');
-					}
+//					var deliveryCharge = parseFloat($(this).data('amount'));
+//					var am = parseFloat($('.final-amount').data('amount'));
+//					if($(this).is(':checked')){
+//						$('.delivery-amount').html('$ '+ (deliveryCharge).toFixed(2));
+//						$('.final-amount').html('$ '+ (am+deliveryCharge).toFixed(2));
+//					}else{						
+//						$('.final-amount').html('$ '+ (am));
+//						$('.delivery-amount').html('$ 0.00');
+//					}
+					Order.refreshMainOrderSummary();
 				});
 			}
 		})
@@ -571,6 +572,23 @@ var Order = {
 	deleteOrderItem : function(){
 		$('.order-'+$(this).data('key')).remove();
 		Order.refreshMainOrderSummary();
+	},
+	applyCoupon : function(){
+		
+    	$('input[name="couponCode"]').parent().removeClass('has-error');
+    	if($('input[name="couponCode"]').val() == ''){
+    		$('input[name="couponCode"]').parent().addClass('has-error');
+    	}else{
+    		$.get('/coupon/check', 'code='+$('input[name="couponCode"]').val()+'&vendorId='+$('input[name="couponCode"]').data('vendor-id'), function(data){
+    			var resp = $.parseJSON(data);
+    			if(resp.status == 1){
+    				Order.refreshMainOrderSummary();
+    			}else{
+    				Messages.showError('Invalid Coupon Code');
+    			}
+    		});
+    	}
+	    
 	}
 }
 var setupUi = function(){

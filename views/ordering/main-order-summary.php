@@ -6,6 +6,9 @@ use app\helpers\TenantHelper;
 use app\models\TenantInfo;
 use app\models\Orders;
 use app\models\AppConfig;
+use app\models\MenuCategories;
+use app\controllers\VendorController;
+use app\models\VendorCoupons;
 if(isset($params['Orders'])){                         
 ?>
 <div class='col-xs-12 text-center'>
@@ -14,9 +17,18 @@ if(isset($params['Orders'])){
 <?php 
 $finalAmount = 0;
 $itemsFinalAmount = 0;
+$vendorId = false;
+$couponCode =  isset($params['couponCode']) ? $params['couponCode'] : '';
+$vendorCoupon = false;
     foreach($params['Orders'] as  $orderKey => $menuItemId){
         $quantity = $params['OrdersQuantity'][$orderKey];
         $menuItem = VendorMenuItem::findOne($menuItemId);
+        if($vendorId === false){
+            $menuCategory = MenuCategories::findOne($menuItem->menuCategoryId);
+            $vendorId = $menuCategory->vendorId;
+            $vendorCoupon = VendorCoupons::isValidCoupon($couponCode, $vendorId);
+            
+        }
         $totalAmount =  $quantity * $menuItem->amount;
         $finalAmount += $totalAmount;
     ?>
@@ -109,6 +121,33 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
     Web Fee</label></td>
     <td><label class='form-label'>$<?php echo UtilityHelper::formatAmountForDisplay($adminFee)?></label></td>
 </tr>
+<?php if($vendorCoupon){?>
+<tr>
+    <td>&nbsp;</td>
+    <td><label class='form-label'>
+    <?php $couponDiscountDisplay = '';
+    $discount = false;
+    if($vendorCoupon->discountType == VendorCoupons::TYPE_AMOUNT){
+        $couponDiscountDisplay = 'Coupon Discount ($'.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).')';
+        $discount = floatval($vendorCoupon->discount);
+        
+    }else if($vendorCoupon->discountType == VendorCoupons::TYPE_PERCENTAGE){
+        $couponDiscountDisplay = 'Coupon Discount ('.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).'%)';
+        $discount = $totalFinalAmount * (floatval($vendorCoupon->discount) / 100);
+    }
+    
+    if($discount !== false){
+        if($totalFinalAmount >= $discount){
+            $totalFinalAmount = $totalFinalAmount - $discount;
+        }else{
+            $totalFinalAmount = 0;
+        }
+    }
+    ?>    
+    <?php echo $couponDiscountDisplay?></label></td>
+    <td><label class='form-label discount-amount' data-type='<?php echo $vendorCoupon->discountType?>' data-discount='<?php echo $vendorCoupon->discount?>'>$<?php echo UtilityHelper::formatAmountForDisplay($discount)?></label></td>
+</tr>
+<?php }?>
 <tr>
     <td>&nbsp;</td>
     <td><label class='form-label'>Total</label></td>
@@ -142,6 +181,22 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
         <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CASH?>' <?php echo (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CASH) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Cash
     </label>        
 </div>
+
+<div class='row col-xs-12'>
+    <div class='col-xs-12'>
+    <label>Coupon Code</label>
+    </div>
+    <div class='col-xs-6'>
+    
+    <input type='text' class='form-control' data-vendor-id='<?php echo $vendorId?>' name='couponCode' value='<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ''?>'/>
+    </div>
+    <div class='col-xs-6'>
+        <button type='button' class='btn btn-info' onclick="javascript: Order.applyCoupon()">Apply</button>
+    </div>
+    
+    
+</div>
+
 <br />
 <div class='col-xs-12 text-center' style='margin: 10px 0;'>
     <button class='btn btn-success'>Order Now</button>

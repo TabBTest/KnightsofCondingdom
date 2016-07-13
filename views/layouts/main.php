@@ -75,7 +75,7 @@ AppAsset::register($this);
     }else if(Yii::$app->user->identity->role== User::ROLE_CUSTOMER){
        
     ?>
-    <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'ordering') !== false && strpos(\Yii::$app->controller->getRoute(), 'history') === false ? 'active' : ''?>"><a href="/ordering">New Order</a></li>
+    <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'ordering') !== false && strpos(\Yii::$app->controller->getRoute(), 'history') === false ? 'active' : ''?>"><a href="/ordering/menu">New Order</a></li>
     <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'history') !== false ? 'active' : ''?>"><a href="/ordering/history">Order History</a></li>
     
     <li class="dropdown  <?php echo  strpos(\Yii::$app->controller->getRoute(), 'profile') !== false ? 'active' : ''?>">
