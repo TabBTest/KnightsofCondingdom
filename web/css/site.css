@@ -32,10 +32,6 @@ body {
     z-index: 2;
 }
 
-body .container .jumbotron, body .container .jumbotron-default, body .container .well, body .container .well-default, body .container-fluid .jumbotron, body .container-fluid .jumbotron-default, body .container-fluid .well, body .container-fluid .well-default {
-    background-color: black;
-}
-
 .jumbotron p {
     color: white;
     position: relative;

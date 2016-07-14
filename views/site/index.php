@@ -7,7 +7,7 @@ $this->title = 'Restalutions';
 
 <div class="site-index">
 
-    <div class="jumbotron">
+    <div class="jumbotron" style="background-color: black">
         <h1>Restalutions</h1>
         <p class="lead">Restaurant Solutions</p>
         <img src="/images/jumbotron-bg.jpg">

@@ -156,21 +156,20 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
 </tbody>
 </table>
 </div>
-<div class='col-xs-12'>
+<div class='form-group col-xs-12'>
     <label>Instructions</label>
     <textarea class='form-control' rows='5' cols='25' name='notes' placeholder='Please add your extra instructions here...'><?php echo isset($params['notes']) ? $params['notes'] : ''?></textarea>    
 </div>
 <?php if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){?>
-<div class='col-xs-12'>
+<div class='form-group col-xs-12'>
     <label>Do you want it delivered?</label>
-   
-    <input type='checkbox' <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value='1' class='has-delivery' name='isDelivery' data-amount='<?php echo TenantHelper::getDeliveryAmount()?>'/>    
+    <input type='checkbox' <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value='1' class='has-delivery' name='isDelivery' data-amount='<?php echo TenantHelper::getDeliveryAmount()?>'/>
 </div>
 
 <?php }?>
 <div class='col-xs-12'>
     <label>How do you want to pay?</label>
-            
+
 </div>
 <div class='col-xs-12'>
     <label>
@@ -179,22 +178,19 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
     &nbsp;&nbsp;&nbsp;&nbsp;
     <label>
         <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CASH?>' <?php echo (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CASH) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Cash
-    </label>        
+    </label>
 </div>
 
 <div class='row col-xs-12'>
     <div class='col-xs-12'>
     <label>Coupon Code</label>
     </div>
-    <div class='col-xs-6'>
-    
-    <input type='text' class='form-control' data-vendor-id='<?php echo $vendorId?>' name='couponCode' value='<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ''?>'/>
+    <div class='form-group col-xs-6'>
+        <input type='text' class='form-control' data-vendor-id='<?php echo $vendorId?>' name='couponCode' value='<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ''?>'/>
     </div>
-    <div class='col-xs-6'>
+    <div class='form-group col-xs-6'>
         <button type='button' class='btn btn-info' onclick="javascript: Order.applyCoupon()">Apply</button>
     </div>
-    
-    
 </div>
 
 <br />

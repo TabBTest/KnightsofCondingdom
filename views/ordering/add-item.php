@@ -7,7 +7,7 @@ $key = strtotime('now');
 ?>
 
 <div class='row'>
-    <div class='col-xs-8'>
+    <div class='col-xs-12 col-sm-12 col-md-8'>
     <form id='item-order-summary'>
     <div class='col-xs-12'>
         <label>Quantity</label>
