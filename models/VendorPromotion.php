@@ -19,6 +19,7 @@ class VendorPromotion extends \yii\db\ActiveRecord
     
     const SEND_TO_SELF = 0;
     const SEND_TO_CUSTOMERS = 1;
+    const SEND_TO_VENDORS = 2;
     /**
      * @inheritdoc
      */
@@ -36,7 +37,7 @@ class VendorPromotion extends \yii\db\ActiveRecord
             [['vendorId', 'subject'], 'required'],
             [['vendorId'], 'integer'],
             [['html'], 'string'],
-            [['date_created', 'promoType', 'sendToType'], 'safe'],
+            [['date_created', 'promoType', 'sendToType', 'isAdmin'], 'safe'],
         ];
     }
 

@@ -11,6 +11,9 @@ use app\assets\AppAsset;
 use app\models\User;
 use app\helpers\TenantHelper;
 
+
+AppAsset::register($this);
+
 ?><?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -20,15 +23,7 @@ use app\helpers\TenantHelper;
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-    <link href="/css/jquery-ui.min.css" rel="stylesheet">
-    <link href="/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/css/jquery-confirm.min.css" rel="stylesheet">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/bootstrap-switch.min.css" rel="stylesheet">
-    <link href="/css/site.css" rel="stylesheet">
-    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <script src="/js/jquery.js"></script> 
+   
 
 
 </head>
@@ -36,68 +31,65 @@ use app\helpers\TenantHelper;
 <?php $this->beginBody() ?>
 
 <div class="wrap">
+    
+
+    <nav class="navbar-inverse navbar-fixed-top navbar">
+    <div class="container">
+    <div class="navbar-header">
+    <a href="/admin" class="navbar-brand"><img alt="" src="/images/logo.png"></a>
+    </div>
+    <ul class="nav navbar-nav navbar-left">
     <?php
-
-
-    NavBar::begin([
-        'brandLabel' => Html::img('/images/logo.png'),
-        'brandOptions' => ['class' => 'navbar-brand'],
-        'brandUrl' => '/admin',
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
     if(Yii::$app->user->isGuest){
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-left'],
-            'items' => [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'About', 'url' => ['/site/about']],
-                ['label' => 'Products', 'url' => ['/site/products']],
-            ],
-        ]);
-    }else if(Yii::$app->session->get('role') == User::ROLE_ADMIN){
-
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-left'],
-            'items' => [
-                ['label' => 'Dashboard', 'url' => ['/admin/home'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'home') !== false ? true : false],
-                ['label' => 'Vendors', 'url' => ['/admin/vendors'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'vendors') !== false ? true : false],
-//                 ['label' => 'Customer', 'url' => ['/admin/customers'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'customers') !== false ? true : false],
-                ['label' => 'Settings', 'url' => ['/admin/settings'], 'active' => strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? true : false],
-            ],
-        ]);
-    }
-    if(Yii::$app->user->isGuest){
-
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                   // ['label' => 'Register', 'url' => ['/site/reg-customer']],
-                    ['label' => 'Login', 'url' => ['/admin/default/login']],
-                ],
-            ]);
+        ?>
         
-    }else{
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-               (
-                    '<li>'
-                    . Html::beginForm(['/admin/default/logout'], 'post', ['class' => 'navbar-form'])
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->email . ')',
-                        ['class' => 'btn btn-link']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-                )
-            ],
-        ]);
-    }
+         <li class=""><a href="/site/index">Home</a></li>
+         <li class=""><a href="/site/about">About</a></li>
+         <li class=""><a href="/site/products">Products</a></li>
+        <?php 
+        }else  if(Yii::$app->user->identity->role == User::ROLE_ADMIN){       
+            
+        ?>
+         <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'home') !== false ? 'active' : ''?>"><a href="/admin/home">Home</a></li>
+         <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'vendors') !== false ? 'active' : ''?>"><a href="/admin/vendors">Vendors</a></li>
+         <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? 'active' : ''?>"><a href="/admin/settings">Settings</a></li>
+         
+         <li class="dropdown <?php echo  strpos(\Yii::$app->controller->getRoute(), 'promotion') !== false || strpos(\Yii::$app->controller->getRoute(), 'coupon') !== false ? 'active' : ''?> ">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Promotion
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/admin/promotion?view=email">Email</a></li>
+              <li><a href="/admin/promotion?view=sms">SMS</a></li>
+            </ul>
+          </li>
+          
+        <?php 
+        }
+        ?>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+        <?php 
+        if(Yii::$app->user->isGuest){
+    
+                
+            ?>
+            <li><a href="/admin/default/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            <?php 
+            
+        }else{
+            
+        ?>
+        <li><a href="/admin/default/logout"><span class="glyphicon glyphicon-user"></span> <?php echo 'Logout (' . Yii::$app->user->identity->email . ')' ?></a></li>
+        <?php 
+        }
+            
+        ?>
+        </ul>
+          
+          
+      </div>
+    </nav>
 
-    NavBar::end();
-    ?>
 
     <div class="container">      
         <?= Breadcrumbs::widget([
@@ -131,16 +123,6 @@ use app\helpers\TenantHelper;
 <?php $this->endBody() ?>
 </body>
 
-    <!--  -->
-     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/jquery.flexslider-min.js"></script>
-    <script src="/js/jquery.bootpag.min.js"></script>
-    <script src="/js/jquery-ui.min.js"></script>
-    <script src="/js/ga.js"></script>
-    <script src="/js/clipboard.min.js"></script>
-    <script src="/js/jquery-confirm.min.js"></script>
-    <script src="/js/bootstrap-switch.min.js"></script>
-    <script src="/js/app.js"></script>
 <style>
 body > .wrap > .container {
     min-height: 500px;

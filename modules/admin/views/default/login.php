@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-xs-10 col-sm-8 col-md-6 col-xs-offset-1 col-sm-offset-2 col-md-offset-3">
     <form method="POST" action="/admin/default/login">
-        <fieldset class="well form-horizontal">
+        <fieldset class="form-horizontal">
             <h1 class="text-center">Log In</h1>
            
 <?php if(isset($error)){?>

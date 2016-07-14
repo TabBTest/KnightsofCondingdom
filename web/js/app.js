@@ -229,7 +229,11 @@ $(document).ready(function () {
 
     var to = $(this).data('to');
     $('#promo-html').val(tinyMCE.get('promotion').getContent())
-    $.post('/promotion/send?to=' + to, $('.promotion-form').serialize(), function (resp) {
+    var prefix = '';
+    if(window.location.href.indexOf('/admin') !== false){
+    	prefix = '/admin';
+    }
+    $.post(prefix+'/promotion/send?to=' + to, $('.promotion-form').serialize(), function (resp) {
       var data = $.parseJSON(resp);
       if (data.status == 1) {
         Messages.showSuccess('Promotions is being processed already');
@@ -238,7 +242,10 @@ $(document).ready(function () {
   })
   $('.btn-send-promo-sms').on('click', function () {
     var to = $(this).data('to');
-    $.post('/promotion/send?to=' + to, $('.promotion-form-sms').serialize(), function (resp) {
+    if(window.location.href.indexOf('/admin') !== false){
+    	prefix = '/admin';
+    }
+    $.post(prefix+'/promotion/send?to=' + to, $('.promotion-form-sms').serialize(), function (resp) {
       var data = $.parseJSON(resp);
       if (data.status == 1) {
         Messages.showSuccess('Promotions is being processed already');
