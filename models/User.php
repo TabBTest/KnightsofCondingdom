@@ -86,7 +86,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'Business Name' => 'Business Name',
             'firstName' => 'First Name',
             'lastName' => 'Last Name',
-            'imgFile' => 'Image File',
+            'imageFile' => 'Image File',
             'streetAddress' => 'Street Address',
             'city' => 'City',
             'state' => 'State',

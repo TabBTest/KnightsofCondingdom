@@ -11,7 +11,7 @@ body {
 }
 
 .wrap > .container {
-    padding: 70px 15px 20px;
+    padding: 20px 15px 20px;
 }
 
 .footer {
@@ -144,6 +144,10 @@ body {
     color: #a94442;
 }
 
+.alert-warning {
+    color: #8a6d3b;
+}
+
 table tr th, table tr td{
 	text-align: center;
 }
@@ -157,4 +161,8 @@ table tr th, table tr td{
 
 .navbar .navbar-brand {
     padding: 5px 15px 5px 15px;
+}
+
+.navbar .navbar-brand.navbar-brand-text {
+    padding: 15px 15px 15px 15px;
 }

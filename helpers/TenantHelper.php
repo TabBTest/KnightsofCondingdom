@@ -43,6 +43,26 @@ class TenantHelper {
         $subdomain = TenantInfo::getTenantValue($userId, TenantInfo::CODE_SUBDOMAIN);
         return $subdomain.'.'.self::get_domain($_SERVER['SERVER_NAME']);
     }
+
+    static public function getVendorImageFromUrl()
+    {
+        $url = $_SERVER['HTTP_HOST'];
+        $urlPartial = explode(".", $url);
+        $subdomain = array_shift($urlPartial);
+        $userId = TenantInfo::findOne(['code' => TenantInfo::CODE_SUBDOMAIN, 'val' => $subdomain])->userId;
+        $imageFile = User::findOne($userId)->imageFile;
+        return $imageFile;
+    }
+
+    static public function getVendorNameFromUrl()
+    {
+        $url = $_SERVER['HTTP_HOST'];
+        $urlPartial = explode(".", $url);
+        $subdomain = array_shift($urlPartial);
+        $userId = TenantInfo::findOne(['code' => TenantInfo::CODE_SUBDOMAIN, 'val' => $subdomain])->userId;
+        $businessName = User::findOne($userId)->businessName;
+        return $businessName;
+    }
     
     static function doMembershipPayment($userId){
         $respInfo = array();

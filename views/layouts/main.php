@@ -13,6 +13,7 @@ use app\helpers\TenantHelper;
 use app\helpers\UtilityHelper;
 
 AppAsset::register($this);
+$model = User::findOne(\Yii::$app->user->id);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -37,7 +38,12 @@ AppAsset::register($this);
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-      <a href="/" class="navbar-brand"><img alt="" class="img-responsive img-rounded" src="/images/logo.png"></a>
+        <?php if (TenantHelper::isDefaultTenant()) { ?>
+            <a href="/" class="navbar-brand"><img alt="" class="img-responsive img-rounded" src="/images/logo.png"></a>
+        <?php } else { ?>
+            <a href="/" class="navbar-brand"><img alt="" class="img-responsive img-rounded" style="height: 100%;" src="/images/users/<?= TenantHelper::getVendorImageFromUrl() ?>" /></a>
+            <span class="navbar-brand navbar-brand-text"><?= TenantHelper::getVendorNameFromUrl() ?></span>
+        <?php } ?>
     </div>
     <div class="navbar-collapse navbar-responsive-collapse collapse">
     <ul class="nav navbar-nav navbar-left">
@@ -116,7 +122,18 @@ AppAsset::register($this);
     }else{
         
     ?>
-    <li><a href="/site/logout"><span class="glyphicon glyphicon-user"></span> <?php echo 'Logout (' . Yii::$app->user->identity->email . ')' ?></a></li>
+    <?php if ($model->imageFile) { ?>
+    <li>
+      <img alt="" style="padding-top: 5px; max-height: 50px;" class="img-responsive" src="/images/users/<?= $model->imageFile ?>" />
+    </li>
+    <li>
+    <a href="/site/logout">
+    <?php } else { ?>
+    <li>
+      <a href="/site/logout">
+      <span class="glyphicon glyphicon-user"></span>
+    <?php } ?>
+      <?php echo 'Logout (' . Yii::$app->user->identity->email . ')' ?></a></li>
     <?php 
     }
         
@@ -131,7 +148,7 @@ AppAsset::register($this);
 
     
 
-    <div class="container">
+    <div class="container-fluid">
       <?php echo $this->render('_card_warning', []);?>
       <?php echo $this->render('_vendor_warning', []);?>
         <?= Breadcrumbs::widget([
@@ -142,7 +159,7 @@ AppAsset::register($this);
 </div>
 
 <footer class="footer">
-    <div class="container">
+    <div class="container-fluid">
         <p class="pull-left">&copy; Restalutions <?= date('Y') ?></p>
     </div>
 </footer>
