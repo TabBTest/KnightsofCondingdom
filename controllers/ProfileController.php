@@ -46,7 +46,7 @@ class ProfileController extends CController
     }
 
     public function actionChangePassword(){
-        return $this->renderPartial('../partials/change-password', ['id' => ($_REQUEST['id'])]);
+        return $this->renderPartial('//partials/_change-password', ['id' => ($_REQUEST['id'])]);
     }
     public function actionSavePassword(){
         $resp = [];
@@ -143,7 +143,7 @@ class ProfileController extends CController
                 
                 $message = 'Profile Saved Successfully';
 
-                if($_POST['password'] != ''){
+                if(isset($_POST['password']) && !$_POST['password']){
                     if($_POST['password'] == $_POST['confirmPassword']){
                         $model->password = $_POST['password'];
                         $model->confirmPassword = $_POST['password'];
