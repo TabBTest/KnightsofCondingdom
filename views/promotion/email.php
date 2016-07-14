@@ -27,7 +27,7 @@ tinymce.init({
 	 });
 	 </script>
 	 <div class='form-group'>
-	 <form action='/promotion/send' class='promotion-form'>
+	 <form action='/promotion/send' class='promotion-form-email'>
 	    <div class='form-group'>
             <label class='form-label'>Subject</label>
             <input type='text'  name='subject' required  class='form-control'/>
@@ -40,9 +40,10 @@ tinymce.init({
         
         
         <input type="hidden" id="promo-html" name="promoHtml" />
+        <input type="hidden" id="userList" name="userList" />
     </form>
     </div>
     <div class='form-group text-center'>
     <button type='button' class='btn btn-success btn-send-promo' data-to='0'>Send to Self</button>
-    <button type='button' class='btn btn-success btn-send-promo' data-to='1'>Send to Customers</button>
+    <button type='button' class='btn btn-success btn-send-promo' data-to='1'>Send to Customers</button>    
     </div>

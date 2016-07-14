@@ -221,36 +221,65 @@ $(document).ready(function () {
   });
 
   $('.btn-send-promo').on('click', function () {
-    $('.promotion-form has-error').removeClass('has-error');
-    if ($('.promotion-form input[name="subject"]').val() == '') {
-      $('.promotion-form input[name="subject"]').parent().addClass('has-error');
+    $('.promotion-form-email has-error').removeClass('has-error');
+    if ($('.promotion-form-email input[name="subject"]').val() == '') {
+      $('.promotion-form-email input[name="subject"]').parent().addClass('has-error');
       return false;
     }
-
-    var to = $(this).data('to');
-    $('#promo-html').val(tinyMCE.get('promotion').getContent())
+    $('#promo-html').val(tinyMCE.get('promotion').getContent());
     var prefix = '';
-    if(window.location.href.indexOf('/admin') !== false){
+    if(window.location.href.indexOf('/admin') != -1){
     	prefix = '/admin';
     }
-    $.post(prefix+'/promotion/send?to=' + to, $('.promotion-form').serialize(), function (resp) {
-      var data = $.parseJSON(resp);
-      if (data.status == 1) {
-        Messages.showSuccess('Promotions is being processed already');
-      }
-    })
+    
+    var to = $(this).data('to');
+   
+    if(to == 1){
+    	
+    	$.post(prefix+'/promotion/get-customers', 'type=email', function (html) {
+    		$('#custom-modal .modal-title').html('Choose Customers');
+            $('#custom-modal .modal-body').html(html);
+            $('#custom-modal').modal('show');
+            
+            setupUiCustomerPromo();
+           
+            
+  	    })
+    	
+    }else{	    	    
+	    $.post(prefix+'/promotion/send?to=' + to, $('.promotion-form-email').serialize(), function (resp) {
+	      var data = $.parseJSON(resp);
+	      if (data.status == 1) {
+	        Messages.showSuccess('Promotions is being processed already');
+	      }
+	    })
+    }
   })
   $('.btn-send-promo-sms').on('click', function () {
     var to = $(this).data('to');
     if(window.location.href.indexOf('/admin') !== false){
     	prefix = '/admin';
     }
-    $.post(prefix+'/promotion/send?to=' + to, $('.promotion-form-sms').serialize(), function (resp) {
-      var data = $.parseJSON(resp);
-      if (data.status == 1) {
-        Messages.showSuccess('Promotions is being processed already');
-      }
-    })
+    if(to == 1){
+    	
+    	$.post(prefix+'/promotion/get-customers', 'type=sms', function (html) {
+    		$('#custom-modal .modal-title').html('Choose Customers');
+            $('#custom-modal .modal-body').html(html);
+            $('#custom-modal').modal('show');
+            
+            setupUiCustomerPromo();
+           
+            
+  	    })
+    	
+    }else{	
+	    $.post(prefix+'/promotion/send?to=' + to, $('.promotion-form-sms').serialize(), function (resp) {
+	      var data = $.parseJSON(resp);
+	      if (data.status == 1) {
+	        Messages.showSuccess('Promotions is being processed already');
+	      }
+	    })
+    }
   })
 
   if ($('#tab-settings').length != 0) {
@@ -609,6 +638,24 @@ var Order = {
     }
 
   }
+}
+var setupUiCustomerPromo = function(){
+	
+	if ($('.promotion-user-pagination').length != 0) {
+	    // init bootpag	    
+	    
+	    $('.promotion-user-pagination').bootpag({
+            total: $('.promotion-user-pagination').data('total-pages'),
+            page: $('.promotion-user-pagination').data('current-page'),
+            maxVisible: 10
+          }).on("page", function (event, /* page number here */ num) {
+        	  var param = $('#promotion-user-search-form').serialize();
+            $.get('/promotion/view-customers', 'page=' + num + '&userId=' + $('.promotion-user-pagination').data('user-id')+'&'+param, function (html) {
+              $('.promotion-user-body').html(html);
+              setupUiCustomerPromo();
+            })
+          });
+	}
 }
 var setupUi = function () {
   if ($('.customer-order-history-pagination').length != 0) {
@@ -1066,6 +1113,95 @@ var Customer = {
       setupUi();
       listLinkActions();
     })
+
+  },
+  selectAll : function(){
+	  $('.customer-promo').prop('checked', $('.all-checkbox-promo').is(':checked'));
+  },
+  addPromoCustomer : function(){
+	  if($('.customer-promo:checked').length == 0){
+		  Messages.showError('Please select a user');
+	  }else{
+		  $('.customer-promo:checked').each(function(){
+			 var html = '<tr data-id="'+$(this).data('id')+'" ><td>'+$(this).data('name')+'</td><td><button type="button" style="padding: 0" class="btn btn-danger btn-xs" onclick="javascript: Customer.removeCustomerPromo('+$(this).data('id')+')">Remove</button></td></tr>';
+			 if($('.customer-list tr[data-id='+$(this).data('id')+']').length == 0){
+				 $('.customer-list').append(html);
+			 }
+		  });
+	  }
+  },
+  removeCustomerPromo : function(id){
+	  swal({
+	        title: "Remove User?",
+	        text: "Are you sure you want to remove this user?",
+	        showCancelButton: true,
+	        confirmButtonText: 'Yes, continue',
+	        cancelButtonText: 'No, keep it'
+	      },
+	      function (isConfirm) {
+	        if (isConfirm) {
+	        	$('.customer-list tr[data-id='+id+']').remove();
+	        }
+	      });
+	  
+  },
+  sendPromoNow : function(type){
+	 var cont = false;
+	 if($('.send-to-all').is(':checked') || $('.customer-list tr').length != 0) {
+		 cont = true;
+	 }else{
+		 Messages.showError('Please select at least 1 user');
+	 }
+	 if(cont){
+	 swal({
+	        title: "Confirm Send?",
+	        text: "Are you sure you want to send this promo?",
+	        showCancelButton: true,
+	        confirmButtonText: 'Yes, continue',
+	        cancelButtonText: 'No, keep it'
+	      },
+	      function (isConfirm) {
+	        if (isConfirm) {
+	        	var userList = '';
+	        	if($('.send-to-all').is(':checked')){
+	        		userList = 'ALL';
+	        	}else{
+	        		$('.customer-list tr').each(function(){
+	        			if(userList != '')
+	        				userList += ',';
+	        			userList += $(this).data('id');
+	        		})
+	        	}
+	        	var prefix = '';
+	     	    if(window.location.href.indexOf('/admin') != -1){
+	     	    	prefix = '/admin';
+	     	    }
+	     	    
+	     	    
+	        	$('.promotion-form-'+type+' #userList').val(userList);
+	        	$.post(prefix+'/promotion/send?to=1', $('.promotion-form-'+type).serialize(), function (resp) {
+	       	      var data = $.parseJSON(resp);
+	       	      if (data.status == 1) {
+	       	        Messages.showSuccess('Promotions is being processed already');
+	       	      }
+	       	    })
+	        	$('#custom-modal').modal('hide');
+	        }
+	      });
+	 }
+  },
+  searchPromo: function () {
+	    var prefix = '';
+	    if(window.location.href.indexOf('/admin') != -1){
+	    	prefix = '/admin';
+	    }
+	    
+	    var param = $('#promotion-user-search-form').serialize();
+        $.get(prefix+'/promotion/view-customers', 'page=1&userId=' + $('.promotion-user-pagination').data('user-id')+'&'+param, function (html) {
+          $('.promotion-user-body').html(html);
+          setupUiCustomerPromo();
+        })
+        
 
   },
   activate: function (id) {

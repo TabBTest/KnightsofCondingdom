@@ -11,6 +11,7 @@ use app\models\VendorPromotion;
         <label class='form-label'>Promotions</label>
         <textarea rows='5' cols='25' maxlength="120" class='form-control' name="promoHtml" placeholder="Enter your promotion here..."></textarea>    
     </div>
+    <input type="hidden" id="userList" name="userList" />
 </form>
 </div>
 <div class='form-group text-center'>

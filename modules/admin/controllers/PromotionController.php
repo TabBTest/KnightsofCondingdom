@@ -33,7 +33,7 @@ class PromotionController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'send', 'view-page-email', 'view-page-sms', 'view'],
+                        'actions' => ['index', 'send', 'view-page-email', 'view-page-sms', 'view', 'get-customers', 'view-customers'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -47,7 +47,16 @@ class PromotionController extends CController
             ],
         ];
     }
-
+    public function actionGetCustomers(){
+        $page = 1;
+        $customers = User::getVendors($userId, 20, $page, ['isActive' => 1,'isOptIn' => 1]);
+        return $this->renderPartial('user', ['customers' => $customers, 'currentPage' => $page, 'type' => $_REQUEST['type']]);
+    }
+    public function actionViewCustomers(){
+        $page = $_REQUEST['page'];
+        $customers = User::getVendors(20, $page, array_merge($_REQUEST['filter'], ['isActive' => 1,'isOptIn' => 1]));
+        return $this->renderPartial('_user_list', ['customers' => $customers, 'currentPage' => $page]);
+    }
     /**
      * Lists all ApplicationType models.
      * @return mixed
@@ -97,16 +106,28 @@ class PromotionController extends CController
             }else{
                 $promo->sendToType = VendorPromotion::SEND_TO_VENDORS;
                 $promo->save();
-                //to all customers
-                $users = User::findAll(['isActive' => 1,'isOptIn' => 1,  'role' =>  User::ROLE_VENDOR]);
-                
-                foreach($users as $user){
-                    $promoUser = new PromotionUserStatus();
-                    $promoUser->vendorPromotionId = $promo->id;
-                    $promoUser->userId = $user->id;
-                    $promoUser->status = PromotionUserStatus::STATUS_IN_QUEUE;
-                    $promoUser->save();
-                }      
+                $userList = $_POST['userList'];
+                if($userList == 'ALL'){
+                    //to all customers
+                    $users = User::findAll(['isActive' => 1,'isOptIn' => 1,  'role' =>  User::ROLE_VENDOR]);
+                    
+                    foreach($users as $user){
+                        $promoUser = new PromotionUserStatus();
+                        $promoUser->vendorPromotionId = $promo->id;
+                        $promoUser->userId = $user->id;
+                        $promoUser->status = PromotionUserStatus::STATUS_IN_QUEUE;
+                        $promoUser->save();
+                    }      
+                }else{
+                    $userIds = explode(',', $userList);
+                    foreach($userIds as $userId){
+                        $promoUser = new PromotionUserStatus();
+                        $promoUser->vendorPromotionId = $promo->id;
+                        $promoUser->userId = $userId;
+                        $promoUser->status = PromotionUserStatus::STATUS_IN_QUEUE;
+                        $promoUser->save();
+                    }
+                }
                 //NotificationHelper::sendPromotion($promo);
                 UtilityHelper::runCommand("promotion/send", $promo->id);
             }

@@ -214,9 +214,44 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $extraSQL .= " and email like '%".mysql_escape_string($filters['email'])."%'";
         }
         
+        if(isset($filters['isActive']) && $filters['isActive'] != ''){
+            $extraSQL .= " and isActive = ".$filters['isActive'];
+        }
+        
+        if(isset($filters['isOptIn']) && $filters['isOptIn'] != ''){
+            $extraSQL .= " and isOptIn = ".$filters['isOptIn'];
+        }
+        
         $resp = array();
         $resp['list'] = User::find()->where('vendorId = '.$userId.' '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
         $resp['count'] = User::find()->where('vendorId = '.$userId.' '.$extraSQL)->count();
+        return $resp;
+    }
+    
+    public static function getVendors($resultsPerPage, $page, $filters){
+        $extraSQL = '';
+        if(isset($filters['firstName']) && $filters['firstName'] != ''){
+            $extraSQL .= " and firstName like '%".mysql_escape_string($filters['firstName'])."%'";
+        }
+        if(isset($filters['lastName']) && $filters['lastName'] != ''){
+            $extraSQL .= " and lastName like '%".mysql_escape_string($filters['lastName'])."%'";
+        }
+    
+        if(isset($filters['email']) && $filters['email'] != ''){
+            $extraSQL .= " and email like '%".mysql_escape_string($filters['email'])."%'";
+        }
+        
+        if(isset($filters['isActive']) && $filters['isActive'] != ''){
+            $extraSQL .= " and isActive = ".$filters['isActive'];
+        }
+        
+        if(isset($filters['isOptIn']) && $filters['isOptIn'] != ''){
+            $extraSQL .= " and isOptIn = ".$filters['isOptIn'];
+        }
+    
+        $resp = array();
+        $resp['list'] = User::find()->where('role = '.User::ROLE_VENDOR.' '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
+        $resp['count'] = User::find()->where('role = '.User::ROLE_VENDOR.' '.$extraSQL)->count();
         return $resp;
     }
     
