@@ -95,7 +95,7 @@ class VendorController extends CController
             
 
             if(Yii::$app->user->identity->role != null && Yii::$app->user->identity->role == User::ROLE_ADMIN){
-                $nextUrl = '/admin/vendors/settings?id='.$userId;
+                $nextUrl = '/admin/vendors/settings?view=settings&id='.$userId;
                
             }
             if (TenantInfo::isUniqueSubdomain($userId, $codes['SUBDOMAIN'])) {

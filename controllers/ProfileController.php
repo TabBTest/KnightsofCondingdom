@@ -87,15 +87,16 @@ class ProfileController extends CController
             $userId = $_POST['userId'];
             
             $model = User::findOne($userId);
-            $nextUrl = '/vendor/settings?view=settings';
+
+            $nextUrl = '/vendor/settings?view=info';
             if($model->role == User::ROLE_CUSTOMER){
                 $nextUrl = '/my/profile?view=info';
             }
             
             if(Yii::$app->session->get('role') != null && Yii::$app->session->get('role') == User::ROLE_ADMIN){
-                $nextUrl = '/admin/vendors/settings?id='.$model->id;
+                $nextUrl = '/admin/vendors/settings?view=info&id='.$model->id;
                 if($model->role == User::ROLE_CUSTOMER){
-                    $nextUrl = '/admin/customers/profile?id='.$model->id;
+                    $nextUrl = '/admin/customers/profile?view=info&id='.$model->id;
                 }
             }
             
@@ -143,7 +144,8 @@ class ProfileController extends CController
                 
                 $message = 'Profile Saved Successfully';
 
-                if(isset($_POST['password']) && !$_POST['password']){
+                /*
+                if($_POST['password'] != ''){
                     if($_POST['password'] == $_POST['confirmPassword']){
                         $model->password = $_POST['password'];
                         $model->confirmPassword = $_POST['password'];
@@ -151,7 +153,7 @@ class ProfileController extends CController
                         \Yii::$app->getSession()->setFlash('warning', 'Password did not match.');
                     }
                 }
-
+                */
                 $imageForUpload = UploadedFile::getInstance($model, 'imageFile');
 
                 if ($imageForUpload) {
@@ -189,15 +191,15 @@ class ProfileController extends CController
             $userId = $_POST['userId'];
             
             $model = User::findOne($userId);
-            $nextUrl = '/vendor/settings';
+            $nextUrl = '/vendor/settings?view=billing';
             if($model->role == User::ROLE_CUSTOMER){
-                $nextUrl = '/my/profile';
+                $nextUrl = '/my/profile?view=billing';
             }
             
             if(Yii::$app->session->get('role') != null && Yii::$app->session->get('role') == User::ROLE_ADMIN){
-                $nextUrl = '/admin/vendors/settings?id='.$model->id;
+                $nextUrl = '/admin/vendors/settings?view=billing&id='.$model->id;
                 if($model->role == User::ROLE_CUSTOMER){
-                    $nextUrl = '/admin/customers/profile?id='.$model->id;
+                    $nextUrl = '/admin/customers/profile?view=billing&id='.$model->id;
                 }
             }
             
