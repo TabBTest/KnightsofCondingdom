@@ -60,12 +60,29 @@ class TenantInfo extends \yii\db\ActiveRecord
     
     public static function getCustomClasses($code){
         $tenantCustom = [];        
-        $tenantCustom[self::CODE_SALES_TAX] = 'numeric short-input';
+        $tenantCustom[self::CODE_SALES_TAX] = 'numeric xs-input';
         $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'numeric short-input';
         $tenantCustom[self::CODE_DELIVERY_MINIMUM_AMOUNT] = 'numeric short-input';
         
         
         return isset($tenantCustom[$code]) ? $tenantCustom[$code] : '';
+    }
+    
+    public static function isDollarAmount($code){
+        $tenantCustom = [];        
+        $tenantCustom[self::CODE_DELIVERY_CHARGE] = true;
+        $tenantCustom[self::CODE_DELIVERY_MINIMUM_AMOUNT] = true;
+    
+    
+        return isset($tenantCustom[$code]) ? $tenantCustom[$code] : false;
+    }
+    
+    public static function isPercentage($code){
+        $tenantCustom = [];
+        $tenantCustom[self::CODE_SALES_TAX] = true;
+    
+    
+        return isset($tenantCustom[$code]) ? $tenantCustom[$code] : false;
     }
 
     /**

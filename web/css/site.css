@@ -151,10 +151,12 @@ body {
 table tr th, table tr td{
 	text-align: center;
 }
-.short-input{
+.short-input, .form-inline .form-control.short-input{
 	width: 150px;
 }
-
+.xs-input, .form-inline .form-control.xs-input{
+	width: 25px;
+}
 .navbar-toggle {
     padding: 15px 10px 15px 10px;
 }

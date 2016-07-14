@@ -97,11 +97,17 @@ use app\models\VendorOperatingHours;
             }else{                 
                 ?>
                 <div class='row form-group' data-key='<?php echo $codeKey?>'>
+                <div  class="form-inline">
                     <div class='col-xs-12'>
                         <label class='form-label'><?php echo $codeDescription?></label>
-                        <input class='form-control <?php echo TenantInfo::getCustomClasses($codeKey)?>' data-key='<?php echo $codeKey?>' type='text' name='TenantCode[<?php echo $codeKey?>]' value="<?php echo TenantInfo::getTenantValue($userId, $codeKey)?>"/>
+                        <div>
+                            <?php echo TenantInfo::isDollarAmount($codeKey) ? '$' : ''?><input class='form-control <?php echo TenantInfo::getCustomClasses($codeKey)?>' <?php echo TenantInfo::isPercentage($codeKey) ? 'maxlength="2"' : ''?> data-key='<?php echo $codeKey?>' type='text' name='TenantCode[<?php echo $codeKey?>]' value="<?php echo TenantInfo::getTenantValue($userId, $codeKey)?>"/> <?php echo TenantInfo::isPercentage($codeKey) ? '%' : ''?>
+                        </div>
+                    </div>
                     </div>
                 </div>
+                
+  
             <?php }?>
         <?php }?>
         <?php 
