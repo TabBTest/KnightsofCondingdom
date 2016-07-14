@@ -6,7 +6,7 @@ use yii\web\AssetBundle;
 
 class BootstrapMaterialDesignAsset extends AssetBundle
 {
-    public $sourcePath = '@bower/bootstrap-material-design/dist';
+    public $sourcePath = '@app/frontend/build';
     public $css = [
         'css/bootstrap-material-design.min.css',
         'css/ripples.min.css',

@@ -29,11 +29,17 @@ AppAsset::register($this);
 
 <div class="wrap">
     
- <nav class="navbar-inverse navbar-fixed-top navbar">
-  <div class="container">
+ <nav class="navbar navbar-default">
+  <div class="container-fluid">
     <div class="navbar-header">
-      <a href="/" class="navbar-brand"><img alt="" src="/images/logo.png"></a>
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+      <a href="/" class="navbar-brand"><img alt="" class="img-responsive img-rounded" src="/images/logo.png"></a>
     </div>
+    <div class="navbar-collapse navbar-responsive-collapse collapse">
     <ul class="nav navbar-nav navbar-left">
     <?php 
     if(Yii::$app->user->isGuest){        
@@ -116,8 +122,7 @@ AppAsset::register($this);
         
     ?>
     </ul>
-      
-      
+    </div>
   </div>
 </nav>
 <?php 

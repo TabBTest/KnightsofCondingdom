@@ -11,10 +11,9 @@ use app\assets\AppAsset;
 use app\models\User;
 use app\helpers\TenantHelper;
 
-
 AppAsset::register($this);
-
-?><?php $this->beginPage() ?>
+?>
+<?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
@@ -23,22 +22,23 @@ AppAsset::register($this);
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
-   
-
-
 </head>
 <body>
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    
-
-    <nav class="navbar-inverse navbar-fixed-top navbar">
-    <div class="container">
-    <div class="navbar-header">
-    <a href="/admin" class="navbar-brand"><img alt="" src="/images/logo.png"></a>
-    </div>
-    <ul class="nav navbar-nav navbar-left">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="/" class="navbar-brand"><img alt="" class="img-responsive img-rounded" src="/images/logo.png"></a>
+            </div>
+            <div class="navbar-collapse navbar-responsive-collapse collapse">
+                <ul class="nav navbar-nav navbar-left">
     <?php
     if(Yii::$app->user->isGuest){
         ?>
@@ -86,7 +86,7 @@ AppAsset::register($this);
         ?>
         </ul>
           
-          
+          </div>
       </div>
     </nav>
 
@@ -122,13 +122,6 @@ AppAsset::register($this);
 
 <?php $this->endBody() ?>
 </body>
-
-<style>
-body > .wrap > .container {
-    min-height: 500px;
-    padding: 60px 15px 0;
-}
-</style>
 </html>
 <?php $this->endPage() ?>
 
