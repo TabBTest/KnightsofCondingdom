@@ -75,7 +75,7 @@ class VendorController extends CController
     }
     public function actionSaveSettings(){
         
-        $nextUrl = '/vendor/settings';
+        $nextUrl = '/vendor/settings?view=settings';
         if(count($_POST) > 0){
             $userId = $_POST['userId'];
             $codes = $_POST['TenantCode'];

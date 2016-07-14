@@ -87,9 +87,9 @@ class ProfileController extends CController
             $userId = $_POST['userId'];
             
             $model = User::findOne($userId);
-            $nextUrl = '/vendor/settings';
+            $nextUrl = '/vendor/settings?view=settings';
             if($model->role == User::ROLE_CUSTOMER){
-                $nextUrl = '/my/profile';
+                $nextUrl = '/my/profile?view=info';
             }
             
             if(Yii::$app->session->get('role') != null && Yii::$app->session->get('role') == User::ROLE_ADMIN){
@@ -148,7 +148,7 @@ class ProfileController extends CController
                         $model->password = $_POST['password'];
                         $model->confirmPassword = $_POST['password'];
                     }else{
-                        \Yii::$app->getSession()->setFlash('warning', 'Password did not matched');
+                        \Yii::$app->getSession()->setFlash('warning', 'Password did not match.');
                     }
                 }
 
@@ -157,7 +157,7 @@ class ProfileController extends CController
                 if ($imageForUpload) {
                     $model->imageFile = $imageForUpload;
                     if (!$model->upload()) {
-                        \Yii::$app->getSession()->setFlash('warning', 'An error occured while uploading your logo. Please try again.');
+                        \Yii::$app->getSession()->setFlash('warning', 'An error occurred while uploading your logo. Please try again.');
                     }
                 }
 
