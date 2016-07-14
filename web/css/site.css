@@ -157,6 +157,9 @@ table tr th, table tr td{
 .xs-input, .form-inline .form-control.xs-input{
 	width: 25px;
 }
+.long-input, .form-inline .form-control.long-input{
+	width: 100%;
+}
 .navbar-toggle {
     padding: 15px 10px 15px 10px;
 }

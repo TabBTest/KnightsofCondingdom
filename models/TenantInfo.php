@@ -22,6 +22,9 @@ class TenantInfo extends \yii\db\ActiveRecord
     const CODE_HAS_DELIVERY = 'HAS_DELIVERY';
     const CODE_DELIVERY_MINIMUM_AMOUNT = 'DELIVERY_MINIMUM_AMOUNT';
     const CODE_DELIVERY_CHARGE = 'DELIVERY_CHARGE';
+    
+    const CODE_TAG_LINE = 'TAG_LINE';
+    const CODE_EXISTING_URL = 'EXISTING_URL';
     /**
      * @inheritdoc
      */
@@ -46,6 +49,9 @@ class TenantInfo extends \yii\db\ActiveRecord
 
     public static function getTenantCodes(){
         $tenantCustom = [];
+        $tenantCustom[self::CODE_TAG_LINE] = 'Tag Line';
+        $tenantCustom[self::CODE_EXISTING_URL] = 'Existing Website';
+        
         $tenantCustom[self::CODE_SUBDOMAIN] = 'Subdomain';
         $tenantCustom[self::CODE_SUBDOMAIN_REDIRECT] = 'Subdomain Redirect';
         $tenantCustom[self::CODE_REDIRECT_URL] = 'Redirect URL';
@@ -54,6 +60,8 @@ class TenantInfo extends \yii\db\ActiveRecord
         $tenantCustom[self::CODE_HAS_DELIVERY] = 'Do you have delivery?';
         $tenantCustom[self::CODE_DELIVERY_MINIMUM_AMOUNT] = 'Delivery Minimum Amount';
         $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'Delivery Charge Amount';
+        
+        
 
         return $tenantCustom;
     }
@@ -63,9 +71,10 @@ class TenantInfo extends \yii\db\ActiveRecord
         $tenantCustom[self::CODE_SALES_TAX] = 'numeric xs-input';
         $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'numeric short-input';
         $tenantCustom[self::CODE_DELIVERY_MINIMUM_AMOUNT] = 'numeric short-input';
+        $tenantCustom[self::CODE_SUBDOMAIN] = 'short-input';
         
         
-        return isset($tenantCustom[$code]) ? $tenantCustom[$code] : '';
+        return isset($tenantCustom[$code]) ? $tenantCustom[$code] : 'long-input';
     }
     
     public static function isDollarAmount($code){
