@@ -9,7 +9,8 @@ use app\models\VendorPromotion;
     <input type='hidden' name='type' value='<?php echo VendorPromotion::TYPE_SMS?>'/>
     <div class='form-group'>
         <label class='form-label'>Promotions</label>
-        <textarea rows='5' cols='25' maxlength="120" class='form-control' name="promoHtml" placeholder="Enter your promotion here..."></textarea>    
+        <textarea rows='5' cols='25' maxlength="120" data-max-length='120' class='form-control' name="promoHtml" placeholder="Enter your promotion here..."></textarea>
+        <span class="countdown-sms"></span>            
     </div>
     <input type="hidden" id="userList" name="userList" />
 </form>

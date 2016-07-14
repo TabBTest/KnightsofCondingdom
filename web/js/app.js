@@ -446,7 +446,16 @@ $(document).ready(function () {
       });
   });
 
+  
+  updateCountdownSms();
+  $('textarea[name="promoHtml"]').change(updateCountdownSms);
+  $('textarea[name="promoHtml"]').keyup(updateCountdownSms);
+  
 });
+var updateCountdownSms = function(){
+	var remaining = $('textarea[name="promoHtml"]').data('max-length') - $('textarea[name="promoHtml"]').val().length;
+    jQuery('.countdown-sms').text(remaining + ' characters remaining.');
+}
 var Order = {
   init: false,
   timeLimit: 15000, //30000
