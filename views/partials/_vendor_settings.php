@@ -100,6 +100,18 @@ use app\models\VendorOperatingHours;
                 <div  class="form-inline">
                     <div class='col-xs-12'>
                         <label class='form-label'><?php echo $codeDescription?></label>
+                       
+                        <?php if($codeKey == TenantInfo::CODE_SALES_TAX && TenantInfo::getTenantValue($userId, $codeKey) != ''){
+                        ?>
+                        <br />
+                         <label class='form-label'><i>
+                         <?php 
+                            echo 'Your Sales Tax is '.TenantInfo::getTenantValue($userId, $codeKey).'%';
+                        ?></i>
+                        </label>
+                        <?php 
+                        }?>
+                        
                         <div>
                             <?php echo TenantInfo::isDollarAmount($codeKey) ? '$' : ''?><input class='form-control <?php echo TenantInfo::getCustomClasses($codeKey)?>' <?php echo TenantInfo::isPercentage($codeKey) ? 'maxlength="2"' : ''?> data-key='<?php echo $codeKey?>' type='text' name='TenantCode[<?php echo $codeKey?>]' value="<?php echo TenantInfo::getTenantValue($userId, $codeKey)?>"/> <?php echo TenantInfo::isPercentage($codeKey) ? '%' : ''?>
                         </div>
