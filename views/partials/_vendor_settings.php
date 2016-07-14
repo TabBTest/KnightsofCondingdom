@@ -12,16 +12,10 @@ use app\models\VendorOperatingHours;
         <div class='row form-group'>
         <div class='col-xs-12'>
             <label class='form-label'>Your Widget</label>
-            <textarea class='form-control copy-content' id='widget-js' rows="5" cols="20">
-<script type="text/javascript" id="foodapp-js" src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/js/sdk.js"></script>
-<div class='restalutions-widget-button'>Show Menu</div>
-<div  class="modal-widget" style='display: none'>
-<div class="modal-content-widget" ><div class="modal-header-widget"><h2>Menu Order</h2></div>
-<div class="modal-body-widget restalutions-widget" data-subdomain='<?php echo TenantHelper::getVendorSubdomain($model->id)?>' ></div>
-<div class="modal-footer-widget"><button class='btn-widget btn-info pull-right-widget close-modal'>Close</button></div>
-</div></div></textarea>
+            <textarea class='form-control copy-content' id='widget-js' rows="5" cols="20"><?php echo $this->render('//partials/_widget', ['model' => $model]);?></textarea>
 <br />
 <a href="javascript: void(0)" data-clipboard-target="#widget-js" class="btn btn-info btn-copy-widget" data-type='widget'>Copy to Clipboard</a>
+<a target='_blank' href="/preview/widget?id=<?php echo $model->id?>" class="btn btn-info btn-preview-widget">Preview</a>
         </div>
     </div>
 
