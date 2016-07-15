@@ -1,7 +1,7 @@
 <?php 
 use app\helpers\TenantHelper;
 ?>
-<script type="text/javascript" id="foodapp-js" src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/js/sdk.js"></script>
+<script type="text/javascript" id="foodapp-js" src="https://<?php echo \Yii::$app->params['defaultSiteURL']?>/js/sdk.js"></script>
 <div class='restalutions-widget-button'>Show Menu</div>
 <div  class="modal-widget" style='display: none'>
 <div class="modal-content-widget" ><div class="modal-header-widget"><h2>Menu Order</h2></div>

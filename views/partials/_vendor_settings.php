@@ -24,8 +24,8 @@ use app\models\VendorOperatingHours;
     <div class='row form-group'>
         <div class='col-xs-12'>
             <label class='form-label'>Your Button</label>
-            <a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="//<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a>
-            <textarea class='form-control copy-content' id='widget-button' rows="5" cols="20"><a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a></textarea>
+            <a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="https://<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a>
+            <textarea class='form-control copy-content' id='widget-button' rows="5" cols="20"><a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="https://<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a></textarea>
             <br />
 <a href="javascript: void(0)" data-clipboard-target="#widget-button" class="btn btn-info btn-copy-widget" data-type='button'>Copy to Clipboard</a>
             <button type="button" class="btn btn-info" data-toggle="modal" data-target="#change-button-modal">
