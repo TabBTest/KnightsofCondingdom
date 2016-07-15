@@ -29,17 +29,17 @@
 /* Modal Header */
 .modal-header-widget {
     padding: 2px 16px;
-    background-color: #5cb85c;
+    background-color: #009688;
     color: white;
 }
 
 /* Modal Body */
-.modal-body-widget {padding: 10px 0 0;height: 95%;}
+.modal-body-widget {padding: 0 0 0 0;height: 95%;}
 
 /* Modal Footer */
 .modal-footer-widget {
-    padding: 10px 16px;
-    background-color: #5cb85c;
+    padding: 16px 16px 16px 16px;
+    background-color: #009688;
     color: white;
 	text-align: right;
 }
@@ -72,9 +72,9 @@
 }
 
 .btn-info {
-    background-color: #5bc0de;
-    border-color: #46b8da;
-    color: #fff;
+    background-color: #eeeeee;
+    border-color: #eeeeee;
+    color: rgba(0,0,0, 0.87);
 }
 .btn-widget {
     -moz-user-select: none;
