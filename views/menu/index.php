@@ -46,7 +46,7 @@ foreach($vendorCategories as $category){
             <div class="panel-title pull-left">
                 <h4>
                     <i class="fa fa-arrows" aria-hidden="true"></i>
-                    <a class='vendor-menu-categories' role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
+                    <a class="vendor-menu-categories" role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
                         <?php echo $category->name?>
                     </a>
                 </h4>
@@ -69,7 +69,9 @@ foreach($vendorCategories as $category){
                         if($item->isArchived == 1)
                             continue;
                     ?>
-                  <div class="panel panel-default menu-panel" style="margin-bottom: 20px;" data-menu-id='<?php echo $item->id?>'>
+                  <div class="panel panel-default menu-panel"
+                       style="margin-bottom: 20px;"
+                       data-menu-id="<?= $item->id?>">
                     <div class="panel-heading" role="tab" id="headingOne">
                         <div class="panel-title pull-left">
                             <h4>
@@ -97,13 +99,10 @@ foreach($vendorCategories as $category){
                             
                         </div>
                         <div class='col-xs-4'>
-                            <label class='form-label'><?php echo $item->description?></label>
+                            <label class="form-label"><?php echo $item->description?></label>
                         </div>
-                         <div class='col-xs-3'>
-                                                        
+                         <div class="col-xs-3">
                         </div>
-                        
-                       
                       </div>
                     </div>
                   </div>

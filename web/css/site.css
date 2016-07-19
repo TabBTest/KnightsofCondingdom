@@ -193,3 +193,7 @@ a.vendor-menu-categories:hover {
     -moz-box-shadow: none;
     box-shadow: none;
 }
+
+div.panel-title > label.price-on-colored-panel {
+    color: #ffffff;
+}

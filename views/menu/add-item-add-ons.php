@@ -3,7 +3,7 @@ use app\models\VendorMenuItemAddOns;
 use app\models\VendorMenuItem;
 use app\models\MenuCategories;
 ?>
-<form action='/menu/save-item-add-ons' method='POST' enctype="multipart/form-data" id='menu-item-add-ons-form'>
+<form action="/menu/save-item-add-ons" method="POST" enctype="multipart/form-data" id="menu-item-add-ons-form">
     <input type='hidden' name='vendorMenuItemId' value='<?php echo $menuItemAddOns->vendorMenuItemId?>'/>
     <input type='hidden' name='menuCategoryId' value='<?php echo $menuItemAddOns->menuCategoryId?>'/>
     <input type='hidden' name='id' value='<?php echo $menuItemAddOns->id?>'/>
