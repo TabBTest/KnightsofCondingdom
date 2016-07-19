@@ -177,7 +177,19 @@ li.add-to-cart:hover {
     border: 3px solid #009688;
 }
 
+a.vendor-menu-categories {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+
 a.vendor-menu-categories:hover {
     color: inherit;
     text-decoration: none;
+}
+
+.panel#menu-heading {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }

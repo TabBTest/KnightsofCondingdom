@@ -16,16 +16,24 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 
-<div class='row'>
-    <div class='col-xs-12 text-center'>
-        &nbsp;&nbsp;&nbsp;&nbsp;<a style='margin-left: 10px' href="#" class="btn btn-default openall pull-right">Expand All</a> &nbsp;&nbsp;<a href="#" class="btn btn-default closeall pull-right">Close All</a>
+<div class="row">
+    <div class="col-xs-12 text-center">
+
     </div>
 </div>
 
-<div class='row'>
-    <div class='col-xs-12 text-center'>
-        <h1>Menu <button class='btn btn-info pull-right add-category-item' data-id='<?php echo $menu->id?>'>Add Category</button></h1>
+<div class="row">
+    <div class="panel panel-primary col-xs-12" id="menu-heading">
+        <div class="panel-heading text-center">
+            <h1>Menu</h1>
+        </div>
+        <div class="pull-right">
+            <button class="btn btn-primary add-category-item" data-id="<?php echo $menu->id?>">Add Category</button>
+            <button type="button" class="btn btn-primary openall">Expand All</button>
+            <button type="button" class="btn btn-primary closeall">Close All</button>
+        </div>
     </div>
+    <div class="clearfix"></div>
 </div>
 
 
@@ -33,23 +41,26 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php 
 foreach($vendorCategories as $category){
 ?>
-    <div class="panel panel-default categories-panel" data-category-id='<?php echo $category->id?>'>
-        <div class="panel-heading">            
-       <h4 class="panel-title">
-        <i class="fa fa-arrows" aria-hidden="true"></i>      
-        <a class='vendor-menu-categories' role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
-          <?php echo $category->name?>
-        </a>
-        <button style='float: right; margin-right: 10px;' class='btn btn-info btn-xs pull-right add-menu-item-add-ons' data-type='category' type='button' data-menu-category-id='<?php echo $category->id?>'>Edit Add-ons</button>                
-        <button style='float: right; margin-right: 10px;' class='btn btn-info btn-xs pull-right add-menu-item' data-category-id='<?php echo $category->id?>' data-id='<?php echo $menu->id?>'>Add Menu Item</button>
-        <button style='margin-right: 10px;' class='btn btn-info btn-xs pull-right edit-category-item' data-id='<?php echo $category->id?>'>Edit Category</button>&nbsp;&nbsp;&nbsp;
-      </h4>
-
+    <div class="panel panel-danger categories-panel" style="margin-bottom: 20px;" data-category-id="<?php echo $category->id?>">
+        <div class="panel-heading">
+            <div class="panel-title pull-left">
+                <h4>
+                    <i class="fa fa-arrows" aria-hidden="true"></i>
+                    <a class='vendor-menu-categories' role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
+                        <?php echo $category->name?>
+                    </a>
+                </h4>
+            </div>
+            <div class="panel-title pull-right">
+                <button class="btn btn-raised btn-default btn-xs add-menu-item-add-ons" data-type='category' type='button' data-menu-category-id='<?php echo $category->id?>'>Edit Add-ons</button>
+                <button class="btn btn-raised btn-default btn-xs add-menu-item" data-category-id='<?php echo $category->id?>' data-id='<?php echo $menu->id?>'>Add Menu Item</button>
+                <button class="btn btn-raised btn-default btn-xs edit-category-item" data-id='<?php echo $category->id?>'>Edit Category</button>
+            </div>
+            <div class="clearfix"></div>
         </div>
         <div id="category<?php echo $category->id?>" class="panel-collapse collapse in">
             <div class="panel-body">
-                    
-                    <?php echo nl2br($category->description)?>
+                    <p><?= $category->description?></p>
                     <div class="panel-group categories-menu-panel" id="accordion1" role="tablist" aria-multiselectable="true">
                     <?php 
                     $menuItems = VendorMenuItem::find()->where('vendorMenuId = '. $menu->id . ' and menuCategoryId = ' . $category->id.' order by sorting asc')->all();
@@ -58,18 +69,22 @@ foreach($vendorCategories as $category){
                         if($item->isArchived == 1)
                             continue;
                     ?>
-                  <div class="panel panel-default menu-panel" data-menu-id='<?php echo $item->id?>'>
+                  <div class="panel panel-default menu-panel" style="margin-bottom: 20px;" data-menu-id='<?php echo $item->id?>'>
                     <div class="panel-heading" role="tab" id="headingOne">
-                      <h4 class="panel-title">
-                        <i class="fa fa-arrows" aria-hidden="true"></i>
-                        <a class='vendor-menu-category-item-<?php echo $category->id?>' role="button" data-toggle="collapse" data-parent1="#accordion1" href="#menu<?php echo $item->id?>" aria-expanded="false" aria-controls="menu<?php echo $item->id?>">
-                          <?php echo $item->name?>
-                        </a>
-                        
-                        <button style='float: right; margin-right: 10px;' class='btn btn-info btn-xs pull-right add-menu-item-add-ons' data-type='menu-item' type='button' data-menu-item-id='<?php echo $item->id?>'>Edit Add-ons</button>
-                        <button style='float: right; margin-right: 10px;' class='btn btn-info btn-xs pull-right edit-menu-item' type='button' data-menu-item-id='<?php echo $item->id?>'>Edit Menu Item</button>                        
-                        <label class='form-label' style='float: right; margin-right: 10px;'>$<?php echo $item->amount?></label>    
-                      </h4>
+                        <div class="panel-title pull-left">
+                            <h4>
+                                <i class="fa fa-arrows" aria-hidden="true"></i>
+                                <a class="vendor-menu-category-item-<?php echo $category->id?>" role="button" data-toggle="collapse" data-parent1="#accordion1" href="#menu<?= $item->id ?>" aria-expanded="false" aria-controls="menu<?php echo $item->id?>">
+                                    <?php echo $item->name?>
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="panel-title pull-right">
+                            <label class="form-label">$<?php echo $item->amount?></label>
+                            <button class="btn btn-raised btn-default btn-xs add-menu-item-add-ons" data-type='menu-item' type='button' data-menu-item-id='<?php echo $item->id?>'>Edit Add-ons</button>
+                            <button class="btn btn-raised btn-default btn-xs edit-menu-item" type='button' data-menu-item-id='<?php echo $item->id?>'>Edit Menu Item</button>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
                     <div id="menu<?php echo $item->id?>" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                       <div class="panel-body">
