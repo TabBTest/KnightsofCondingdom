@@ -156,49 +156,83 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
 </tbody>
 </table>
 </div>
-<div class='form-group col-xs-12'>
+<div class="form-group col-xs-12">
     <label>Instructions</label>
-    <textarea class='form-control' rows='5' cols='25' name='notes' placeholder='Please add your extra instructions here...'><?php echo isset($params['notes']) ? $params['notes'] : ''?></textarea>    
+    <textarea class="form-control" rows="5" cols="25" name="notes" placeholder="Please add your extra instructions here..."><?php echo isset($params['notes']) ? $params['notes'] : ''?></textarea>
 </div>
-<?php if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){?>
-<div class='form-group col-xs-12'>
-    <label>Do you want it delivered?</label>
-    <input type='checkbox' <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value='1' class='has-delivery' name='isDelivery' data-amount='<?php echo TenantHelper::getDeliveryAmount()?>'/>
+<div class="col-xs-12 text-center">
+    <button class="btn btn-raised btn-primary" type="button" data-toggle="modal" data-target="#checkout-modal">Checkout</button>
 </div>
 
-<?php }?>
-<div class='col-xs-12'>
-    <label>How do you want to pay?</label>
+    <div class="modal fade" id="checkout-modal" tabindex="-1" role="dialog" aria-labelledby="checkout-modal-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="checkout-modal-label">Order Checkout</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Radios</label>
 
-</div>
-<div class='col-xs-12'>
-    <label>
-        <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CARD?>' <?php echo !isset($params['paymentType']) || (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CARD) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Card
-    </label>
-    &nbsp;&nbsp;&nbsp;&nbsp;
-    <label>
-        <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CASH?>' <?php echo (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CASH) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Cash
-    </label>
-</div>
+                        <div class="col-md-10">
+                            <div class="radio radio-primary">
+                                <label>
+                                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                    Option one is this
+                                </label>
+                            </div>
+                            <div class="radio radio-primary">
+                                <label>
+                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                    Option two can be something else
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <?php if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){?>
+                        <div class='form-group col-xs-12'>
+                            <label>Do you want it delivered?</label>
+                            <input type='checkbox' <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value='1' class='has-delivery' name='isDelivery' data-amount='<?php echo TenantHelper::getDeliveryAmount()?>'/>
+                        </div>
 
-<div class='row col-xs-12'>
-    <div class='col-xs-12'>
-    <label>Coupon Code</label>
+                    <?php }?>
+                    <div class='col-xs-12'>
+                        <label>How do you want to pay?</label>
+
+                    </div>
+                    <div class='col-xs-12'>
+                        <label>
+                            <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CARD?>' <?php echo !isset($params['paymentType']) || (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CARD) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Card
+                        </label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>
+                            <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CASH?>' <?php echo (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CASH) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Cash
+                        </label>
+                    </div>
+
+                    <div class='row col-xs-12'>
+                        <div class='col-xs-12'>
+                            <label>Coupon Code</label>
+                        </div>
+                        <div class='form-group col-xs-6'>
+                            <input type='text' class='form-control' data-vendor-id='<?php echo $vendorId?>' name='couponCode' value='<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ''?>'/>
+                        </div>
+                        <div class='form-group col-xs-6'>
+                            <button type='button' class='btn btn-info' onclick="javascript: Order.applyCoupon()">Apply</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-raised btn-primary">Pay Now</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class='form-group col-xs-6'>
-        <input type='text' class='form-control' data-vendor-id='<?php echo $vendorId?>' name='couponCode' value='<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ''?>'/>
-    </div>
-    <div class='form-group col-xs-6'>
-        <button type='button' class='btn btn-info' onclick="javascript: Order.applyCoupon()">Apply</button>
-    </div>
-</div>
 
-<br />
-<div class='col-xs-12 text-center' style='margin: 10px 0;'>
-    <button class='btn btn-success'>Order Now</button>
-</div>
 <?php }else{?>
-<div class='col-xs-12 text-center'>
+<div class="col-xs-12 text-center">
     <label>Please add your order now</label>
 </div>
 <?php }?>
+

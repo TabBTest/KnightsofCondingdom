@@ -6,7 +6,6 @@
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\User;
 use app\helpers\TenantHelper;
@@ -151,10 +150,7 @@ $model = User::findOne(\Yii::$app->user->id);
     <div class="container-fluid">
       <?php echo $this->render('_card_warning', []);?>
       <?php echo $this->render('_vendor_warning', []);?>
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= $content ?>
+      <?= $content ?>
     </div>
 </div>
 

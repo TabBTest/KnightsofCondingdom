@@ -356,7 +356,7 @@ class OrderingController extends CController
                             $vendorCouponOrder->save();
                         }
                         
-                        \Yii::$app->getSession()->setFlash('success', 'Orders Submitted Successfully');
+                        \Yii::$app->getSession()->setFlash('success', 'Order submitted successfully.');
 
                         $redis = Yii::$app->redis;
                         $redis->executeCommand('PUBLISH', ['orders',
@@ -368,7 +368,7 @@ class OrderingController extends CController
                     }
 //                 }
                     else{
-                     \Yii::$app->getSession()->setFlash('error', 'Error in processing order, please try again');
+                     \Yii::$app->getSession()->setFlash('error', 'Error in processing order, please try again.');
                      }
             
             }catch (\Stripe\Error\Card $e){

@@ -81,11 +81,11 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
                 <?php
                 foreach($vendorCategories as $category){
                     ?>
-                    <div class="col-xs-12 col-sm-12 col-md-6">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="panel panel-danger" style="margin-bottom: 20px;" data-category-id='<?php echo $category->id?>'>
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a class='vendor-menu-categories' role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
+                                    <a class="vendor-menu-categories" role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
                                         <?php echo $category->name?>
                                     </a>
                                 </h4>
@@ -93,7 +93,7 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
                             </div>
                             <div id="category<?php echo $category->id?>" class="panel-collapse collapse in">
                                 <div class="panel-body">
-                                    <ul class='list-group'>
+                                    <ul class="list-group">
                                         <?php
                                         $menuItems = VendorMenuItem::find()->where('vendorMenuId = '. $menu->id . ' and menuCategoryId = ' . $category->id.' order by sorting asc')->all();
                                         ?>
@@ -104,11 +104,11 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
                                                 continue;
 
                                             ?>
-                                            <li  class='list-group-item add-to-cart' data-menu-item-id="<?php echo $item->id?>">
-                                                <label class='form-label menu-name'><?php echo $item->name?> </label>
-                                                <span class='pull-right'>$<?php echo UtilityHelper::formatAmountForDisplay($item->amount)?></span>
+                                            <li class="col-xs-12 col-sm-12 col-md-6 list-group-item add-to-cart" data-menu-item-id="<?php echo $item->id?>">
+                                                <label class="col-md-10 form-label menu-name"><?php echo $item->name?> </label>
+                                                <span class="col-md-2 pull-right"><strong>$<?php echo UtilityHelper::formatAmountForDisplay($item->amount)?></strong></span>
                                                 <br />
-                                                <label class='form-label menu-description'><i><?php echo $item->description?></i></label>
+                                                <label class="col-md-10 form-label menu-description"><i><?php echo $item->description?></i></label>
                                             </li>
                                             <?php
                                         }
@@ -127,9 +127,9 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
     <div class="col-xs-12 col-sm-12 col-md-4">
         <div class="panel panel-primary">
             <h2 class="panel-heading text-center">Order Summary</h2>
-            <form id='main-order-summary' action='/ordering/save' method="POST">
-                <div class='col-xs-12 main-order-summary-content'>
-                    <div class='col-xs-12 text-center'>
+            <form id="main-order-summary" action='/ordering/save' method="POST">
+                <div class="col-xs-12 main-order-summary-content">
+                    <div class="col-xs-12 text-center">
                         <label>Please add your order now</label>
                     </div>
                 </div>
@@ -137,8 +137,3 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
         </div>
     </div>
 </div>
-<style>
-li.add-to-cart:hover{
-	border: 2px solid green;
-}
-</style>

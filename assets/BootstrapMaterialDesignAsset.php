@@ -12,7 +12,7 @@ class BootstrapMaterialDesignAsset extends AssetBundle
         'css/ripples.min.css',
     ];
     public $js = [
-        'js/material.min.js',
         'js/ripples.min.js',
+        'js/material.min.js',
     ];
 }
