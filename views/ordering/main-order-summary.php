@@ -172,54 +172,39 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
                     <h4 class="modal-title" id="checkout-modal-label">Order Checkout</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Radios</label>
-
-                        <div class="col-md-10">
-                            <div class="radio radio-primary">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-                                    Option one is this
-                                </label>
-                            </div>
-                            <div class="radio radio-primary">
-                                <label>
-                                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                                    Option two can be something else
-                                </label>
-                            </div>
-                        </div>
-                    </div>
                     <?php if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){?>
-                        <div class='form-group col-xs-12'>
-                            <label>Do you want it delivered?</label>
-                            <input type='checkbox' <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value='1' class='has-delivery' name='isDelivery' data-amount='<?php echo TenantHelper::getDeliveryAmount()?>'/>
+                        <div class="form-group">
+                            <div class="">
+                                <label class="">Do you want it delivered?</label>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value="1" class="has-delivery" name="isDelivery" data-amount="<?php echo TenantHelper::getDeliveryAmount()?>"/>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-
                     <?php }?>
-                    <div class='col-xs-12'>
-                        <label>How do you want to pay?</label>
+                    <div class="form-group">
+                        <label class="">Payment Type</label>
 
-                    </div>
-                    <div class='col-xs-12'>
-                        <label>
-                            <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CARD?>' <?php echo !isset($params['paymentType']) || (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CARD) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Card
-                        </label>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <label>
-                            <input type='radio' value='<?php echo Orders::PAYMENT_TYPE_CASH?>' <?php echo (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CASH) ? 'checked' : ''?> name='paymentType'/>&nbsp;&nbsp;Cash
-                        </label>
-                    </div>
-
-                    <div class='row col-xs-12'>
-                        <div class='col-xs-12'>
-                            <label>Coupon Code</label>
+                        <div class="">
+                            <div class="radio radio-primary">
+                                <label>
+                                    <input type="radio" value="<?php echo Orders::PAYMENT_TYPE_CARD?>" <?php echo !isset($params['paymentType']) || (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CARD) ? "checked" : ""?> name="paymentType"/>Card
+                                </label>
+                            </div>
+                            <div class="radio radio-primary">
+                                <label>
+                                    <input type="radio" value="<?php echo Orders::PAYMENT_TYPE_CASH?>" <?php echo (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CASH) ? "checked" : ""?> name="paymentType"/>Cash
+                                </label>
+                            </div>
                         </div>
-                        <div class='form-group col-xs-6'>
-                            <input type='text' class='form-control' data-vendor-id='<?php echo $vendorId?>' name='couponCode' value='<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ''?>'/>
-                        </div>
-                        <div class='form-group col-xs-6'>
-                            <button type='button' class='btn btn-info' onclick="javascript: Order.applyCoupon()">Apply</button>
+                    </div>
+                    <div class="form-group">
+                        <label class="">Coupon Code</label>
+                        <div class="">
+                            <input type="text" class="form-control col-md-6" data-vendor-id="<?php echo $vendorId?>" name="couponCode" value="<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ""?>"/>
+                            <button type="button" class="btn btn-info" onclick="javascript: Order.applyCoupon()">Apply</button>
                         </div>
                     </div>
                 </div>

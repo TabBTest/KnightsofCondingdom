@@ -606,23 +606,15 @@ var Order = {
       $('.delete-order-item').off('click');
       $('.delete-order-item').on('click', Order.deleteOrderItem);
       $('#item-order-summary').html('');
+      $.material.init();
 
       if ($('.has-delivery').length == 1) {
         $('.has-delivery').off('click');
         $('.has-delivery').on('click', function () {
-//					var deliveryCharge = parseFloat($(this).data('amount'));
-//					var am = parseFloat($('.final-amount').data('amount'));
-//					if($(this).is(':checked')){
-//						$('.delivery-amount').html('$ '+ (deliveryCharge).toFixed(2));
-//						$('.final-amount').html('$ '+ (am+deliveryCharge).toFixed(2));
-//					}else{						
-//						$('.final-amount').html('$ '+ (am));
-//						$('.delivery-amount').html('$ 0.00');
-//					}
           Order.refreshMainOrderSummary();
         });
       }
-    })
+    });
   },
   deleteOrderItem: function () {
     $('.order-' + $(this).data('key')).remove();
