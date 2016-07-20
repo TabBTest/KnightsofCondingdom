@@ -3,16 +3,17 @@ use app\helpers\UtilityHelper;
 
 $addOns =  $item->getAddOns();
 
-$key = strtotime('now');
+$key = isset($_REQUEST['key']) ? $_REQUEST['key'] : strtotime('now');
+$isEdit = isset($_REQUEST['key']) ? true : false;
 ?>
 
 <div class='row'>
     <div class='col-xs-12 col-sm-12 col-md-8'>
-    <form id='item-order-summary'>
+    <form id='item-order-summary' data-key='<?php echo $key?>'>
     <div class='col-xs-12'>
         <label>Quantity</label>
         <input  type='hidden' name='Orders[<?php echo $key?>]' value='<?php echo $item->id?>' min='0'/>
-        <input style='width: 100px' class='form-control order-quantity order-changes' type='number' name='OrdersQuantity[<?php echo $key?>]' value='1' min='0'/>    
+        <input style='width: 100px' data-is-edit='<?php echo $isEdit ? 1 : 0?>' class='form-control order-quantity order-changes' type='number' name='OrdersQuantity[<?php echo $key?>]' value='1' min='0'/>    
     </div>
     <div class='col-xs-12'>
         <h2><?php echo $item->name?> - $<?php echo UtilityHelper::formatAmountForDisplay($item->amount)?></h2>
@@ -45,7 +46,7 @@ $key = strtotime('now');
     foreach($allAddOns as $index => $addOn){
         ?>
       <li  data-toggle="popover" title="Description" data-menu-item-add-on-id='<?php echo $addOn->id?>' data-content="<?php echo $addOn->description?>" class="vendor-menu-item-add-on-<?php echo $item->id?> list-group-item add-ons-popover">
-            <input type='radio' name='AddOnsExclusive[<?php echo $key?>]' value='<?php echo $addOn->id?>' class='order-changes'/>&nbsp;&nbsp;&nbsp;
+            <input type='radio' name='AddOnsExclusive[<?php echo $key?>]' value='<?php echo $addOn->id?>' class='order-changes add-on-<?php echo $addOn->id?>'/>&nbsp;&nbsp;&nbsp;
             <label class='form-label'><?php echo $addOn->name?> - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amount)?></label>
      
          
@@ -67,7 +68,7 @@ $key = strtotime('now');
     foreach($allAddOns as $index => $addOn){
         ?>
       <li  data-toggle="popover" title="Description" data-menu-item-add-on-id='<?php echo $addOn->id?>' data-content="<?php echo $addOn->description?>" class="vendor-menu-item-add-on-<?php echo $item->id?> list-group-item add-ons-popover">
-            <input type='checkbox' name='AddOns[<?php echo $key?>][<?php echo $addOn->id?>]' value='<?php echo $addOn->id?>' class='order-changes'/>&nbsp;&nbsp;&nbsp;
+            <input type='checkbox' name='AddOns[<?php echo $key?>][<?php echo $addOn->id?>]' value='<?php echo $addOn->id?>' class='order-changes add-on-<?php echo $addOn->id?>'/>&nbsp;&nbsp;&nbsp;
             <label class='form-label'><?php echo $addOn->name?> - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amount)?></label>
      
          
@@ -104,6 +105,6 @@ $key = strtotime('now');
 <div class='row'>
     <div class='col-xs-12' style='text-align: center'>
         <button class='btn btn-default' type='button' data-dismiss='modal'>Cancel</button>
-        <button class='btn btn-success' onclick="javascript: Order.AddOrder()" type='button'>Add</button>
+        <button class='btn btn-success' onclick="javascript: Order.AddOrder()" type='button'><?php echo $isEdit ? 'Update' : 'Add'?></button>
     </div>
 </div>

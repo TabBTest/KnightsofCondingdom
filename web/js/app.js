@@ -593,6 +593,9 @@ var Order = {
   AddOrder: function () {
     $('#item-order-summary .has-error').removeClass('has-error');
     if ($.isNumeric($('.order-quantity').val()) && parseInt($('.order-quantity').val()) > 0) {
+    	if($('.order-quantity').data('is-edit') == 1){
+    		 $('.order-' + $('form#item-order-summary').data('key')).remove();
+    	}
       Order.refreshMainOrderSummary();
     } else {
       $('.order-quantity').parent().addClass('has-error');
@@ -605,6 +608,9 @@ var Order = {
       $('#custom-modal').modal('hide');
       $('.delete-order-item').off('click');
       $('.delete-order-item').on('click', Order.deleteOrderItem);
+      $('.edit-order-item').off('click');
+      $('.edit-order-item').on('click', Order.editOrderItem);
+      
       $('#item-order-summary').html('');
       $.material.init();
 
@@ -619,6 +625,39 @@ var Order = {
   deleteOrderItem: function () {
     $('.order-' + $(this).data('key')).remove();
     Order.refreshMainOrderSummary();
+  },
+  editOrderItem: function () {
+	  var key = $(this).data('key');
+    $.get('/ordering/add-item', 'menuItemId=' + $(this).data('menu-item-id')+'&key='+$(this).data('key'), function (html) {
+      $('#custom-modal .modal-title').html('Add Order');
+      $('#custom-modal .modal-body').html(html);
+      
+      var menuItemId = $('input[type="hidden"][name="Orders['+key+']"]').val();
+      var quantity = $('input[type="hidden"][name="OrdersQuantity['+key+']"]').val();
+      var notes = $('input[type="hidden"][name="OrdersNotes['+key+']"]').val();
+      
+      $('form#item-order-summary input[name="OrdersQuantity['+key+']"]').val(quantity).trigger('change');
+      $('form#item-order-summary textarea[name="OrdersNotes['+key+']"]').html(notes);
+      
+      if($('input[type="hidden"][name="AddOnsExclusive['+key+']"]').length != 0){
+    	  
+      }
+      if($('input[type="hidden"][name="AddOns['+key+']"]').length != 0){
+    	  
+      }                
+      $('.additionals.'+key).each(function(){
+    	  var addOnId = $(this).data('add-on-id');
+    	  //if($(this).hasClass('exclusive')){
+    		  $('form#item-order-summary .add-on-'+addOnId).prop('checked', true);
+    	  //}
+      })
+      
+      $('#custom-modal').modal('show');
+      $('.add-ons-popover').popover({'placement': 'left', 'trigger': 'hover'});
+      Order.showItemOrderSummary();
+      $('.order-changes').off('change');
+      $('.order-changes').on('change', Order.showItemOrderSummary);
+    })
   },
   applyCoupon: function () {
 

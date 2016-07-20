@@ -37,6 +37,9 @@ $vendorCoupon = false;
             <a href='javascript: void(0)' class='delete-order-item' data-key='<?php echo $orderKey?>'>
             <i class="fa fa-times" aria-hidden="true"></i>
             </a>
+            <a href='javascript: void(0)' class='edit-order-item' data-menu-item-id='<?php echo $menuItem->id?>'  data-key='<?php echo $orderKey?>'>
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+            </a>
             </td>
             <td>
             <input type='hidden' name='Orders[<?php echo $orderKey?>]' value='<?php echo $menuItem->id?>' />
@@ -58,7 +61,7 @@ $vendorCoupon = false;
                     <tr class='order-<?php echo $orderKey?>'>
                         <td></td>
                         <td style='padding-left: 20px;'>
-                        <input type='hidden' name='AddOnsExclusive[<?php echo $orderKey?>]' value='<?php echo $menuItemAddOn->id?>' />
+                        <input type='hidden' name='AddOnsExclusive[<?php echo $orderKey?>]' value='<?php echo $menuItemAddOn->id?>' class='additionals <?php echo $orderKey?> exclusive' data-add-on-id='<?php echo $menuItemAddOn->id?>' />
                         Add-ons: <?php echo $quantity?> <?php echo $menuItemAddOn->name?></td>
                         <td>$<?php echo UtilityHelper::formatAmountForDisplay($totalAddonAmount)?></td>
                     </tr>
@@ -77,7 +80,7 @@ $vendorCoupon = false;
             <tr class='order-<?php echo $orderKey?>'>
                 <td></td>
                 <td style='padding-left: 20px;'>
-                <input type='hidden' name='AddOns[<?php echo $orderKey?>][<?php echo $menuItemAddOn->id?>]' value='<?php echo $quantity?>' />
+                <input type='hidden' name='AddOns[<?php echo $orderKey?>][<?php echo $menuItemAddOn->id?>]' class='additionals <?php echo $orderKey?>' data-add-on-id='<?php echo $menuItemAddOn->id?>' value='<?php echo $quantity?>' />
                 Add-ons: <?php echo $quantity?> <?php echo $menuItemAddOn->name?></td>
                 <td>$<?php echo UtilityHelper::formatAmountForDisplay($totalAddonAmount)?></td>
             </tr>
