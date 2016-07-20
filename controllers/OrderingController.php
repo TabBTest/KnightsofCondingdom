@@ -317,28 +317,28 @@ class OrderingController extends CController
                         $orderDetails->type = OrderDetails::TYPE_SALES_TAX;
                         $orderDetails->save();
                         
-                        
-                        $orderDetails = new OrderDetails();
-                        $orderDetails->orderId = $order->id;
-                        $orderDetails->vendorMenuItemId = 0;
-                        $orderDetails->name = 'Delivery Fee';
-                        $orderDetails->amount = $deliveryFee;
-                        $orderDetails->quantity = 1;
-                        $orderDetails->totalAmount = $deliveryFee;
-                        $orderDetails->type = OrderDetails::TYPE_DELIVERY_CHARGE;
-                        $orderDetails->save();
-                        
-                        
-                        $orderDetails = new OrderDetails();
-                        $orderDetails->orderId = $order->id;
-                        $orderDetails->vendorMenuItemId = 0;
-                        $orderDetails->name = 'Web Fee';
-                        $orderDetails->amount = $adminFee;
-                        $orderDetails->quantity = 1;
-                        $orderDetails->totalAmount = $adminFee;
-                        $orderDetails->type = OrderDetails::TYPE_ADMIN_FEE;
-                        $orderDetails->save();
-                        
+                        if($deliveryFee > 0){
+                            $orderDetails = new OrderDetails();
+                            $orderDetails->orderId = $order->id;
+                            $orderDetails->vendorMenuItemId = 0;
+                            $orderDetails->name = 'Delivery Fee';
+                            $orderDetails->amount = $deliveryFee;
+                            $orderDetails->quantity = 1;
+                            $orderDetails->totalAmount = $deliveryFee;
+                            $orderDetails->type = OrderDetails::TYPE_DELIVERY_CHARGE;
+                            $orderDetails->save();
+                        }
+                        if($adminFee > 0){
+                            $orderDetails = new OrderDetails();
+                            $orderDetails->orderId = $order->id;
+                            $orderDetails->vendorMenuItemId = 0;
+                            $orderDetails->name = 'Web Fee';
+                            $orderDetails->amount = $adminFee;
+                            $orderDetails->quantity = 1;
+                            $orderDetails->totalAmount = $adminFee;
+                            $orderDetails->type = OrderDetails::TYPE_ADMIN_FEE;
+                            $orderDetails->save();
+                        }
                         if($discount){
                             $orderDetails = new OrderDetails();
                             $orderDetails->orderId = $order->id;

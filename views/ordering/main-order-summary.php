@@ -118,12 +118,14 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
 </tr>
 
 <?php }?>
+<?php if($adminFee != 0){?>
 <tr>
     <td>&nbsp;</td>
     <td><label class='form-label'>    
     Web Fee</label></td>
     <td><label class='form-label'>$<?php echo UtilityHelper::formatAmountForDisplay($adminFee)?></label></td>
 </tr>
+<?php }?>
 <?php if($vendorCoupon){?>
 <tr>
     <td>&nbsp;</td>
