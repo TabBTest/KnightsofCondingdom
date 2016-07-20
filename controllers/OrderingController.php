@@ -242,6 +242,9 @@ class OrderingController extends CController
                         $order->cardLast4 = $user->cardLast4;
                         $order->paymentType = Orders::PAYMENT_TYPE_CARD;
                         $order->isPaid = 1;
+                        $paymentGatewayFee = ($finalAmount * 0.029) + 0.3;
+                        $order->paymentGatewayFee = $paymentGatewayFee;
+                        
                     }
                 }else if($paymentType == Orders::PAYMENT_TYPE_CASH){
                     $order->isPaid = 0;
