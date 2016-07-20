@@ -325,6 +325,7 @@ $(document).ready(function () {
       $('#custom-modal .modal-body').html(html);
       $('#custom-modal').modal('show');
       $('.add-ons-popover').popover({'placement': 'left', 'trigger': 'hover'});
+      $.material.init();
       Order.showItemOrderSummary();
       $('.order-changes').off('change');
       $('.order-changes').on('change', Order.showItemOrderSummary);
@@ -594,9 +595,9 @@ var Order = {
   AddOrder: function () {
     $('#item-order-summary .has-error').removeClass('has-error');
     if ($.isNumeric($('.order-quantity').val()) && parseInt($('.order-quantity').val()) > 0) {
-    	if($('.order-quantity').data('is-edit') == 1){
-    		 $('.order-' + $('form#item-order-summary').data('key')).remove();
-    	}
+      if($('.order-quantity').data('is-edit') == 1){
+        $('.order-' + $('form#item-order-summary').data('key')).remove();
+      }
       Order.refreshMainOrderSummary();
     } else {
       $('.order-quantity').parent().addClass('has-error');

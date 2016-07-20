@@ -20,13 +20,11 @@ class AppAsset extends AssetBundle
     public $css = [
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css',
         'https://fonts.googleapis.com/css?family=Open+Sans:400,700',
-        'css/jquery-ui.min.css',
         'css/bootstrap-switch.min.css',
         'css/site.css',
     ];
 
     public $js = [
-        'js/jquery-ui.min.js',
         'js/jquery.bootpag.min.js',
         'js/bootstrap-switch.min.js',
         'js/clipboard.min.js',

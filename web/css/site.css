@@ -128,10 +128,6 @@ body {
     color: #333;
 }
 
-.popover, .tooltip-inner {
-    background-color: #f9f9f9;
-}
-
 .alert-success {
     color: #3c763d;
 }
@@ -173,6 +169,7 @@ li.list-group-item.add-to-cart {
     border-radius: 3px;
     margin-bottom: 0;
 }
+
 li.add-to-cart:hover {
     border: 3px solid #009688;
 }
@@ -196,4 +193,17 @@ a.vendor-menu-categories:hover {
 
 div.panel-title > label.price-on-colored-panel {
     color: #ffffff;
+}
+
+.form-group.is-focused .radio label:hover {
+    color: #333;
+}
+
+.form-group.is-focused .checkbox label:hover {
+    color: #333;
+}
+
+.form-group label.control-label {
+    font-size: 16px;
+    margin-bottom: 16px;
 }
