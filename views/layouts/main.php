@@ -27,6 +27,17 @@ $model = User::findOne(\Yii::$app->user->id);
 <body>
 <?php $this->beginBody() ?>
 
+<?php 
+ if(\Yii::$app->user->identity != null && \Yii::$app->user->identity->role == User::ROLE_ADMIN){
+        //
+        \Yii::$app->user->logout();
+?>
+<script>
+window.location.href = '/';
+</script>
+<?php 
+    }
+?>
 <div class="wrap">
     
  <nav class="navbar navbar-default">
