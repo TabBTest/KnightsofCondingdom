@@ -1,3 +1,16 @@
+<?php 
+
+use yii\helpers\Html;
+use app\helpers\UtilityHelper;
+
+/* @var $this yii\web\View */
+/* @var $searchModel app\models\UserSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->title = 'Overrides Summary';
+$this->params['breadcrumbs'][] = $this->title;
+
+?>
 <div class='row'>
     
     <form id='overrides-user-search-form'>    

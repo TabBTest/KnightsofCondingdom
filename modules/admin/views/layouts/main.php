@@ -57,7 +57,7 @@ AppAsset::register($this);
             <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="/admin/vendors">List</a></li>
-              <li><a href="/admin/vendors/overrides">Overrides</a></li>
+              <li><a href="/admin/vendors/overrides">Overrides Summary</a></li>
             </ul>
           </li>
           
