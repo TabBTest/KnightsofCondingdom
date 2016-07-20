@@ -313,6 +313,7 @@ $(document).ready(function () {
      */
   }
   setupUi();
+  setupUiVendorOverrides();
   listLinkActions();
   if ($('.add-ons-popover').length > 0)
     $('.add-ons-popover').popover({'placement': 'left', 'trigger': 'hover'});
@@ -691,6 +692,24 @@ var setupUiCustomerPromo = function(){
             $.get('/promotion/view-customers', 'page=' + num + '&userId=' + $('.promotion-user-pagination').data('user-id')+'&'+param, function (html) {
               $('.promotion-user-body').html(html);
               setupUiCustomerPromo();
+            })
+          });
+	}
+}
+var setupUiVendorOverrides = function(){
+	
+	if ($('.overrides-user-pagination').length != 0) {
+	    // init bootpag	    
+	    
+	    $('.overrides-user-pagination').bootpag({
+            total: $('.overrides-user-pagination').data('total-pages'),
+            page: $('.overrides-user-pagination').data('current-page'),
+            maxVisible: 10
+          }).on("page", function (event, /* page number here */ num) {
+        	  var param = $('#overrides-user-search-form').serialize();
+            $.get('/admin/vendors/view-vendors', 'page=' + num +'&'+param, function (html) {
+              $('.overrides-user-body').html(html);
+              setupUiVendorOverrides();
             })
           });
 	}
@@ -1133,6 +1152,20 @@ var VendorSettings = {
       $('.preview-operating-hours').html(html);
     });
   }
+}
+var Vendors  = {
+	search : function(){
+		var prefix = '';
+	    if(window.location.href.indexOf('/admin') != -1){
+	    	prefix = '/admin';
+	    }
+	    
+	    var param = $('#overrides-user-search-form').serialize();
+        $.get('/admin/vendors/view-vendors', 'page=1&'+param, function (html) {
+          $('.overrides-user-body').html(html);
+          setupUiVendorOverrides();
+        })
+	}
 }
 var Customer = {
   viewOrder: function (orderId) {

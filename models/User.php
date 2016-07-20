@@ -230,6 +230,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     
     public static function getVendors($resultsPerPage, $page, $filters){
         $extraSQL = '';
+        if(isset($filters['businessName']) && $filters['businessName'] != ''){
+            $extraSQL .= " and businessName like '%".mysql_escape_string($filters['businessName'])."%'";
+        }
+        
         if(isset($filters['firstName']) && $filters['firstName'] != ''){
             $extraSQL .= " and firstName like '%".mysql_escape_string($filters['firstName'])."%'";
         }

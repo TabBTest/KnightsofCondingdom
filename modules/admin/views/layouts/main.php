@@ -51,7 +51,16 @@ AppAsset::register($this);
             
         ?>
          <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'home') !== false ? 'active' : ''?>"><a href="/admin/home">Home</a></li>
-         <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'vendors') !== false ? 'active' : ''?>"><a href="/admin/vendors">Vendors</a></li>
+         
+         <li class="dropdown <?php echo  strpos(\Yii::$app->controller->getRoute(), 'vendors') !== false ? 'active' : ''?> ">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Vendors
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/admin/vendors">List</a></li>
+              <li><a href="/admin/vendors/overrides">Overrides</a></li>
+            </ul>
+          </li>
+          
          <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? 'active' : ''?>"><a href="/admin/settings">Settings</a></li>
          
          <li class="dropdown <?php echo  strpos(\Yii::$app->controller->getRoute(), 'promotion') !== false || strpos(\Yii::$app->controller->getRoute(), 'coupon') !== false ? 'active' : ''?> ">

@@ -47,15 +47,16 @@ class PromotionController extends CController
             ],
         ];
     }
+    
     public function actionGetCustomers(){
         $page = 1;
-        $customers = User::getVendors($userId, 20, $page, ['isActive' => 1,'isOptIn' => 1]);
-        return $this->renderPartial('user', ['customers' => $customers, 'currentPage' => $page, 'type' => $_REQUEST['type']]);
+        $customers = User::getVendors(20, $page, ['isActive' => 1,'isOptIn' => 1]);
+        return $this->renderPartial('/../../../views/promotion/user', ['customers' => $customers, 'currentPage' => $page, 'type' => $_REQUEST['type']]);
     }
     public function actionViewCustomers(){
         $page = $_REQUEST['page'];
         $customers = User::getVendors(20, $page, array_merge($_REQUEST['filter'], ['isActive' => 1,'isOptIn' => 1]));
-        return $this->renderPartial('_user_list', ['customers' => $customers, 'currentPage' => $page]);
+        return $this->renderPartial('/../../../views/promotion/_user_list', ['customers' => $customers, 'currentPage' => $page]);
     }
     /**
      * Lists all ApplicationType models.

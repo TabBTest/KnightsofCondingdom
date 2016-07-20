@@ -27,7 +27,7 @@ class VendorsController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index','config', 'customers', 'settings', 'payments', 'viewpage', 'menu'],
+                        'actions' => ['overrides','view-vendors', 'index','config', 'customers', 'settings', 'payments', 'viewpage', 'menu'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -55,6 +55,17 @@ class VendorsController extends CController
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    
+    public function actionOverrides(){
+        $vendors = User::getVendors(20, 1, ['isActive' => 1]);
+        return $this->render('overrides', ['vendors' => $vendors]);
+        
+    }
+    public function actionViewVendors(){
+        $page = $_REQUEST['page'];
+        $vendors = User::getVendors(20, $page, array_merge($_REQUEST['filter'], ['isActive' => 1]));
+        return $this->renderPartial('_user_list', ['vendors' => $vendors, 'currentPage' => $page]);
     }
 
     /**
