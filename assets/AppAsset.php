@@ -25,6 +25,7 @@ class AppAsset extends AssetBundle
     ];
 
     public $js = [
+        'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js',
         'js/jquery.bootpag.min.js',
         'js/bootstrap-switch.min.js',
         'js/clipboard.min.js',
