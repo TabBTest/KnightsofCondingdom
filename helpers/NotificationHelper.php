@@ -18,7 +18,7 @@ class NotificationHelper {
   
     static public function notifyVendorOfAccount($user, $randomPassword){
         $params = [];
-        $params['name'] = $user->name;
+        $params['name'] = $user->getFullName();
         $params['tempPassword'] = $randomPassword;
         $params['loginUrl'] = self::getContextUrl().'/site/login';
         $message = \Yii::$app->mailer->compose('vendor-register-success',$params)
@@ -35,7 +35,7 @@ class NotificationHelper {
     
     static public function notifyUserOfAccount($user, $randomPassword){
         $params = [];
-        $params['name'] = $user->name;
+        $params['name'] = $user->getFullName();
         $params['tempPassword'] = $randomPassword;
         $params['loginUrl'] = self::getContextUrl().'/site/login';
         $message = \Yii::$app->mailer->compose('customer-register-success',$params)
@@ -52,7 +52,7 @@ class NotificationHelper {
     
     static public function notifyVendorOfAccountReset($user, $randomPassword){
         $params = [];
-        $params['name'] = $user->name;
+        $params['name'] = $user->getFullName();
         $params['tempPassword'] = $randomPassword;
         $params['loginUrl'] = self::getContextUrl().'/site/login';
         $message = \Yii::$app->mailer->compose('vendor-reset-success',$params)
@@ -69,7 +69,7 @@ class NotificationHelper {
     
     static public function notifyUserOfAccountReset($user, $randomPassword){
         $params = [];
-        $params['name'] = $user->name;
+        $params['name'] = $user->getFullName();
         $params['tempPassword'] = $randomPassword;
         $params['loginUrl'] = self::getContextUrl().'/site/login';
         $message = \Yii::$app->mailer->compose('customer-reset-success',$params)

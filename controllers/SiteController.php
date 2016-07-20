@@ -109,7 +109,7 @@ class SiteController extends CController
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->redirect('/site');
     }
 
     public function actionContact()

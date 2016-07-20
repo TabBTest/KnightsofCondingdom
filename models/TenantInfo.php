@@ -122,7 +122,7 @@ class TenantInfo extends \yii\db\ActiveRecord
             $tenantInfo = new TenantInfo();
             $tenantInfo->code = self::CODE_SUBDOMAIN;
             $tenantInfo->userId = $user->id;
-            $tenantInfo->val = str_replace(' ', '-', strtolower($user->name));
+            $tenantInfo->val = str_replace(' ', '-', strtolower($user->businessName));
             $tenantInfo->save();
         }
     }
