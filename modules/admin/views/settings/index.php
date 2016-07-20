@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php }?>
 <h1>Application Settings</h1>
 
-<form action="/admin/settings" method="POST" class="form-horizontal">
+<form id='admin-settings-form' action="/admin/settings" method="POST" class="form-horizontal" onsubmit="return AdminSettings.validateSettings()">
 <?php
 foreach($appConfigs as $conf){
 		$inputOptions = $conf->getInputOptions();
@@ -19,7 +19,7 @@ foreach($appConfigs as $conf){
     <div class="form-group field-applicationtype-keyword required">
         <label for="applicationtype-keyword" class="col-xs-4 control-label"><?php echo $conf->name?></label>
         <div class="col-xs-12 col-md-5">
-            <input type="<?php echo $inputOptions['type']?>" class="form-control currency-val" maxlength="255" value="<?php echo $conf->val?>" name="AppConfig[<?php echo $conf->code?>]" 
+            <input type="<?php echo $inputOptions['type']?>" class="form-control currency-val <?php echo AppConfig::getCustomClasses($conf->code)?>" maxlength="255" value="<?php echo $conf->val?>" name="AppConfig[<?php echo $conf->code?>]" 
             style="<?php echo $inputOptions['width']?>">
             <div class="help-block"></div></div>
     </div>

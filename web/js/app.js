@@ -1277,7 +1277,27 @@ var Customer = {
       });
   }
 };
+var AdminSettings = {
+	validateSettings: function () {
+	    $('form#admin-settings-form .has-error').removeClass('has-error');
+	    $('.numeric').each(function () {
+	      if ($.isNumeric($(this).val()) == false) {
+	        $(this).parent().addClass('has-error');
+	      }
+	    });
 
+	    $('.more-than-zero').each(function () {
+	      if ($.isNumeric($(this).val()) == false || parseFloat($(this).val()) < 0) {
+	        $(this).parent().addClass('has-error');
+	      }
+	    });
+    
+	    if ($('form#admin-settings-form .has-error').length == 0) {
+	      return true;
+	    }
+	    return false;
+	  },
+}
 var Messages = {
   showError: function (message) {
     swal({

@@ -20,6 +20,13 @@ class AppConfig extends \yii\db\ActiveRecord
     const MONTHLY_MEMBERSHIP_FEE = 'MONTHLY_MEMBERSHIP_FEE';
    
     
+    public static function getCustomClasses($code){
+        $appConfig = [];
+        $appConfig[self::ADMIN_FEE] = 'numeric more-than-zero';
+    
+    
+        return isset($appConfig[$code]) ? $appConfig[$code] : '';
+    }
     
     public function getInputOptions(){
         /*
