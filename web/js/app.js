@@ -483,8 +483,8 @@ var Order = {
   },
   loadArchivedOrder: function () {
     var param = $('#archived-order-form').serialize();
-    $.get($('.vendor-order-archive-body').data('url'), 'page=1&userId=' + $('.vendor-order-archive-body').data('user-id') + '&' + param, function (html) {
-      $('.vendor-order-archive-body').html(html);
+    $.get($('.vendor-order-archived-body').data('url'), 'page=1&userId=' + $('.vendor-order-archived-body').data('user-id') + '&' + param, function (html) {
+      $('.vendor-order-archived-body').html(html);
       setupUi();
     })
   },

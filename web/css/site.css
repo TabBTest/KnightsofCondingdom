@@ -207,3 +207,29 @@ div.panel-title > label.price-on-colored-panel {
     font-size: 16px;
     margin-bottom: 16px;
 }
+
+form#current-order-form {
+    margin-top: 0px;
+}
+
+form#current-order-form > .form-group {
+    margin-top: 0px;
+}
+
+div#search-box-current-orders {
+    margin-top: 26px;
+    padding: 0 0 0 0;
+}
+
+form#archived-order-form {
+    margin-top: 0px;
+}
+
+form#archived-order-form > .form-group {
+    margin-top: 0px;
+}
+
+div#search-box-archived-orders {
+    margin-top: 26px;
+    padding: 0 0 0 0;
+}
