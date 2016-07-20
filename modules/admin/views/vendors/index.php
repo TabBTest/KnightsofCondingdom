@@ -29,6 +29,12 @@ function extraLinks($model)
             ]
         );
         array_push($rest, [
+        'label' => 'Override Vendor Config',
+        'url' => '/admin/vendors/config?id=' . $model->id,
+        'ico' => 'fa-pencil'
+            ]
+        );
+        array_push($rest, [
         'label' => 'Edit Menu',
         'url' => '/admin/vendors/menu?id=' . $model->id,
         'ico' => 'fa-list-alt'

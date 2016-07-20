@@ -12,6 +12,8 @@ use yii\filters\AccessControl;
 use app\models\VendorMembership;
 use app\models\VendorMenu;
 use app\models\MenuCategories;
+use app\models\VendorAppConfigOverride;
+use app\models\AppConfig;
 
 /**
  * VendorController implements the CRUD actions for User model.
@@ -25,7 +27,7 @@ class VendorsController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'customers', 'settings', 'payments', 'viewpage', 'menu'],
+                        'actions' => ['index','config', 'customers', 'settings', 'payments', 'viewpage', 'menu'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -135,6 +137,37 @@ class VendorsController extends CController
         
         return $this->render('/../../../views/vendor/settings', ['model' => $model]);
         
+    }
+    
+    public function actionConfig(){
+    
+        $model = User::findOne(['role' => User::ROLE_VENDOR, 'id' => $_REQUEST['id']]);
+    
+        if(count($_POST) != 0){
+            $vendorId = $_POST['vendorId'];
+            //we save it
+            $appConfigs = $_POST['AppConfig'];
+            //            var_dump($appConfigs);
+            foreach($appConfigs as $code => $val){
+                $origAppConfig = AppConfig::findOne(['code' => $code]);
+                $appConfig = VendorAppConfigOverride::findOne(['vendorId' => $vendorId, 'code'=>$code]);
+                if($appConfig == null){
+                    $appConfig = new VendorAppConfigOverride();
+                    $appConfig->vendorId = $vendorId;
+                    $appConfig->code = $code;
+                }
+                
+                    $appConfig->val = $val;
+                    $appConfig->save();
+                if($origAppConfig->val == $appConfig->val){
+                    $appConfig->delete();
+                }
+            }
+            \Yii::$app->getSession()->setFlash('success', 'Override Vendor Config Saved Successfully');
+        }
+        
+        return $this->render('config', ['model' => $model]);
+    
     }
     
     public function actionMenu(){

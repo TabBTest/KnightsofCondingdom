@@ -9,6 +9,7 @@ use app\models\AppConfig;
 use app\models\MenuCategories;
 use app\controllers\VendorController;
 use app\models\VendorCoupons;
+use app\models\VendorAppConfigOverride;
 if(isset($params['Orders'])){                         
 ?>
 <div class='col-xs-12 text-center'>
@@ -99,7 +100,7 @@ $vendorCoupon = false;
     <td><label class='form-label'>$<?php echo UtilityHelper::formatAmountForDisplay($salesTax)?></label></td>
 </tr>
 <?php 
-$adminFee = floatval(UtilityHelper::getAppConfig(AppConfig::ADMIN_FEE, 0));
+$adminFee = floatval(VendorAppConfigOverride::getVendorOverride($vendorId, AppConfig::ADMIN_FEE));
 $totalFinalAmount += $adminFee;
 ?>
 <?php

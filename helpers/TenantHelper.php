@@ -6,6 +6,7 @@ use app\models\User;
 use app\models\TenantInfo;
 use app\models\VendorMembership;
 use app\models\AppConfig;
+use app\models\VendorAppConfigOverride;
 class TenantHelper {
     
     static public function isDefaultTenant(){
@@ -66,7 +67,9 @@ class TenantHelper {
     
     static function doMembershipPayment($userId){
         $respInfo = array();
-        $membershipPrice = UtilityHelper::getAppConfig(AppConfig::MONTHLY_MEMBERSHIP_FEE, User::MEMBERSHIP_PRICE);
+        //UtilityHelper::getAppConfig(AppConfig::MONTHLY_MEMBERSHIP_FEE, User::MEMBERSHIP_PRICE);
+        $membershipPrice = floatval(VendorAppConfigOverride::getVendorOverride($userId, AppConfig::MONTHLY_MEMBERSHIP_FEE));
+        
         $startDate = false;
         $endDate = false;
     

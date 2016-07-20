@@ -25,6 +25,7 @@ use app\models\VendorMenuItemAddOns;
 use app\models\AppConfig;
 use app\models\VendorCoupons;
 use app\models\VendorCouponOrders;
+use app\models\VendorAppConfigOverride;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -166,7 +167,7 @@ class OrderingController extends CController
                 $customerOrdersMetaData['sales tax'] = ['name' => 'sales tax', 'amount' => $salesTaxAmount];
                 
                 
-                $adminFee = floatval(UtilityHelper::getAppConfig(AppConfig::ADMIN_FEE, 0));
+                $adminFee = floatval(VendorAppConfigOverride::getVendorOverride($tenantInfo->userId, AppConfig::ADMIN_FEE));
                 $totalFinalAmount += $adminFee;
                 
                 $deliveryFee = 0;
