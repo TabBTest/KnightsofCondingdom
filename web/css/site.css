@@ -214,11 +214,16 @@ form#current-order-form {
 
 form#current-order-form > .form-group {
     margin-top: 0px;
+    margin-right: 10px;
 }
 
 div#search-box-current-orders {
     margin-top: 26px;
     padding: 0 0 0 0;
+}
+
+div#search-box-current-orders > div.panel-heading:hover {
+    cursor: pointer;
 }
 
 form#archived-order-form {
@@ -227,9 +232,14 @@ form#archived-order-form {
 
 form#archived-order-form > .form-group {
     margin-top: 0px;
+    margin-right: 10px;
 }
 
 div#search-box-archived-orders {
     margin-top: 26px;
     padding: 0 0 0 0;
+}
+
+div#search-box-archived-orders > div.panel-heading:hover {
+    cursor: pointer;
 }

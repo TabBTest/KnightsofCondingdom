@@ -48,15 +48,12 @@ $this->registerJs($pageJs, $this::POS_READY);
                     <div class="form-group">
                         <label class="control-label">First Name: <input type="text" name="filter[firstName]" class="form-control" /></label>
                     </div>
-                    &nbsp;&nbsp;
                     <div class="form-group">
                         <label class="control-label">Last Name: <input type="text" name="filter[lastName]" class="form-control" /></label>
                     </div>
-                    &nbsp;&nbsp;
                     <div class="form-group">
                         <label class="control-label">Order #: <input type="text" name="filter[orderId]" class="form-control" /></label>
                     </div>
-                    &nbsp;&nbsp;
                     <div class="form-group">
                         <label class="control-label">Type:
                             <select name="filter[isDelivery]" class="form-control">
@@ -66,7 +63,6 @@ $this->registerJs($pageJs, $this::POS_READY);
                             </select>
                         </label>
                     </div>
-                    &nbsp;&nbsp;
                     <div class="form-group">
                         <div class="checkbox">
                             <label class="control-label">
@@ -76,7 +72,6 @@ $this->registerJs($pageJs, $this::POS_READY);
                         </div>
                     </div>
                     <div class="form-group">
-                        <br />
                         <button type="button"
                                 class="btn btn-raised btn-primary"
                                 onclick="Order.search('current');">
@@ -113,15 +108,12 @@ $this->registerJs($pageJs, $this::POS_READY);
                     <div class="form-group">
                         <label class="control-label">First Name: <input type="text" name="filter[firstName]" class="form-control" /></label>
                     </div>
-                    &nbsp;&nbsp;
                     <div class="form-group">
                         <label class="control-label">Last Name: <input type="text" name="filter[lastName]" class="form-control" /></label>
                     </div>
-                    &nbsp;&nbsp;
                     <div class="form-group">
                         <label class="control-label">Order #: <input type="text" name="filter[orderId]" class="form-control" /></label>
                     </div>
-                    &nbsp;&nbsp;
                     <div class="form-group">
                         <label class="control-label">Type:
                             <select name="filter[isDelivery]" class="form-control">
@@ -131,7 +123,6 @@ $this->registerJs($pageJs, $this::POS_READY);
                             </select>
                         </label>
                     </div>
-                    &nbsp;&nbsp;
                     <div class="form-group">
                         <div class="checkbox">
                             <label class="control-label">
@@ -141,7 +132,6 @@ $this->registerJs($pageJs, $this::POS_READY);
                         </div>
                     </div>
                     <div class="form-group">
-                        <br />
                         <button type="button"
                                 class="btn btn-raised btn-primary"
                                 onclick="Order.search('archived');">

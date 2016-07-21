@@ -53,7 +53,7 @@ use app\models\User;
             <label class='form-label'>CONFIRM : 
             <?php if($orderInfo->date_created != null){?>
             <?php if($orderInfo->confirmedDateTime == null){?>
-            <button type='button' class='btn btn-info btn-xs' onclick='javascript: Order.confirm(<?php echo $orderInfo->id?>)'>CONFIRM</button>
+            <button type='button' class='btn btn-raised btn-primary btn-sm' onclick='javascript: Order.confirm(<?php echo $orderInfo->id?>)'>CONFIRM</button>
             <?php }else{?>
             <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->confirmedDateTime );?>
             <?php }
@@ -64,7 +64,7 @@ use app\models\User;
             <label class='form-label'>START : 
            <?php if($orderInfo->confirmedDateTime != null){?>
             <?php if($orderInfo->startDateTime == null){?>
-            <button type='button' class='btn btn-info btn-xs'  onclick='javascript: Order.start(<?php echo $orderInfo->id?>)'>START</button>
+            <button type='button' class='btn btn-raised btn-primary btn-sm'  onclick='javascript: Order.start(<?php echo $orderInfo->id?>)'>START</button>
             <?php }else{?>
             <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->startDateTime );?>
             <?php }
@@ -77,7 +77,7 @@ use app\models\User;
             <label class='form-label'>PICKED UP? : 
            <?php if($orderInfo->startDateTime != null){?>
             <?php if($orderInfo->pickedUpDateTime == null){?>
-            <button type='button' class='btn btn-info btn-xs'  onclick='javascript: Order.pickup(<?php echo $orderInfo->id?>)'>PICKED UP?</button>
+            <button type='button' class='btn btn-raised btn-primary btn-sm'  onclick='javascript: Order.pickup(<?php echo $orderInfo->id?>)'>PICKED UP</button>
             <?php }else{?>
             <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->pickedUpDateTime );?>
             <?php }
@@ -147,6 +147,6 @@ use app\models\User;
 
 <div class='row form-group'>
     <div class='col-xs-12 text-center'>
-        <button type='button' class='btn btn-default' data-dismiss="modal">Close</button>
+        <button type='button' class='btn btn-raised btn-default' data-dismiss="modal">Close</button>
     </div>
 </div>
