@@ -12,7 +12,9 @@ use app\helpers\TenantHelper;
 use app\helpers\UtilityHelper;
 
 AppAsset::register($this);
-$model = User::findOne(\Yii::$app->user->id);
+$model = false ;
+if(\Yii::$app->user->identity != null)
+    $model = User::findOne(\Yii::$app->user->id);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -132,7 +134,7 @@ window.location.href = '/';
     }else{
         
     ?>
-    <?php if ($model->imageFile) { ?>
+    <?php if ($model !== false && $model->imageFile) { ?>
     <li>
       <img alt="" style="padding-top: 5px; max-height: 50px;" class="img-responsive" src="/images/users/<?= $model->imageFile ?>" />
     </li>
