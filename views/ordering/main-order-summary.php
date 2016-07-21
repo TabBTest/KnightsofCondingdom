@@ -210,7 +210,7 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
                         <label class="">Coupon Code</label>
                         <div class="">
                             <input type="text" class="form-control col-md-6" data-vendor-id="<?php echo $vendorId?>" name="couponCode" value="<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ""?>"/>
-                            <button type="button" class="btn btn-info" onclick="javascript: Order.applyCoupon()">Apply</button>
+                            <button type="button" class="btn btn-primary" onclick="javascript: Order.applyCoupon()">Apply</button>
                         </div>
                     </div>
                 </div>

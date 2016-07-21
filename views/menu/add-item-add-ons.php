@@ -42,7 +42,7 @@ use app\models\MenuCategories;
             <?php }?>
                 
             <?php }?>
-            <button type='button' class='btn btn-success' onclick="javascript: VendorMenu.saveItemAddOns()">Save</button>
+            <button type='button' class='btn btn-raised btn-primary' onclick="javascript: VendorMenu.saveItemAddOns()">Save</button>
         </div>
     </div>
 </form>

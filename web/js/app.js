@@ -316,15 +316,15 @@ $(document).ready(function () {
   setupUiVendorOverrides();
   listLinkActions();
   if ($('.add-ons-popover').length > 0)
-    $('.add-ons-popover').popover({'placement': 'left', 'trigger': 'hover'});
+    $('.add-ons-popover').popover({'placement': 'top', 'trigger': 'hover'});
 
   $('.add-to-cart').on('click', function () {
     var sorting = $('.vendor-menu-categories').length + 1;
     $.get('/ordering/add-item', 'menuItemId=' + $(this).data('menu-item-id'), function (html) {
-      $('#custom-modal .modal-title').html('Add Order');
       $('#custom-modal .modal-body').html(html);
+      $('#custom-modal .modal-title').html(menuItemTitle);
       $('#custom-modal').modal('show');
-      $('.add-ons-popover').popover({'placement': 'left', 'trigger': 'hover'});
+      $('.add-ons-popover').popover({'placement': 'top', 'trigger': 'hover'});
       $.material.init();
       Order.showItemOrderSummary();
       $('.order-changes').off('change');
@@ -631,7 +631,7 @@ var Order = {
   editOrderItem: function () {
 	  var key = $(this).data('key');
     $.get('/ordering/add-item', 'menuItemId=' + $(this).data('menu-item-id')+'&key='+$(this).data('key'), function (html) {
-      $('#custom-modal .modal-title').html('Add Order');
+      $('#custom-modal .modal-title').html(menuItemTitle);
       $('#custom-modal .modal-body').html(html);
       
       var menuItemId = $('input[type="hidden"][name="Orders['+key+']"]').val();
@@ -655,7 +655,8 @@ var Order = {
       })
       
       $('#custom-modal').modal('show');
-      $('.add-ons-popover').popover({'placement': 'left', 'trigger': 'hover'});
+      $('.add-ons-popover').popover({'placement': 'top', 'trigger': 'hover'});
+      $.material.init();
       Order.showItemOrderSummary();
       $('.order-changes').off('change');
       $('.order-changes').on('change', Order.showItemOrderSummary);

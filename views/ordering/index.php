@@ -15,14 +15,46 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
 <div class='row'>
     <div class='col-xs-12'>
         <ul class="pager">
-            <li><span><i class="fa fa-phone" aria-hidden="true"></i> <a href="tel://<?= $vendor->getContactNumber();?>"><?= $vendor->getContactNumber();?></a></span></li>
-            <li><span><a href="#" data-toggle="modal" data-target="#operating-hours-modal">Operating Hours</a></span></li>
-            <li><span>Time to Pickup: <?= $vendor->getTimeToPickUpDisplay();?></span></li>
-            <li><span>Offers Delivery: <?= $hasDelivery ? "Yes <i class=\"fa fa-check-circle\" aria-hidden=\"true\"></i>" : "No <i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i>";?></span></li>
-            <?php if($hasDelivery){?>
-            <li><span>Minimum Delivery Amount: $<?php echo  UtilityHelper::formatAmountForDisplay(TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_DELIVERY_MINIMUM_AMOUNT));?></span></li>
-            <li><span>Delivery Charge: $<?php echo  UtilityHelper::formatAmountForDisplay(TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_DELIVERY_CHARGE));?></span></li>
-            <?php }?>
+            <li>
+                <span>
+                    <i class="fa fa-phone" aria-hidden="true"></i>
+                    <a href="tel://<?= $vendor->getContactNumber();?>"><?= $vendor->getContactNumber();?></a>
+                </span>
+            </li>
+            <li>
+                <span>
+                    <a href="#" data-toggle="modal" data-target="#operating-hours-modal">Operating Hours</a>
+                </span>
+            </li>
+            <li>
+                <span>Time to Pickup: <?= $vendor->getTimeToPickUpDisplay();?></span>
+            </li>
+            <li>
+                <span>
+                    Offers Delivery:&nbsp;
+                    <?= $hasDelivery ?
+                        "Yes <i class=\"fa fa-check-circle\" aria-hidden=\"true\"></i>" :
+                        "No <i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i>"
+                    ?>
+                </span>
+            </li>
+            <?php if($hasDelivery) { ?>
+            <li>
+                <span>
+                    Minimum Delivery Amount: $
+                    <?= UtilityHelper::formatAmountForDisplay(
+                        TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_DELIVERY_MINIMUM_AMOUNT)
+                    ) ?>
+                </span>
+            </li>
+            <li>
+                <span>Delivery Charge: $
+                    <?= UtilityHelper::formatAmountForDisplay(
+                        TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_DELIVERY_CHARGE)
+                    ) ?>
+                </span>
+            </li>
+            <?php } ?>
         </ul>
     </div>
 
@@ -33,7 +65,7 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Operating
-                        Hours <?php echo UtilityHelper::getTimeZoneDisplay($vendor->timezone) ?></h4>
+                        Hours <?= UtilityHelper::getTimeZoneDisplay($vendor->timezone) ?></h4>
                 </div>
                 <div class="modal-body">
                     <?php
@@ -41,19 +73,19 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
                     foreach (UtilityHelper::getDays() as $key => $val) {
                         $operatingHours = VendorOperatingHours::getVendorOperatingHours($vendor->id, $key);
                         ?>
-                        <div class='col-xs-12' style='margin-bottom: 10px'>
-                            <div class='col-xs-6 text-center'>
-                                <?php echo $val ?>
+                        <div class="col-xs-12" style="margin-bottom: 10px">
+                            <div class="col-xs-6 text-center">
+                                <?= $val ?>
                             </div>
-                            <div class='col-xs-6'>
+                            <div class="col-xs-6">
                                 <?php foreach ($operatingHours as $operatingHour) { ?>
-                                    <div class='col-xs-12'>
+                                    <div class="col-xs-12">
                                         <?php foreach ($operatingTime as $val => $display) { ?>
-                                            <?php echo $val == $operatingHour->startTime ? $display : '' ?>
+                                            <?= $val == $operatingHour->startTime ? $display : '' ?>
                                         <?php } ?>
                                         -
                                         <?php foreach ($operatingTime as $val => $display) { ?>
-                                            <?php echo $val == $operatingHour->endTime ? $display : '' ?>
+                                            <?= $val == $operatingHour->endTime ? $display : '' ?>
                                         <?php } ?>
                                     </div>
                                 <?php } ?>
@@ -79,55 +111,70 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
             </div>
             <div class="panel-group categories-main-panel" id="accordion">
                 <?php
-                foreach($vendorCategories as $category){
-                    ?>
+                foreach($vendorCategories as $category) {
+                ?>
                     <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="panel panel-danger" style="margin-bottom: 20px;" data-category-id='<?php echo $category->id?>'>
+                        <div class="panel panel-danger"
+                             style="margin-bottom: 20px;"
+                             data-category-id="<?= $category->id ?>"
+                        >
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a class="vendor-menu-categories" role="button" data-target="#category<?php echo $category->id?>" data-toggle="collapse" data-parent1="#accordion" href="#category<?php echo $category->id?>" aria-expanded="false" aria-controls="category<?php echo $category->id?>">
-                                        <?php echo $category->name?>
+                                    <a class="vendor-menu-categories"
+                                       role="button"
+                                       data-target="#category<?= $category->id ?>"
+                                       data-toggle="collapse"
+                                       data-parent1="#accordion"
+                                       href="#category<?= $category->id ?>"
+                                       aria-expanded="false"
+                                       aria-controls="category<?= $category->id ?>"
+                                    >
+                                        <?= $category->name ?>
                                     </a>
                                 </h4>
-
                             </div>
-                            <div id="category<?php echo $category->id?>" class="panel-collapse collapse in">
-                                <div class="panel-body">
+                            <div id="category<?= $category->id ?>" class="panel-body panel-collapse collapse in">
+                                <div class="panel-body" style="border: none;">
                                     <ul class="list-group">
                                         <?php
-                                        $menuItems = VendorMenuItem::find()->where('vendorMenuId = '. $menu->id . ' and menuCategoryId = ' . $category->id.' order by sorting asc')->all();
+                                        $menuItems = VendorMenuItem::find()->where(
+                                            'vendorMenuId = ' .
+                                            $menu->id .
+                                            ' and menuCategoryId = '.
+                                            $category->id.' order by sorting asc'
+                                        )->all();
                                         ?>
-
-
                                         <?php foreach($menuItems as $item){
                                             if($item->isArchived == 1)
                                                 continue;
-
                                             ?>
-                                            <li class="col-xs-12 col-sm-12 col-md-6 list-group-item add-to-cart" data-menu-item-id="<?php echo $item->id?>">
-                                                <label class="col-md-10 form-label menu-name"><?php echo $item->name?> </label>
-                                                <span class="col-md-2 pull-right"><strong>$<?php echo UtilityHelper::formatAmountForDisplay($item->amount)?></strong></span>
+                                            <li class="col-xs-12 col-sm-12 col-md-6 list-group-item add-to-cart"
+                                                data-menu-item-id="<?= $item->id ?>">
+                                                <label class="col-md-10 form-label menu-name"><?= $item->name?></label>
+                                                <span class="col-md-2 pull-right">
+                                                    <strong>
+                                                        $<?= UtilityHelper::formatAmountForDisplay($item->amount)?>
+                                                    </strong>
+                                                </span>
                                                 <br />
-                                                <label class="col-md-10 form-label menu-description"><i><?php echo $item->description?></i></label>
+                                                <label class="col-md-10 form-label menu-description">
+                                                    <i><?= $item->description ?></i>
+                                                </label>
                                             </li>
-                                            <?php
-                                        }
-                                        ?>
-
+                                        <?php } ?>
                                     </ul>
                                 </div>
-
                             </div>
                         </div>
                     </div>
-                <?php }?>
+                <?php } ?>
             </div>
         </div>
     </div>
     <div class="col-xs-12 col-sm-12 col-md-4">
         <div class="panel panel-primary">
             <h2 class="panel-heading text-center">Order Summary</h2>
-            <form id="main-order-summary" action='/ordering/save' method="POST">
+            <form id="main-order-summary" action="/ordering/save" method="POST">
                 <div class="col-xs-12 main-order-summary-content">
                     <div class="col-xs-12 text-center">
                         <label>Please add your order now</label>

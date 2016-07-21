@@ -11,11 +11,11 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
     <div class="col-xs-12 col-sm-12 col-md-8">
     <form id="item-order-summary" data-key="<?= $key ?>">
         <div class="col-xs-12">
-            <h2><?= $item->name?> - $<?= UtilityHelper::formatAmountForDisplay($item->amount) ?></h2>
             <?php if ($item->hasPhoto()) { ?>
                 <img src="/menu-images/<?= $item->getPhotoPath() ?>" width="150px" height="150px" />
             <?php } ?>
-            <label class="form-label"><?= $item->description ?></label>
+            <br />
+            <label><?= $item->description ?></label>
         </div>
         <div class="form-group col-xs-12">
             <label class="control-label">Quantity</label>
@@ -32,13 +32,13 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
 
         <?php if (count($addOns) > 0) { ?>
             <?php if (count($categoryExclusives) != 0 || count($itemExclusives) != 0) { ?>
-            <div class="form-group col-xs-12">
+            <div class="form-group col-xs-12 col-sm-12 col-md-6">
                 <label class="control-label">Options</label>
                 <?php
                 $allAddOns = array_merge($categoryExclusives, $itemExclusives);
                 foreach($allAddOns as $index => $addOn) { ?>
                 <div>
-                    <div data-toggle="tooltip"
+                    <div data-toggle="popover"
                          data-placement="bottom"
                          data-content="<?= $addOn->description ?>"
                          data-menu-item-add-on-id="<?= $addOn->id ?>"
@@ -57,13 +57,13 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
                 <?php } ?>
             </div>
             <?php } if (count($categoryNonExclusives) != 0 || count($itemNonExclusives) != 0) { ?>
-            <div class="form-group col-xs-12">
+            <div class="form-group col-xs-12 col-sm-12 col-md-6">
                 <label class="control-label">Add-ons</label>
                 <?php
                 $allAddOns = array_merge($categoryNonExclusives, $itemNonExclusives);
                 foreach($allAddOns as $index => $addOn) { ?>
                 <div>
-                    <div data-toggle="tooltip"
+                    <div data-toggle="popover"
                         data-placement="bottom"
                         data-content="<?= $addOn->description ?>"
                         data-menu-item-add-on-id="<?= $addOn->id ?>"
@@ -81,11 +81,11 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
             </div>
             <?php } ?>
         <?php } ?>
-        <div class="form-group">
-            <label for="order-notes-field" class="col-md-2 control-label">Note</label>
-            <div class="col-md-12">
+        <div class="form-group col-xs-12">
+            <label for="order-notes-field" class="control-label">Note</label>
+            <div>
                 <textarea class="form-control"
-                          rows="5"
+                          rows="3"
                           cols="25"
                           name="OrdersNotes[<?= $key ?>]"
                           id="order-notes-field"></textarea>
@@ -112,3 +112,7 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
     </div>
     <div class="clearfix"></div>
 </div>
+
+<script>
+    var menuItemTitle = '<?= $item->name?> - $<?= UtilityHelper::formatAmountForDisplay($item->amount) ?>';
+</script>
