@@ -217,7 +217,7 @@ form#current-order-form > .form-group {
     margin-right: 10px;
 }
 
-div#search-box-current-orders {
+div#search-box-current-orders, div#search-box-sales-orders , div#search-box-payable-orders{
     margin-top: 26px;
     padding: 0 0 0 0;
 }

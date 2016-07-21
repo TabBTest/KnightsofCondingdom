@@ -94,6 +94,7 @@ window.location.href = '/';
           <li><a href="/vendor/settings?view=history">Billing History</a></li>
         </ul>
       </li>
+      <li class="<?php echo  strpos(\Yii::$app->controller->getRoute(), 'sales') !== false ? 'active' : ''?>"><a href="/sales">Sales</a></li>
       
     <?php 
     }else if(Yii::$app->user->identity->role== User::ROLE_CUSTOMER){

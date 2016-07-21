@@ -21,11 +21,13 @@ class AppAsset extends AssetBundle
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css',
         'https://fonts.googleapis.com/css?family=Open+Sans:400,700',
         'css/bootstrap-switch.min.css',
+        'css/bootstrap-datepicker3.min.css',
         'css/site.css',
     ];
 
     public $js = [
         'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js',
+        'js/bootstrap-datepicker.js',
         'js/jquery.bootpag.min.js',
         'js/bootstrap-switch.min.js',
         'js/clipboard.min.js',

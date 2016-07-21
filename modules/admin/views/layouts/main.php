@@ -58,6 +58,8 @@ AppAsset::register($this);
             <ul class="dropdown-menu">
               <li><a href="/admin/vendors">List</a></li>
               <li><a href="/admin/vendors/overrides">Overrides Summary</a></li>
+              <li><a href="/admin/vendors/payable">Accounts Payable</a></li>
+              <li><a href="/admin/vendors/receivable">Accounts Receivable</a></li>
             </ul>
           </li>
           

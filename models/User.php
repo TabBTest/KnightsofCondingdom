@@ -360,7 +360,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return 0;
         
     }
-    public function showConvertedTime($date, $format = 'm-d-Y H:i'){
+    public function showConvertedTime($date, $format = 'm-d-Y h:i a'){
         if($date != null && $date != ''){
             $date_time_zone = new \DateTimeZone($this->timezone );
             
@@ -437,5 +437,54 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function getTimeToPickUpDisplay(){
         return TenantHelper::getTimeToPickUp()[$this->timeToPickUp];
         
+    }
+    
+    //from date and toDate == m-d-Y format, needs to change it
+    public function getTotalPayableCost($fromDate, $toDate){
+        //in perspective of admin
+        // == receivable in perspective of vendor
+        $fromDateReal = '';
+        $toDateReal = '';
+        $params = [];
+        $params['vendorId'] = $this->id;
+        if($fromDate != null && $fromDate != ''){
+            $froms = explode('-',$fromDate);           
+            $fromDateReal = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        }
+        if($toDate != null && $toDate != ''){
+            $tos = explode('-',$toDate);
+            $toDateReal = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        }
+        $params['fromDate'] = $fromDateReal;
+        $params['toDate'] = $toDateReal;
+        $orders = Orders::getSalesOrders('ALL', 1, $params);
+        $totalAmount = 0;
+        foreach($orders['list'] as $order){
+            $totalAmount = $order->getTotalReceivableCost();
+        }
+        return $totalAmount;        
+    }
+    public function getTotalReceivableCost($fromDate, $toDate){
+        //in the perspective of admin
+        $fromDateReal = '';
+        $toDateReal = '';
+        $params = [];
+        $params['vendorId'] = $this->id;
+        if($fromDate != null && $fromDate != ''){
+            $froms = explode('-',$fromDate);
+            $fromDateReal = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        }
+        if($toDate != null && $toDate != ''){
+            $tos = explode('-',$toDate);
+            $toDateReal = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        }
+        $params['fromDate'] = $fromDateReal;
+        $params['toDate'] = $toDateReal;
+        $orders = Orders::getSalesOrders('ALL', 1, $params);
+        $totalAmount = 0;
+        foreach($orders['list'] as $order){
+            $totalAmount = $order->getTotalAdminReceivableCost();
+        }
+        return $totalAmount;
     }
 }

@@ -31,7 +31,7 @@ class VendorController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['settings', 'save-settings', 'profile', 'billing', 'view-page', 'preview-hours', 'save-time-to-pickup'],
+                        'actions' => [ 'settings', 'save-settings', 'profile', 'billing', 'view-page', 'preview-hours', 'save-time-to-pickup'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

@@ -27,6 +27,9 @@ class Orders extends \yii\db\ActiveRecord
     
     public $orderId = '';
     const MAGIC_NUMBER = 10000;
+    
+    private $_detailList = false;
+    
     public function getOrderId(){
         $orderId = self::MAGIC_NUMBER + $this->id;
         return $orderId;
@@ -47,9 +50,10 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['customerId', 'vendorId', 'status'], 'required'],
             [['customerId', 'vendorId', 'status'], 'integer'],
-            [['isDelivery', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
+            [['isDelivery','isCancelled','isRefunded','cancellation_date','refund_date', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
         ];
     }
+    
 
     /**
      * @inheritdoc
@@ -100,6 +104,51 @@ class Orders extends \yii\db\ActiveRecord
         return parent::afterFind();
     }
     */
+    public static function getSalesOrders($resultsPerPage, $page, $filters){
+    
+        $extraSQL = '';
+//         if(isset($filters['showCompleted'])){
+//             if( $filters['showCompleted'] == 0){
+//                 $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
+//             }
+//         }else{
+//             $extraSQL .= ' and status != '.self::STATUS_PROCESSED;
+//         }
+    
+//         if(isset($filters['firstName']) && $filters['firstName'] != ''){
+//             $extraSQL .= " and customerId in (select id from user where firstName like '%".mysql_escape_string($filters['firstName'])."%')";
+//         }
+//         if(isset($filters['lastName']) && $filters['lastName'] != ''){
+//             $extraSQL .= " and customerId in (select id from user where lastName like '%".mysql_escape_string($filters['lastName'])."%')";
+//         }
+    
+//         if(isset($filters['orderId']) && $filters['orderId'] != ''){
+//             $extraSQL .= " and (id + ".self::MAGIC_NUMBER.") =  '".$filters['orderId']."'";
+//         }
+//         if(isset($filters['isDelivery']) && $filters['isDelivery'] != ''){
+//             $extraSQL .= " and isDelivery = ".$filters['isDelivery'];
+//         }
+    
+        if(isset($filters['vendorId']) && $filters['vendorId'] != ''){
+            $extraSQL .= " and vendorId = ".$filters['vendorId'];
+        }
+        if(isset($filters['fromDate']) && $filters['fromDate'] != ''){
+            $extraSQL .= " and date(confirmedDateTime) >= '".$filters['fromDate']."'";
+        }
+        if(isset($filters['toDate']) && $filters['toDate'] != ''){
+            $extraSQL .= " and date(confirmedDateTime) <= '".$filters['toDate']."'";
+        }
+    
+        $resp = array();
+        $limitSql = '';
+        if($resultsPerPage != 'ALL' ){
+            $limitSql = ' limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage);
+        }
+        
+        $resp['list'] = Orders::find()->where('isCancelled = 0 and isPaid = 1 '.$extraSQL.' order by id desc '.$limitSql)->all();
+        $resp['count'] = Orders::find()->where('isCancelled = 0 and isPaid = 1 '.$extraSQL)->count();
+        return $resp;
+    }
     public static function getVendorOrders($userId, $resultsPerPage, $page, $filters){
         
         $extraSQL = '';
@@ -182,5 +231,80 @@ class Orders extends \yii\db\ActiveRecord
         else if($this->paymentType == self::PAYMENT_TYPE_CASH)
             return 'Cash';
         return 'N/A';
+    }
+    public function getDetailList(){
+        if($this->_detailList === false)
+            $this->_detailList = OrderDetails::findAll(['orderId' => $this->id]);
+        return $this->_detailList;
+    }
+    
+    public function getFoodCost(){
+        
+        $list = $this->getDetailList();
+        $amount = 0;
+        foreach($list as $item){
+            if($item->type == OrderDetails::TYPE_MENU_ITEM || 
+                $item->type == OrderDetails::TYPE_MENU_ITEM_ADD_ON){
+                $amount += $item->totalAmount;
+            }
+        }
+        return $amount;
+    }
+    public function getSalesTax(){
+        
+        $list = $this->getDetailList();
+        $amount = 0;
+        foreach($list as $item){
+            if($item->type == OrderDetails::TYPE_SALES_TAX ){
+                $amount += $item->totalAmount;
+            }
+        }
+        return $amount;
+    }
+    public function getDeliveryCharge(){
+        
+        $list = $this->getDetailList();
+        $amount = 0;
+        foreach($list as $item){
+            if($item->type == OrderDetails::TYPE_DELIVERY_CHARGE ){
+                $amount += $item->totalAmount;
+            }
+        }
+        return $amount;
+    }
+    public function getWebFee(){        
+        $list = $this->getDetailList();
+        $amount = 0;
+        foreach($list as $item){
+            if($item->type == OrderDetails::TYPE_ADMIN_FEE ){
+                $amount += $item->totalAmount;
+            }
+        }
+        return $amount;
+    }
+    public function getCCFee(){
+        return $this->paymentGatewayFee != null && $this->paymentGatewayFee > 0 ? $this->paymentGatewayFee : 0;
+    }
+    public function getDiscount(){       
+        $list = $this->getDetailList();
+        $amount = 0;
+        foreach($list as $item){
+            if($item->type == OrderDetails::TYPE_COUPON ){
+                $amount += $item->totalAmount;
+            }
+        }
+        return $amount;
+        
+    }
+    public function getTotalReceivableCost(){
+        //do we include the cc charge here
+        //return $this->getFoodCost() + $this->getWebFee() + $this->getSalesTax() + $this->getDeliveryCharge() - $this->getDiscount();
+        return $this->getFoodCost() +  $this->getSalesTax() + $this->getDeliveryCharge() - $this->getDiscount();
+    }
+    
+    public function getTotalAdminReceivableCost(){
+        //do we include the cc charge here
+        //return $this->getFoodCost() + $this->getWebFee() + $this->getSalesTax() + $this->getDeliveryCharge() - $this->getDiscount();
+        return $this->getWebFee();
     }
 }

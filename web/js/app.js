@@ -488,11 +488,46 @@ var Order = {
       setupUi();
     })
   },
+  loadSalesOrder: function () {
+    var param = $('#sales-form').serialize();
+    $('#sales-form .has-error').removeClass('has-error');
+    $('#sales-form input[type="text"]').each(function(){
+    	if($(this).val() == ''){
+    		$(this).parent().addClass('has-error');
+    	}
+    })
+    if($('#sales-form .has-error').length == 0 ){
+    	$.get($('.vendor-sales-body').data('url'), 'page=1&userId=' + $('.vendor-sales-body').data('user-id') + '&' + param, function (html) {
+	      $('.vendor-sales-body').html(html);
+	      setupUi();
+	    })
+    }
+  },
+  loadAdminReceivableOrder : function(){
+	  var param = $('#admin-receivable-form').serialize();
+    $('#admin-receivable-form .has-error').removeClass('has-error');
+    $('#admin-receivable-form input[type="text"]').each(function(){
+    	if($(this).val() == ''){
+    		$(this).parent().addClass('has-error');
+    	}
+    })
+    if($('#admin-receivable-form .has-error').length == 0 ){
+    	$.get($('.admin-receivable-body').data('url'), 'page=1&userId=' + $('.admin-receivable-body').data('user-id') + '&' + param, function (html) {
+	      $('.admin-receivable-body').html(html);
+	      setupUi();
+	    })
+    }
+  },
   search: function (type) {
     if (type == 'current')
       Order.loadCurrentOrder();
     else if (type == 'archived')
       Order.loadArchivedOrder();
+    else if (type == 'sales')
+        Order.loadSalesOrder();
+    else if (type == 'admin-receivable')
+        Order.loadAdminReceivableOrder();
+    
   },
   confirm: function (orderId) {
     swal({
@@ -715,6 +750,38 @@ var setupUiVendorOverrides = function(){
             })
           });
 	}
+	
+	if ($('.payable-user-pagination').length != 0) {
+	    // init bootpag	    
+	    
+	    $('.payable-user-pagination').bootpag({
+            total: $('.payable-user-pagination').data('total-pages'),
+            page: $('.payable-user-pagination').data('current-page'),
+            maxVisible: 10
+          }).on("page", function (event, /* page number here */ num) {
+        	  var param = $('#payable-user-search-form').serialize();
+            $.get('/admin/vendors/view-vendors-payable', 'page=' + num +'&'+param, function (html) {
+              $('.payable-user-body').html(html);
+              setupUiVendorOverrides();
+            })
+          });
+	}
+	if ($('.receivable-user-pagination').length != 0) {
+	    // init bootpag	    
+	    
+	    $('.receivable-user-pagination').bootpag({
+            total: $('.receivable-user-pagination').data('total-pages'),
+            page: $('.receivable-user-pagination').data('current-page'),
+            maxVisible: 10
+          }).on("page", function (event, /* page number here */ num) {
+        	  var param = $('#receivable-user-search-form').serialize();
+            $.get('/admin/vendors/view-vendors-receivable', 'page=' + num +'&'+param, function (html) {
+              $('.receivable-user-body').html(html);
+              setupUiVendorOverrides();
+            })
+          });
+	}
+	
 }
 var setupUi = function () {
   if ($('.customer-order-history-pagination').length != 0) {
@@ -774,6 +841,36 @@ var setupUi = function () {
      */
     $('[data-toggle="tooltip"]').tooltip();
   }
+  if ($('.vendor-sales-pagination').length != 0) {
+	    // init bootpag
+	    $('.vendor-sales-pagination').bootpag({
+	      total: $('.vendor-sales-pagination').data('total-pages'),
+	      page: $('.vendor-sales-pagination').data('current-page'),
+	      maxVisible: 10
+	    }).on("page", function (event, /* page number here */ num) {
+	      $.get($('.vendor-sales-body').data('url'), 'page=' + num + '&userId=' + $('.vendor-sales-pagination').data('user-id'), function (html) {
+	        $('.vendor-sales-body').html(html);
+	        setupUi();
+	      })
+	    });
+	   
+	    $('[data-toggle="tooltip"]').tooltip();
+	  }
+  if ($('.admin-receivable-pagination').length != 0) {
+	    // init bootpag
+	    $('.admin-receivable-pagination').bootpag({
+	      total: $('.admin-receivable-pagination').data('total-pages'),
+	      page: $('.admin-receivable-pagination').data('current-page'),
+	      maxVisible: 10
+	    }).on("page", function (event, /* page number here */ num) {
+	      $.get($('.admin-receivable-body').data('url'), 'page=' + num + '&userId=' + $('.admin-receivable-pagination').data('user-id'), function (html) {
+	        $('.admin-receivable-body').html(html);
+	        setupUi();
+	      })
+	    });
+	   
+	    $('[data-toggle="tooltip"]').tooltip();
+	  }
   if ($('.vendor-billing-pagination').length != 0) {
     // init bootpag
     $('.vendor-billing-pagination').bootpag({
@@ -1167,7 +1264,25 @@ var Vendors  = {
           $('.overrides-user-body').html(html);
           setupUiVendorOverrides();
         })
-	}
+	},
+	searchPayable : function(){
+		var prefix = '';
+	    
+	    var param = $('#payable-user-search-form').serialize();
+        $.get('/admin/vendors/view-vendors-payable', 'page=1&'+param, function (html) {
+          $('.payable-user-body').html(html);
+          setupUiVendorOverrides();
+        })
+	},
+	searchReceivable : function(){
+		var prefix = '';
+	    
+	    var param = $('#receivable-user-search-form').serialize();
+        $.get('/admin/vendors/view-vendors-receivable', 'page=1&'+param, function (html) {
+          $('.receivable-user-body').html(html);
+          setupUiVendorOverrides();
+        })
+	},
 }
 var Customer = {
   viewOrder: function (orderId) {

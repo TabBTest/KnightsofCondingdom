@@ -117,7 +117,11 @@ use app\models\User;
                 <?php 
                 $finalTotalAmount = 0;
                 foreach($orders as $detail){
-                    $finalTotalAmount +=  $detail->totalAmount;
+                    if($detail->type != OrderDetails::TYPE_COUPON)
+                        $finalTotalAmount +=  $detail->totalAmount;
+                    else{
+                        $finalTotalAmount -=  $detail->totalAmount;
+                    }
                     $isAddOn = $detail->type == OrderDetails::TYPE_MENU_ITEM_ADD_ON ? true : false;
                 ?>
                 <tr>

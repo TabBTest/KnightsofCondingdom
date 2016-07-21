@@ -14,6 +14,7 @@ use app\models\VendorMenu;
 use app\models\MenuCategories;
 use app\models\VendorAppConfigOverride;
 use app\models\AppConfig;
+use app\models\Orders;
 
 /**
  * VendorController implements the CRUD actions for User model.
@@ -27,7 +28,8 @@ class VendorsController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['overrides','view-vendors', 'index','config', 'customers', 'settings', 'payments', 'viewpage', 'menu'],
+                       
+                        'actions' => ['receivable-summary-details','receivable-summary-details-viewpage', 'receivable','view-vendors-receivable', 'payable-summary-details','payable-summary-details-viewpage', 'payable','view-vendors-payable', 'receivable','overrides','view-vendors', 'index','config', 'customers', 'settings', 'payments', 'viewpage', 'menu'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -67,6 +69,130 @@ class VendorsController extends CController
         $vendors = User::getVendors(20, $page, array_merge($_REQUEST['filter'], ['isActive' => 1]));
         return $this->renderPartial('_user_list', ['vendors' => $vendors, 'currentPage' => $page]);
     }
+    
+    public function actionReceivable(){
+    
+        $fromDateDisplay = date('m-01-Y', strtotime('now'));
+        $toDateDisplay = date('m-d-Y', strtotime('now'));
+    
+        $vendors = User::getVendors(20, 1, ['isActive' => 1]);
+        return $this->render('receivable', ['fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'vendors' => $vendors]);
+    
+    }
+    public function actionViewVendorsReceivable(){
+        $page = $_REQUEST['page'];
+        $vendors = User::getVendors(20, $page, array_merge($_REQUEST['filter'], ['isActive' => 1]));
+    
+        $params = $_REQUEST['filter'];
+    
+        return $this->renderPartial('_user_receivable_list', ['fromDate' => $params['fromDate'], 'toDate' => $params['toDate'], 'vendors' => $vendors, 'currentPage' => $page]);
+    }
+    
+    public function actionPayable(){
+        
+        $fromDateDisplay = date('m-01-Y', strtotime('now'));
+        $toDateDisplay = date('m-d-Y', strtotime('now'));
+        
+        $vendors = User::getVendors(20, 1, ['isActive' => 1]);
+        return $this->render('payable', ['fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'vendors' => $vendors]);
+    
+    }
+    public function actionViewVendorsPayable(){
+        $page = $_REQUEST['page'];
+        $vendors = User::getVendors(20, $page, array_merge($_REQUEST['filter'], ['isActive' => 1]));
+        
+        $params = $_REQUEST['filter'];
+
+        return $this->renderPartial('_user_payable_list', ['fromDate' => $params['fromDate'], 'toDate' => $params['toDate'], 'vendors' => $vendors, 'currentPage' => $page]);
+    }
+    public function actionPayableSummaryDetails(){
+        
+        $fromDateDisplay = $_REQUEST['fromDate'];
+        $toDateDisplay = $_REQUEST['toDate'];
+        
+        $params = [];
+        
+        
+        
+        if($fromDateDisplay != ''){
+            $froms = explode('-',$fromDateDisplay);
+            $params['fromDate'] = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        }
+        if($toDateDisplay != ''){
+            $tos = explode('-',$toDateDisplay);
+            $params['toDate'] = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        }
+        
+        $params['vendorId'] = $_REQUEST['id'];
+        $orders = Orders::getSalesOrders( 20, 1, $params);
+        
+       
+        
+        return $this->render('payable-summary-details', ['fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'orders' => $orders, 'userId' => $_REQUEST['id'], 'url' => '/admin/vendors/payable-summary-details-viewpage']);
+    }
+    
+    public function actionPayableSummaryDetailsViewpage(){
+        $page = $_REQUEST['page'];
+        $userId = $_REQUEST['userId'];
+        $params = $_REQUEST['filter'];
+                
+        if($params['fromDate'] != ''){
+            $froms = explode('-',$params['fromDate']);
+            $params['fromDate'] = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        }
+        if($params['toDate'] != ''){
+            $tos = explode('-',$params['toDate']);
+            $params['toDate'] = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        }
+    
+        $orders = Orders::getSalesOrders(20, $page, $params);
+        return $this->renderPartial('_payable-summary-details-list', ['orders' => $orders, 'currentPage' => $page, 'userId' => $userId]);
+    }
+
+    public function actionReceivableSummaryDetails(){
+    
+        $fromDateDisplay = $_REQUEST['fromDate'];
+        $toDateDisplay = $_REQUEST['toDate'];
+    
+        $params = [];
+    
+    
+    
+        if($fromDateDisplay != ''){
+            $froms = explode('-',$fromDateDisplay);
+            $params['fromDate'] = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        }
+        if($toDateDisplay != ''){
+            $tos = explode('-',$toDateDisplay);
+            $params['toDate'] = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        }
+    
+        $params['vendorId'] = $_REQUEST['id'];
+        $orders = Orders::getSalesOrders( 20, 1, $params);
+    
+         
+    
+        return $this->render('receivable-summary-details', ['fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'orders' => $orders, 'userId' => $_REQUEST['id'], 'url' => '/admin/vendors/receivable-summary-details-viewpage']);
+    }
+    
+    public function actionReceivableSummaryDetailsViewpage(){
+        $page = $_REQUEST['page'];
+        $userId = $_REQUEST['userId'];
+        $params = $_REQUEST['filter'];
+    
+        if($params['fromDate'] != ''){
+            $froms = explode('-',$params['fromDate']);
+            $params['fromDate'] = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        }
+        if($params['toDate'] != ''){
+            $tos = explode('-',$params['toDate']);
+            $params['toDate'] = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        }
+    
+        $orders = Orders::getSalesOrders(20, $page, $params);
+        return $this->renderPartial('_receivable-summary-details-list', ['orders' => $orders, 'currentPage' => $page, 'userId' => $userId]);
+    }
+    
 
     /**
      * Displays a single User model.
