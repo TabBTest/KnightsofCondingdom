@@ -19,7 +19,6 @@ $totalCount = $orders['count'];
             <th>Confirmed Time</th>
             <th>Start Time</th>
             <th>Picked-up Time</th>
-            <th>Action</th>          
         </tr>
     </thead>
     <tbody>
@@ -42,7 +41,6 @@ $totalCount = $orders['count'];
             <th>Confirmed Time</th>
             <th>Start Time</th>
             <th>Picked-up Time</th>
-            <th>Action</th>            
         </tr>
     </thead>
     <tbody>
@@ -52,7 +50,7 @@ $totalCount = $orders['count'];
         <tr class="" data-id="<?php echo $orderInfo->id?>">
             <td><?php echo $customer->firstName?></td>
             <td><?php echo $customer->lastName?></td>
-            <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)"># <?php echo $orderInfo->getOrderId()?></a></td>
+            <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)"><?php echo $orderInfo->getOrderId()?></a></td>
             <td>
             <?php if($orderInfo->isPaid == 1){
             ?>
@@ -75,7 +73,7 @@ $totalCount = $orders['count'];
             <?php 
             }?>
             </td>
-            <td><?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->date_created );?></td>
+            <td><?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->date_created, 'H:i');?></td>
             <td>           
                 <?php if($orderInfo->status == Orders::STATUS_PROCESSED){?>
                 <i data-toggle="tooltip" data-placement="left" title="Processed Order" class="fa fa-check alert-success" aria-hidden="true"></i>                
@@ -88,7 +86,7 @@ $totalCount = $orders['count'];
             <td>
                 <?php if($orderInfo->date_created != null){?>
                 <?php if($orderInfo->confirmedDateTime != null){?>
-                <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->confirmedDateTime );?>
+                <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->confirmedDateTime, 'H:i');?>
                 <?php }
                 }?>
                 
@@ -96,19 +94,16 @@ $totalCount = $orders['count'];
             <td>
                 <?php if($orderInfo->confirmedDateTime != null){?>
                 <?php if($orderInfo->startDateTime != null){?>
-                <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->startDateTime );?>
+                <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->startDateTime, 'H:i');?>
                 <?php }
                 }?>
             </td>
             <td>
                 <?php if($orderInfo->startDateTime != null){?>
                 <?php if($orderInfo->pickedUpDateTime != null){?>
-                <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->pickedUpDateTime );?>
+                <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->pickedUpDateTime, 'H:i');?>
                 <?php }
                 }?>
-            </td>
-           <td>
-                <a data-toggle="tooltip" data-placement="left" title="Archive Order" href='javascript: Order.archiveOrder(<?php echo $orderInfo->id?>)'><i class="fa fa-file-archive-o" aria-hidden="true"></i></a>
             </td>
         </tr>
         <?php }?>

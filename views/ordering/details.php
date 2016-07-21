@@ -85,7 +85,17 @@ use app\models\User;
                 echo '-';
             }?>
             </label>
-        </div>    
+        </div>
+        <br />
+        <div class="col-xs-12">
+            <label class="form-label">
+                <button type="button"
+                        class="btn btn-danger btn-sm"
+                        onclick="javascript: Order.archiveOrder(<?= $orderInfo->id ?>)">
+                    Archive
+                </button>
+            </label>
+        </div>
     </div>
     
     

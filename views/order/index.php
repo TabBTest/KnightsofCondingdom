@@ -94,7 +94,7 @@ $this->registerJs($pageJs, $this::POS_READY);
         <div class="col-xs-9 form-group">
             <label class="form-label">* Orders older than 24 hours are automatically archived.</label>
         </div>
-        <div class="col-xs-12 vendor-order-body" data-user-id='<?php echo $userId?>' data-url='<?php echo $url?>'>
+        <div class="vendor-order-body" data-user-id='<?php echo $userId?>' data-url='<?php echo $url?>'>
             <?php echo $this->render('_list', ['orders' => $orders, 'userId' => $userId]);?>
         </div>
     </div>
@@ -141,7 +141,7 @@ $this->registerJs($pageJs, $this::POS_READY);
                 </form>
             </div>
         </div>
-        <div class="col-xs-12 vendor-order-archived-body"
+        <div class="vendor-order-archived-body"
              data-user-id="<?= $userId ?>"
              data-url="<?= $urlArchive ?>">
             <?= $this->render('_archive_list', ['orders' => $archivedOrders, 'userId' => $userId]) ?>
