@@ -13,12 +13,12 @@ var paths = {
 
 gulp.task('scripts', function() {
   return gulp.src(paths.scripts)
-    .pipe(gulp.dest('build/js'));
+    .pipe(gulp.dest('gulp-build/js'));
 });
 
 gulp.task('css', function() {
   return gulp.src(paths.css)
-    .pipe(gulp.dest('build/css'));
+    .pipe(gulp.dest('gulp-build/css'));
 });
 
 gulp.task('sass', function() {
@@ -28,7 +28,7 @@ gulp.task('sass', function() {
       includePaths: '../vendor/bower/bootstrap-sass/assets/stylesheets'}).on('error', sass.logError))
     .pipe(concat('bootstrap-material-design.min.css'))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('build/css'));
+    .pipe(gulp.dest('gulp-build/css'));
 });
 
 gulp.task('default', ['scripts', 'css', 'sass']);
