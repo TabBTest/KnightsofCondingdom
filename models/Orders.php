@@ -299,7 +299,7 @@ class Orders extends \yii\db\ActiveRecord
     public function getTotalReceivableCost(){
         //do we include the cc charge here
         //return $this->getFoodCost() + $this->getWebFee() + $this->getSalesTax() + $this->getDeliveryCharge() - $this->getDiscount();
-        return $this->getFoodCost() +  $this->getSalesTax() + $this->getDeliveryCharge() - $this->getDiscount();
+        return $this->getFoodCost() +  $this->getSalesTax() + $this->getDeliveryCharge() - ($this->getDiscount() + $this->getCCFee());
     }
     
     public function getTotalAdminReceivableCost(){
