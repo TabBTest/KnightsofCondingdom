@@ -1,6 +1,7 @@
 <form action='/menu/save-category' method='POST' enctype="multipart/form-data" id='category-item-form'>
     <input type='hidden' name='id' value='<?php echo $category->id?>'/>
     <input type='hidden' name='vendorId' value='<?php echo $category->vendorId?>'/>
+    <input type='hidden' name='vendorMenuId' value='<?php echo $category->vendorMenuId?>'/>
     <input type='hidden' name='sorting' value='<?php echo $category->sorting?>'/>
     <div class='row'>
         <div class='col-xs-12 form-group'>

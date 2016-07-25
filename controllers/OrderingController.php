@@ -85,11 +85,8 @@ class OrderingController extends CController
         $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
         
         $userVendor = User::findOne($tenantInfo->userId);
-        $vendorMenu = User::getVendorDefaultMenu($userVendor);
-    
-        $vendorCategories = MenuCategories::find()->where('isArchived = 0 and vendorId = '.$tenantInfo->userId.' order by sorting asc')->all();
-        
-        return $this->render('index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories, 'vendor' => $userVendor]);
+         
+        return $this->render('index', ['vendor' => $userVendor]);
     }
     
     

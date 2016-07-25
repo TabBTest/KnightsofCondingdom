@@ -317,10 +317,11 @@ class VendorsController extends CController
             $vendorMenu->isDefault = 1;
             $vendorMenu->save();
         }
+        $vendorId = $user->id;
         
         $vendorCategories = MenuCategories::find()->where('isArchived = 0 and vendorId = '.$user->id.' order by sorting asc')->all();
         
-        return $this->render('/../../../views/menu/index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
+        return $this->render('/../../../views/menu/index', ['vendorId' => $vendorId, 'menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
     }
     
     public function actionPayments(){

@@ -32,7 +32,7 @@ class VendorMenu extends \yii\db\ActiveRecord
         return [
             [['name', 'isDefault', 'vendorId'], 'required'],
             [['isDefault', 'vendorId'], 'integer'],
-            [['date_created', 'date_updated'], 'safe'],
+            [['date_created', 'date_updated', 'startTime', 'endTime'], 'safe'],
             [['name'], 'string', 'max' => 250],
         ];
     }
@@ -50,5 +50,37 @@ class VendorMenu extends \yii\db\ActiveRecord
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];
+    }
+    public function isMenuOpenForOrder(){
+    
+        //get the current day
+        $user = User::findOne($this->vendorId);
+    
+        $date_time_zone = new \DateTimeZone($user->timezone );
+        $date_time_current = new \DateTime('now', $date_time_zone);
+        
+        if($this->startTime == null || $this->startTime == ''){
+            return false;
+        }
+        $date_time = new \DateTime('now', $date_time_zone);
+        $timeComponent = explode(':', $this->startTime);
+        $date_time->setTime($timeComponent[0], $timeComponent[1], 0);
+
+        $date_time_close = new \DateTime('now', $date_time_zone);
+        $timeComponent = explode(':', $this->endTime);
+        $date_time_close->setTime($timeComponent[0], $timeComponent[1], 0);
+
+//         var_dump(date('H:i', $date_time->getTimestamp()) );
+
+//         var_dump(date('H:i', $date_time_close->getTimestamp()) );
+
+//         var_dump(date('H:i', $date_time_current->getTimestamp()) );
+        
+        if($date_time->getTimestamp() <= $date_time_current->getTimestamp() && $date_time_current->getTimestamp() <= $date_time_close->getTimestamp()){
+            return true;
+        }
+            
+    
+        return false;
     }
 }

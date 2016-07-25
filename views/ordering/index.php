@@ -5,6 +5,8 @@ use yii\widgets\MaskedInput;
 use app\helpers\UtilityHelper;
 use app\models\TenantInfo;
 use app\models\VendorOperatingHours;
+use app\models\VendorMenu;
+use app\models\MenuCategories;
 $this->title = 'Menu';
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -101,14 +103,64 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
     </div>
 </div>
 
+
+
+
+
 <div class="row">
     <div class="col-xs-12 col-md-8">
-        <div class="panel panel-primary">
-            <h2 class="panel-heading text-center">Menu</h2>
-            <div class="col-xs-12">
-                <a href="#" class="btn btn-default openall pull-right">Expand All</a>
-                <a href="#" class="btn btn-default closeall pull-right">Close All</a>
+    <div class="panel panel-primary">
+    <ul class="nav nav-tabs">    
+<?php 
+$allMenus = VendorMenu::findAll(['vendorId' => $vendor->id]);
+foreach($allMenus as $index => $menus){
+    $className = '';
+    if(isset($_REQUEST['menuId']) && $_REQUEST['menuId'] != ''){
+        if($_REQUEST['menuId'] == $menus->id)
+            $className = 'active';
+    }else if($index == 0){
+        $className = 'active';
+    }
+?>
+ <li class="<?php echo $className?>">
+ <a data-toggle="tab" href="#menu-<?php echo $menus->id?>"><?php echo $menus->name?></a></li>
+<?php 
+}?>
+</ul>
+    </div>
+        
+            
+            <div class="tab-content">
+<?php 
+foreach($allMenus as $index => $menu){
+    $className = '';
+    if(isset($_REQUEST['menuId']) && $_REQUEST['menuId'] != ''){
+        if($_REQUEST['menuId'] == $menu->id)
+            $className = 'active';
+    }else if($index == 0){
+        $className = 'active';
+    }
+    $openForOrder = $menu->isMenuOpenForOrder();
+?>
+ <div id="menu-<?php echo $menu->id?>" class="tab-pane <?php echo $className?>">
+     
+     <div class="row">
+        <div class="col-xs-12" id="menu-heading">            
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary openall" data-id="<?php echo $menu->id?>">Expand All</button>
+                <button type="button" class="btn btn-primary closeall" data-id="<?php echo $menu->id?>">Close All</button>
             </div>
+        </div>
+    </div>
+    <?php 
+    $vendorCategories = MenuCategories::find()->where('vendorMenuId = '.$menu->id.' and isArchived = 0 order by sorting asc')->all();
+    
+    
+    foreach($vendorCategories as $category){
+    ?>
+        <div class="panel panel-danger categories-panel" style="margin-bottom: 20px;" data-category-id="<?php echo $category->id?>">
+            
+            
             <div class="panel-group categories-main-panel" id="accordion">
                 <?php
                 foreach($vendorCategories as $category) {
@@ -149,7 +201,7 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
                                                 continue;
                                             ?>
                                             <li class="col-xs-12 col-sm-12 col-md-6 list-group-item add-to-cart"
-                                                data-menu-item-id="<?= $item->id ?>">
+                                                data-menu-item-id="<?= $item->id ?>" data-open-for-order='<?php echo $openForOrder?>'>
                                                 <label class="col-md-10 form-label menu-name"><?= $item->name?></label>
                                                 <span class="col-md-2 pull-right">
                                                     <strong>
@@ -168,12 +220,21 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
                         </div>
                     </div>
                 <?php } ?>
-            </div>
-        </div>
-    </div>
+                    </div>
+    
+          </div>
+          
+        
+    <?php }?> 
+ </div>
+<?php 
+}?>
+    
+</div>
+</div>
     <div class="col-xs-12 col-sm-12 col-md-4">
         <div class="panel panel-primary">
-            <h2 class="panel-heading text-center">Order Summary</h2>
+            <h2 class="panel-heading text-center" style='margin-top: 0'>Order Summary</h2>
             <form id="main-order-summary" action="/ordering/save" method="POST">
                 <div class="col-xs-12 main-order-summary-content">
                     <div class="col-xs-12 text-center">

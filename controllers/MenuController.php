@@ -33,7 +33,7 @@ class MenuController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['add-category-add-ons','edit-category-add-ons', 'save-category-add-ons', 'delete-category-add-ons', 'add-item-add-ons','edit-item-add-ons', 'save-item-add-ons', 'delete-item-add-ons', 'index','add-category', 'save-category', 'edit-category', 'add-item','edit-item', 'save-item', 'delete-item','delete-category', 'save-menu-sort','save-menu-add-on-sort', 'save-category-sort'],
+                        'actions' => ['edit', 'save-menu', 'delete-menu', 'create', 'add-category-add-ons','edit-category-add-ons', 'save-category-add-ons', 'delete-category-add-ons', 'add-item-add-ons','edit-item-add-ons', 'save-item-add-ons', 'delete-item-add-ons', 'index','add-category', 'save-category', 'edit-category', 'add-item','edit-item', 'save-item', 'delete-item','delete-category', 'save-menu-sort','save-menu-add-on-sort', 'save-category-sort'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -47,7 +47,52 @@ class MenuController extends CController
             ],
         ];
     }
-    
+    public function actionDeleteMenu(){
+        $menu = VendorMenu::findOne($_REQUEST['id']);
+        if($menu){
+            $menu->delete();
+            \Yii::$app->getSession()->setFlash('success', 'Menu Category Deleted Successfully');
+        }
+    }
+    public function actionSaveMenu(){
+        $nextUrl = '/menu';
+        if(count($_POST) > 0){
+            
+            
+            
+            $menuId = $_POST['id'];
+            $vendorMenu = VendorMenu::findOne($menuId);
+            if($vendorMenu == null){
+                $vendorMenu = new VendorMenu();
+                $vendorMenu->vendorId = isset($_POST['vendorId']) ? intval($_POST['vendorId']) : 0;
+                $vendorMenu->isDefault = 0;
+            }
+            
+            $vendorMenu->name = $_POST['name'];
+            $vendorMenu->startTime = $_POST['startTime'];
+            $vendorMenu->endTime = $_POST['endTime'];
+            $vendorMenu->save();
+            
+            if(Yii::$app->user->identity->role == User::ROLE_ADMIN){
+                $nextUrl = '/admin/vendors/menu?id='.$vendorMenu->vendorId.'&menuId='.$vendorMenu->id;
+            }else{
+                $nextUrl .= '?menuId='.$vendorMenu->id;
+            }
+            
+            \Yii::$app->getSession()->setFlash('success', 'Menu Saved Successfully');
+            
+        }
+        return $this->redirect($nextUrl);
+    }
+    public function actionCreate(){
+        $model = new VendorMenu();
+        $model->vendorId = $_REQUEST['vendorId'];
+        return $this->renderPartial('menu-form', ['model' => $model]);
+    }
+    public function actionEdit(){
+        $model = VendorMenu::findOne($_REQUEST['id']);
+        return $this->renderPartial('menu-form', ['model' => $model]);
+    }
 
     /**
      * Lists all ApplicationType models.
@@ -64,10 +109,10 @@ class MenuController extends CController
             $vendorMenu->isDefault = 1;
             $vendorMenu->save();
         }
-        
+        $vendorId = \Yii::$app->user->id;
         $vendorCategories = MenuCategories::find()->where('isArchived = 0 and vendorId = '.$user->id.' order by sorting asc')->all();
         
-        return $this->render('index', ['menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
+        return $this->render('index', ['vendorId' => $vendorId, 'menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
     }
     
     public function actionAddItem(){
@@ -251,6 +296,7 @@ class MenuController extends CController
         $sorting = $_REQUEST['sorting'];
         $menuCategory = new MenuCategories();
         $menuCategory->vendorId = \Yii::$app->user->id;
+        $menuCategory->vendorMenuId = $_REQUEST['menuId'];
         $menuCategory->sorting = $sorting;
         return $this->renderPartial('add-category', ['category' => $menuCategory]);
     }
@@ -272,6 +318,7 @@ class MenuController extends CController
                 $category = new MenuCategories();
                 $category->sorting = intval($_POST['sorting']);
                 $category->vendorId = intval($_POST['vendorId']);
+                $category->vendorMenuId = intval($_POST['vendorMenuId']);
             }
     
             $category->name = $_POST['name'];
@@ -279,7 +326,9 @@ class MenuController extends CController
             $category->save();
                 
             if(Yii::$app->user->identity->role == User::ROLE_ADMIN){
-                $nextUrl = '/admin/vendors/menu?id='.$category->vendorId;
+                $nextUrl = '/admin/vendors/menu?id='.$category->vendorId.'&menuId='.$category->vendorMenuId;
+            }else{
+                $nextUrl .= '?menuId='.$category->vendorMenuId;
             }
     
             \Yii::$app->getSession()->setFlash('success', 'Menu Category Saved Successfully');

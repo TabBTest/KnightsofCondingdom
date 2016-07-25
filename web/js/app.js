@@ -9,11 +9,11 @@ $(document).ready(function () {
   $('#register-form .fieldset:eq(0)').fadeIn('slow');
 
   $('.closeall').click(function () {
-    $('.panel-collapse.in')
+    $('#menu-'+$(this).data('id')+' .panel-collapse.in')
       .collapse('hide');
   });
   $('.openall').click(function () {
-    $('.panel-collapse:not(".in")')
+    $('#menu-'+$(this).data('id')+' .panel-collapse:not(".in")')
       .collapse('show');
   });
 
@@ -124,8 +124,8 @@ $(document).ready(function () {
   }
 
   $('.add-category-item').on('click', function () {
-    var sorting = $('.vendor-menu-categories').length + 1;
-    $.get('/menu/add-category', 'sorting=' + sorting, function (html) {
+    var sorting = $('#menu-'+$(this).data('id')+' .vendor-menu-categories').length + 1;
+    $.get('/menu/add-category', 'sorting=' + sorting+'&menuId='+$(this).data('id'), function (html) {
       $('#custom-modal .modal-title').html('Add Category');
       $('#custom-modal .modal-body').html(html);
       $('#custom-modal').modal('show');
@@ -319,7 +319,10 @@ $(document).ready(function () {
     $('.add-ons-popover').popover({'placement': 'top', 'trigger': 'hover'});
 
   $('.add-to-cart').on('click', function () {
-    var sorting = $('.vendor-menu-categories').length + 1;
+    if($(this).data('open-for-order') == 0){
+    	Messages.showError('Item is not available for ordering as of this time.');
+    	return;
+    }
     $.get('/ordering/add-item', 'menuItemId=' + $(this).data('menu-item-id'), function (html) {
       $('#custom-modal .modal-body').html(html);
       $('#custom-modal .modal-title').html(menuItemTitle);
@@ -1250,6 +1253,54 @@ var VendorSettings = {
     $.post('/vendor/preview-hours', $('.vendor-settings-form').serialize(), function (html) {
       $('.preview-operating-hours').html(html);
     });
+  },
+  addMenu : function(vendorId){
+	  $.get('/menu/create', 'vendorId='+vendorId, function(html){
+		  $('#custom-modal .modal-title').html('Add Menu');
+	      $('#custom-modal .modal-body').html(html);
+	      $('#custom-modal').modal('show');
+	  });
+	  
+  },
+  editMenu : function(menuId){
+	  $.get('/menu/edit', 'id='+menuId, function(html){
+		  $('#custom-modal .modal-title').html('Edit Menu');
+	      $('#custom-modal .modal-body').html(html);
+	      $('#custom-modal').modal('show');
+	  });
+	  
+  },
+  saveMenu : function(){
+	  	$('#menu-form .has-error').removeClass('has-error');
+	    $('#menu-form input[type="text"], #menu-form select').each(function () {
+	      if ($(this).val() == '') {
+	        $(this).parent().addClass('has-error');
+	      }
+	      
+	    });
+
+	    if ($('#menu-form .has-error').length == 0) {
+	      $('#menu-form').submit();
+	    }
+	  
+  },
+  deleteMenu : function(id){
+	  swal({
+          title: "Delete Menu?",
+          text: "Are you sure you want to delete this menu?",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonText: 'Yes, remove it',
+          cancelButtonText: 'No, keep it'
+        },
+        function (isConfirm) {
+          if (isConfirm) {
+            $.post('/menu/delete-menu', 'id=' + id, function (html) {
+              window.location.href = '/menu';
+            });
+          }
+        }
+      );
   }
 }
 var Vendors  = {
