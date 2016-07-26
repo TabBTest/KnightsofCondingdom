@@ -3,6 +3,7 @@
 use app\models\VendorMenuItem;
 use app\models\MenuCategories;
 use app\models\VendorMenu;
+
 $this->title = 'Menu';
 $this->params['breadcrumbs'][] = $this->title;
 ?>

@@ -34,10 +34,8 @@ use app\models\MenuCategories;
             <button type='button' class='btn' data-dismiss="modal">Close</button>
             <?php if($menuItemAddOns->isNewRecord == false){?>
             <?php if($menuItemAddOns->menuCategoryId > 0){?>
-                <button class='btn btn-info add-menu-item-add-ons-internal' data-type='category' data-menu-category-id='<?php echo $menuItemAddOns->menuCategoryId?>' type='button'>Add New</button>
                 <button class='btn btn-danger delete-menu-item-add-on'  data-type='category' type='button' data-menu-category-id='<?php echo $menuItemAddOns->menuCategoryId?>' data-menu-item-add-on-id='<?php echo $menuItemAddOns->id?>'>Delete</button>
             <?php }else{?>
-                <button class='btn btn-info add-menu-item-add-ons-internal' data-type='menu-item' data-menu-item-id='<?php echo $menuItemAddOns->vendorMenuItemId?>' type='button'>Add New</button>
                 <button class='btn btn-danger delete-menu-item-add-on'  data-type='menu-item' type='button' data-menu-item-id='<?php echo $menuItemAddOns->vendorMenuItemId?>' data-menu-item-add-on-id='<?php echo $menuItemAddOns->id?>'>Delete</button>
             <?php }?>
                 
@@ -50,7 +48,7 @@ use app\models\MenuCategories;
 <ul class="nav nav-tabs">
     
     <li class="active"><a data-toggle="tab" href="#tab-exclusive">Exclusive</a></li>
-    <li><a data-toggle="tab" href="#tab-additions">Additions</a></li>    
+    <li><a data-toggle="tab" href="#tab-additions">Additions</a></li>
 </ul>
 
 <div class="tab-content">    

@@ -1016,16 +1016,21 @@ var VendorMenu = {
     });
 
     if ($('#menu-item-add-ons-form .has-error').length == 0) {
-      //$('#menu-item-add-ons-form').submit();
 
-      $.post('/menu/save-item-add-ons', $('#menu-item-add-ons-form').serialize(), function (data) {
+      var menuItemAddonData = $('#menu-item-add-ons-form').serialize();
+      var menuItemAddonDataJson = JSON.parse(JSON.stringify($('#menu-item-add-ons-form').serializeArray()));
+      var addonType = Boolean(parseInt(menuItemAddonDataJson[4].value)) ? 'exclusive' : 'additions';
+
+      $.post('/menu/save-item-add-ons', menuItemAddonData, function (data) {
         var resp = $.parseJSON(data);
         if (resp.status == 1) {
-          Messages.showSuccess('Add On Saved Successfully');
-          if (resp.type == 'menu-item')
-            VendorMenu.editAddOn(resp.id);
-          else if (resp.type == 'category')
-            VendorMenu.editAddOn(resp.id);
+          Messages.showSuccess('Add-on Saved Successfully');
+          if (resp.type == 'menu-item') {
+            VendorMenu.openNewAddOn(menuItemAddonDataJson[0].value, addonType);
+          }
+          else if (resp.type == 'category') {
+            VendorMenu.openNewAddOnCategory(menuItemAddonDataJson[1].value, addonType);
+          }
         }
       })
     }
@@ -1140,54 +1145,29 @@ var VendorMenu = {
               });
             }
           });
-
-      });
-
-      $('.add-menu-item-add-ons-internal').off('click');
-      $('.add-menu-item-add-ons-internal').on('click', function () {
-        var menuItemId = $(this).data('menu-item-id');
-        var type = $(this).data('type');
-        var menuCategoryId = $(this).data('menu-category-id');
-        swal({
-            title: "New Add-on",
-            content: "Are you sure you want to add new add-on?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
-          },
-          function (isConfirm) {
-            if (isConfirm) {
-              if (type == 'menu-item')
-                VendorMenu.openNewAddOn($(this).data('menu-item-id'));
-              else if (type == 'category') {
-                VendorMenu.openNewAddOnCategory(menuCategoryId);
-              }
-            }
-          });
       });
     });
   },
   newAddOn: function () {
     if ($(this).data('type') == 'menu-item')
-      VendorMenu.openNewAddOn($(this).data('menu-item-id'));
+      VendorMenu.openNewAddOn($(this).data('menu-item-id'), 'additions');
     else if ($(this).data('type') == 'category')
-      VendorMenu.openNewAddOnCategory($(this).data('menu-category-id'));
+      VendorMenu.openNewAddOnCategory($(this).data('menu-category-id'), 'additions');
   },
-  openNewAddOn: function (menuItemId) {
-    //var sorting = $('.vendor-menu-item-add-on-'+menuItemId).length + 1;
+  openNewAddOn: function (menuItemId, addonType) {
     $.get('/menu/add-item-add-ons', 'id=' + menuItemId, function (html) {
       $('#custom-modal .modal-title').html('Add Menu Item - Add-ons');
       $('#custom-modal .modal-body').html(html);
       $('#custom-modal').modal('show');
+      $('.nav-tabs a[href="#tab-' + addonType + '"]').tab('show');
     })
   },
-  openNewAddOnCategory: function (menuCategoryId) {
-    //var sorting = $('.vendor-menu-item-add-on-'+menuItemId).length + 1;
+  openNewAddOnCategory: function (menuCategoryId, addonType) {
     $.get('/menu/add-category-add-ons', 'id=' + menuCategoryId, function (html) {
       $('#custom-modal .modal-title').html('Add Category - Add-ons');
       $('#custom-modal .modal-body').html(html);
       $('#custom-modal').modal('show');
+      $('.nav-tabs a[href="#tab-' + addonType + '"]').tab('show');
     })
   }
 }

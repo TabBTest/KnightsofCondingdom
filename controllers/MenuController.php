@@ -57,33 +57,32 @@ class MenuController extends CController
     public function actionSaveMenu(){
         $nextUrl = '/menu';
         if(count($_POST) > 0){
-            
-            
-            
             $menuId = $_POST['id'];
             $vendorMenu = VendorMenu::findOne($menuId);
+
             if($vendorMenu == null){
                 $vendorMenu = new VendorMenu();
                 $vendorMenu->vendorId = isset($_POST['vendorId']) ? intval($_POST['vendorId']) : 0;
                 $vendorMenu->isDefault = 0;
             }
-            
+
             $vendorMenu->name = $_POST['name'];
             $vendorMenu->startTime = $_POST['startTime'];
             $vendorMenu->endTime = $_POST['endTime'];
             $vendorMenu->save();
-            
-            if(Yii::$app->user->identity->role == User::ROLE_ADMIN){
+
+            if(Yii::$app->user->identity->role == User::ROLE_ADMIN) {
                 $nextUrl = '/admin/vendors/menu?id='.$vendorMenu->vendorId.'&menuId='.$vendorMenu->id;
-            }else{
+            } else {
                 $nextUrl .= '?menuId='.$vendorMenu->id;
             }
-            
+
             \Yii::$app->getSession()->setFlash('success', 'Menu Saved Successfully');
-            
         }
+
         return $this->redirect($nextUrl);
     }
+
     public function actionCreate(){
         $model = new VendorMenu();
         $model->vendorId = $_REQUEST['vendorId'];

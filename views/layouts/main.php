@@ -162,8 +162,8 @@ window.location.href = '/';
     
 
     <div class="container-fluid">
-      <?php echo $this->render('_card_warning', []);?>
-      <?php echo $this->render('_vendor_warning', []);?>
+      <?= $this->render('_card_warning', []);?>
+      <?= $this->render('_vendor_warning', []);?>
       <?= $content ?>
     </div>
 </div>

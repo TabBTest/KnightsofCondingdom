@@ -154,8 +154,8 @@ foreach($allMenus as $index => $menu){
     </div>
     <?php 
     $vendorCategories = MenuCategories::find()->where('vendorMenuId = '.$menu->id.' and isArchived = 0 order by sorting asc')->all();
-    
-    
+
+
     foreach($vendorCategories as $category){
     ?>
         <div class="panel panel-danger categories-panel" style="margin-bottom: 20px;" data-category-id="<?php echo $category->id?>">
@@ -221,11 +221,11 @@ foreach($allMenus as $index => $menu){
                     </div>
                 <?php } ?>
                     </div>
-    
+
           </div>
           
         
-    <?php }?> 
+    <?php }?>
  </div>
 <?php 
 }?>
