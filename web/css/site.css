@@ -209,15 +209,10 @@ div.panel-title > label.price-on-colored-panel {
 }
 
 form#current-order-form {
-    margin-top: 0px;
+    margin-top: 0;
 }
 
-form#current-order-form > .form-group {
-    margin-top: 0px;
-    margin-right: 10px;
-}
-
-div#search-box-current-orders, div#search-box-sales-orders , div#search-box-payable-orders{
+div#search-box-current-orders {
     margin-top: 26px;
     padding: 0 0 0 0;
 }
@@ -227,19 +222,29 @@ div#search-box-current-orders > div.panel-heading:hover {
 }
 
 form#archived-order-form {
-    margin-top: 0px;
+    margin-top: 0;
 }
 
-form#archived-order-form > .form-group {
-    margin-top: 0px;
+form#current-order-form > .form-group,
+form#archived-order-form > .form-group,
+form#sales-form > .form-group,
+form#admin-receivable-form > .form-group {
+    margin-top: 0;
     margin-right: 10px;
 }
 
-div#search-box-archived-orders {
-    margin-top: 26px;
+div#search-box-sales-orders,
+div#sales-summary,
+div#search-box-payable-orders,
+div#payable-summary,
+div#receivable-summary {
     padding: 0 0 0 0;
 }
 
-div#search-box-archived-orders > div.panel-heading:hover {
+div#search-box-sales-orders > div.panel-heading:hover,
+div#sales-summary > div.panel-heading:hover,
+div#search-box-payable-orders > div.panel-heading:hover,
+div#payable-summary > div.panel-heading:hover,
+div#receivable-summary > div.panel-heading:hover{
     cursor: pointer;
 }

@@ -102,16 +102,13 @@ AppAsset::register($this);
     </nav>
 
 
-    <div class="container">      
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
+    <div class="container-fluid">
         <?= $content ?>
     </div>
 </div>
 
 <footer class="footer">
-    <div class="container">
+    <div class="container-fluid">
         <p class="pull-left">&copy; Restalutions <?= date('Y') ?></p>
     </div>
 </footer>
