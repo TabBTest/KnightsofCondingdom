@@ -162,9 +162,7 @@ foreach($allMenus as $index => $menu){
             
             
             <div class="panel-group categories-main-panel" id="accordion">
-                <?php
-                foreach($vendorCategories as $category) {
-                ?>
+                
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="panel panel-danger"
                              style="margin-bottom: 20px;"
@@ -219,8 +217,7 @@ foreach($allMenus as $index => $menu){
                             </div>
                         </div>
                     </div>
-                <?php } ?>
-                    </div>
+                </div>
 
           </div>
           
