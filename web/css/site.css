@@ -248,3 +248,9 @@ div#payable-summary > div.panel-heading:hover,
 div#receivable-summary > div.panel-heading:hover{
     cursor: pointer;
 }
+.summary td{
+	text-align: left;
+}
+.summary td.amounts{
+	text-align: right;
+}

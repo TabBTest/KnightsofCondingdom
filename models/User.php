@@ -460,7 +460,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $orders = Orders::getSalesOrders('ALL', 1, $params);
         $totalAmount = 0;
         foreach($orders['list'] as $order){
-            $totalAmount = $order->getTotalReceivableCost();
+            $totalAmount += $order->getTotalReceivableCost();
         }
         return $totalAmount;        
     }

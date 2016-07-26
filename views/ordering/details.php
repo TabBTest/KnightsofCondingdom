@@ -86,14 +86,44 @@ use app\models\User;
             }?>
             </label>
         </div>
+        <?php if($orderInfo->isCancelled == 1){?>
+        <div class='col-xs-12'>
+            <label class='form-label'>CANCELLED : 
+            <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->cancellation_date );?> - <?php echo $orderInfo->getCancelledBy()->getFullName();?>
+            </label>
+            
+        </div>
+        <?php }?>
+        <?php if($orderInfo->isRefunded == 1){?>
+        <div class='col-xs-12'>
+            <label class='form-label'>REFUNDED : 
+            <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->refund_date );?> - <?php echo $orderInfo->getRefundedBy()->getFullName();?>
+            </label>
+            
+        </div>
+        <?php }?>
         <br />
         <div class="col-xs-12">
             <label class="form-label">
                 <button type="button"
-                        class="btn btn-danger btn-sm"
+                        class="btn btn-raised  btn-danger btn-sm"
                         onclick="javascript: Order.archiveOrder(<?= $orderInfo->id ?>)">
                     Archive
                 </button>
+                <?php if($orderInfo->isCancelled != 1){?>
+                <button type="button"
+                        class="btn btn-raised btn-danger btn-sm"
+                        onclick="javascript: Order.cancelOrder(<?= $orderInfo->id ?>)">
+                    Cancel Order
+                </button>
+                <?php }?>
+                <?php if($orderInfo->isPaid == 1 && $orderInfo->isRefunded != 1){?>
+                <button type="button"
+                        class="btn btn-raised btn-danger btn-sm"
+                        onclick="javascript: Order.refundOrder(<?= $orderInfo->id ?>)">
+                    Refund
+                </button>
+                <?php }?>
             </label>
         </div>
     </div>

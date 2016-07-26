@@ -504,6 +504,10 @@ var Order = {
 	      $('.vendor-sales-body').html(html);
 	      setupUi();
 	    })
+	    
+	    $.get($('.vendor-sales-body').data('url-summary'), 'userId=' + $('.vendor-sales-body').data('user-id') + '&' + param, function (html) {
+	      $('#sales-summary').html(html);
+	    })
     }
   },
   loadAdminReceivableOrder : function(){
@@ -519,6 +523,11 @@ var Order = {
 	      $('.admin-receivable-body').html(html);
 	      setupUi();
 	    })
+	    
+	    $.get($('.admin-receivable-body').data('url-summary'), 'userId=' + $('.admin-receivable-body').data('user-id') + '&' + param, function (html) {
+	      $('#sales-summary').html(html);
+	    })
+	    
     }
   },
   search: function (type) {
@@ -624,6 +633,60 @@ var Order = {
           })
         }
       });
+  },
+  cancelNow : function(){
+	  $('#cancel-form .has-error').removeClass('has-error');
+	  if($('#cancel-form textarea').val() == ''){
+		  $('#cancel-form textarea').parent().addClass('has-error');
+	  }
+	  if($('#cancel-form .has-error').length == 0){
+		  $.post('/order/cancel', $('#cancel-form').serialize(), function(data){
+			  var resp = $.parseJSON(data);
+			  if(resp.status == 1){
+				  Messages.showSuccess('Order Cancellation Successful');
+				  if ($('#custom-modal').hasClass('in')) {
+		              Customer.viewOrder($('#cancel-form input[name="id"]').val());
+		            }
+			  }else{
+				  Messages.showError('Order Cancellation Failed');
+			  }
+		  });
+	  }
+  },
+  refundNow : function(){
+	  $('#refund-form .has-error').removeClass('has-error');
+	  if($('#refund-form textarea').val() == ''){
+		  $('#refund-form textarea').parent().addClass('has-error');
+	  }
+	  if($('#refund-form .has-error').length == 0){
+		  $.post('/order/refund', $('#refund-form').serialize(), function(data){
+			  var resp = $.parseJSON(data);
+			  if(resp.status == 1){
+				  Messages.showSuccess('Order Refund Successful');
+				  if ($('#custom-modal').hasClass('in')) {
+		              Customer.viewOrder($('#refund-form input[name="id"]').val());
+		            }
+			  }else{
+				  Messages.showError('Order Refund Failed');
+			  }
+		  });
+	  }
+  },
+  cancelOrder : function (orderId) {
+	  $.get('/order/cancel', 'id='+orderId, function(data){
+		  var resp = $.parseJSON(data);
+		  $('#custom-modal .modal-title').html('Cancel Order');
+	      $('#custom-modal .modal-body').html(resp.html);
+	      $('#custom-modal').modal('show');  
+	  });
+  },
+  refundOrder : function (orderId) {
+	  $.get('/order/refund', 'id='+orderId, function(data){
+		  var resp = $.parseJSON(data);
+		  $('#custom-modal .modal-title').html('Refund Order');
+	      $('#custom-modal .modal-body').html(resp.html);
+	      $('#custom-modal').modal('show');  
+	  });
   },
   showItemOrderSummary: function () {
     $.post('/ordering/item-order-summary', $('#item-order-summary').serialize(), function (html) {

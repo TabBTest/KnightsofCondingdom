@@ -20,7 +20,7 @@ class OrderController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'viewpage',  'viewpagearchive', 'confirm', 'start', 'pickup', 'mark-paid', 'archive'],
+                        'actions' => ['index','cancel','refund', 'viewpage',  'viewpagearchive', 'confirm', 'start', 'pickup', 'mark-paid', 'archive'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -98,4 +98,33 @@ class OrderController extends CController
         $order->save();
         die;
     }
+    
+    public function actionCancel(){
+        $orderId = $_REQUEST['id'];
+        $resp = [];
+        if(count($_POST) > 0){
+            $order = Orders::findOne($orderId);
+            $order->cancelOrder($_POST['reason'], \Yii::$app->user->id);
+            $resp['status'] = 1;
+        }else{
+            $resp['html'] = $this->renderPartial('cancel', ['orderId' => $orderId]);
+        }
+        echo json_encode($resp);
+        die;
+    }
+    
+    public function actionRefund(){
+        $orderId = $_REQUEST['id'];
+        $resp = [];
+        if(count($_POST) > 0){
+            $order = Orders::findOne($orderId);
+            $isRefunded = $order->refundOrder($_POST['reason'], \Yii::$app->user->id);
+            $resp['status'] = $isRefunded ? 1 : 0;
+        }else{
+            $resp['html'] = $this->renderPartial('refund', ['orderId' => $orderId]);
+        }
+        echo json_encode($resp);
+        die;
+    }
+    
 }

@@ -20,7 +20,7 @@ class SalesController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'viewpage'],
+                        'actions' => ['index', 'viewpage', 'summary'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -52,7 +52,21 @@ class SalesController extends CController
         $fromDateDisplay = date('m-01-Y', strtotime('now'));
         $toDateDisplay = date('m-d-Y', strtotime('now'));
         
-        return $this->render('index', ['fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'orders' => $orders, 'userId' => \Yii::$app->user->id, 'url' => '/sales/viewpage']);
+        $salesSummary = $this->renderPartial('_summary', ['orders' => Orders::getSalesOrders( 'ALL', 1, $params)]);
+        
+        return $this->render('index', ['salesSummary' => $salesSummary, 'fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'orders' => $orders, 'userId' => \Yii::$app->user->id, 'url' => '/sales/viewpage', 'urlSummary' => '/sales/summary']);
+    }
+    
+    public function actionSummary(){
+        $userId = $_REQUEST['userId'];
+        $params = $_REQUEST['filter'];
+        $froms = explode('-',$params['fromDate']);
+        $tos = explode('-',$params['toDate']);
+        $params['fromDate'] = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        $params['toDate'] = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        
+        return $this->renderPartial('_summary', ['orders' => Orders::getSalesOrders( 'ALL', 1, $params)]);
+        
     }
     
     public function actionViewpage(){

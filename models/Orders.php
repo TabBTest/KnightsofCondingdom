@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use Stripe\Refund;
 
 /**
  * This is the model class for table "orders".
@@ -50,10 +51,59 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['customerId', 'vendorId', 'status'], 'required'],
             [['customerId', 'vendorId', 'status'], 'integer'],
-            [['isDelivery','isCancelled','isRefunded','cancellation_date','refund_date', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
+            [['isDelivery','cancelReason','refundTransactionId', 'refundReason','cancelledByUserId','refundedByUserId', 'isCancelled','isRefunded','cancellation_date','refund_date', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
         ];
     }
     
+    public function getCancelledBy(){
+        return User::findOne($this->cancelledByUserId);
+    }
+    public function getRefundedBy(){
+        return User::findOne($this->refundedByUserId);
+    }
+    
+    public function cancelOrder($reason, $userId){
+        $this->cancelReason = $reason;
+        $this->cancelledByUserId = $userId;
+        $this->isCancelled = 1;
+        $this->cancellation_date = date('Y-m-d H:i:s', strtotime('now'));
+        $this->save();
+    }
+    public function refundOrder($reason, $userId){
+        $doRefund = false;
+        if($this->paymentType == self::PAYMENT_TYPE_CARD){
+            //do stripe refund
+            \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
+           
+            $ch = \Stripe\Charge::retrieve($this->transactionId);
+            $chargeObject = $ch->__toArray(true);
+            $bookingAmount = floatval($chargeObject['amount'] / 100) - floatval($chargeObject['amount_refunded'] / 100);
+            //$refundAmount = floatval($userBooking->amount) - $totalCancellationCost;
+            $refundAmount = $bookingAmount;
+            $refundAmount = $refundAmount * 100;
+           
+            $re = $ch->refunds->create(['amount'=>$refundAmount]);
+            $chargeArray = $re->__toArray(true);
+            
+            
+            if($this->refundTransactionId == null && $chargeArray['status'] == 'succeeded'){
+                $this->refundTransactionId = $chargeArray['id'];
+                $this->save();
+                $doRefund = true;
+            }
+        }else if($this->paymentType == self::PAYMENT_TYPE_CASH){
+            $doRefund = true;
+        }
+        if($doRefund){
+            $this->refundReason = $reason;
+            $this->refundedByUserId = $userId;
+            $this->isRefunded = 1;
+            $this->refund_date = date('Y-m-d H:i:s', strtotime('now'));
+            $this->save();
+            return true;
+        }
+        return false;
+    }
 
     /**
      * @inheritdoc
@@ -145,8 +195,8 @@ class Orders extends \yii\db\ActiveRecord
             $limitSql = ' limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage);
         }
         
-        $resp['list'] = Orders::find()->where('isCancelled = 0 and isPaid = 1 '.$extraSQL.' order by id desc '.$limitSql)->all();
-        $resp['count'] = Orders::find()->where('isCancelled = 0 and isPaid = 1 '.$extraSQL)->count();
+        $resp['list'] = Orders::find()->where('isRefunded = 0 and isPaid = 1 '.$extraSQL.' order by id desc '.$limitSql)->all();
+        $resp['count'] = Orders::find()->where('isRefunded = 0 and isPaid = 1 '.$extraSQL)->count();
         return $resp;
     }
     public static function getVendorOrders($userId, $resultsPerPage, $page, $filters){
@@ -299,7 +349,7 @@ class Orders extends \yii\db\ActiveRecord
     public function getTotalReceivableCost(){
         //do we include the cc charge here
         //return $this->getFoodCost() + $this->getWebFee() + $this->getSalesTax() + $this->getDeliveryCharge() - $this->getDiscount();
-        return $this->getFoodCost() +  $this->getSalesTax() + $this->getDeliveryCharge() - ($this->getDiscount() + $this->getCCFee());
+        return $this->getFoodCost() +  $this->getSalesTax() + $this->getDeliveryCharge() - ($this->getDiscount() + $this->getCCFee() + $this->getWebFee());
     }
     
     public function getTotalAdminReceivableCost(){

@@ -7,11 +7,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php echo $this->render('//partials/_show_message', []);?>
 
-<div class="row">
-    <div class="col-xs-12 text-center">
-        <h1><?php echo Yii::$app->session->get('name')?></h1>
-    </div>
-</div>
 
 <div id="search-box-sales-orders" class="col-md-5 panel panel-primary">
     <div class="panel-heading" data-toggle="collapse" data-target="#search-box-current-orders-body">
@@ -40,15 +35,16 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<div id="sales-summary" class="col-md-offset-1 col-md-6 panel panel-primary">
-    <div class="panel-heading" data-toggle="collapse" data-target="#sales-summary-body">
-        <h4 class="panel-title">Sales Summary</h4>
+<div id="search-box-sales-orders" class="col-md-4 col-md-offset-1 panel panel-primary">
+    <div class="panel-heading" data-toggle="collapse" data-target="#sales-summary">
+        <h4 class="panel-title">Summary</h4>
     </div>
-    <div id="sales-summary-body" class="collapse in panel-body">
-        Sample Data here
+    <div id="sales-summary" class="collapse in panel-body">
+        <?php  echo $salesSummary?>
+        
     </div>
 </div>
 
-<div class="admin-receivable-body" data-user-id='<?php echo $userId?>' data-url='<?php echo $url?>'>
+<div class="admin-receivable-body" data-user-id='<?php echo $userId?>' data-url='<?php echo $url?>' data-url-summary='<?php echo $urlSummary?>'>
     <?php echo $this->render('_receivable-summary-details-list', ['orders' => $orders, 'userId' => $userId]);?>
 </div>

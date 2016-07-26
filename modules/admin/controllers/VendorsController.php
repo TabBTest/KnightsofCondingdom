@@ -29,7 +29,7 @@ class VendorsController extends CController
                 'rules' => [
                     [
                        
-                        'actions' => ['receivable-summary-details','receivable-summary-details-viewpage', 'receivable','view-vendors-receivable', 'payable-summary-details','payable-summary-details-viewpage', 'payable','view-vendors-payable', 'receivable','overrides','view-vendors', 'index','config', 'customers', 'settings', 'payments', 'viewpage', 'menu'],
+                        'actions' => ['payable-summary','receivable-summary', 'receivable-summary-details','receivable-summary-details-viewpage', 'receivable','view-vendors-receivable', 'payable-summary-details','payable-summary-details-viewpage', 'payable','view-vendors-payable', 'receivable','overrides','view-vendors', 'index','config', 'customers', 'settings', 'payments', 'viewpage', 'menu'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -126,9 +126,27 @@ class VendorsController extends CController
         $params['vendorId'] = $_REQUEST['id'];
         $orders = Orders::getSalesOrders( 20, 1, $params);
         
-       
+        $salesSummary = $this->renderPartial('_summary', ['orders' => Orders::getSalesOrders( 'ALL', 1, $params)]);
         
-        return $this->render('payable-summary-details', ['fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'orders' => $orders, 'userId' => $_REQUEST['id'], 'url' => '/admin/vendors/payable-summary-details-viewpage']);
+        
+        return $this->render('payable-summary-details', ['salesSummary' => $salesSummary, 'fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'orders' => $orders, 'userId' => $_REQUEST['id'], 'url' => '/admin/vendors/payable-summary-details-viewpage',  'urlSummary' => '/admin/vendors/payable-summary']);
+    }
+    
+    public function actionPayableSummary(){
+        $userId = $_REQUEST['userId'];
+        $params = $_REQUEST['filter'];
+                
+        if($params['fromDate'] != ''){
+            $froms = explode('-',$params['fromDate']);
+            $params['fromDate'] = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        }
+        if($params['toDate'] != ''){
+            $tos = explode('-',$params['toDate']);
+            $params['toDate'] = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        }
+        
+        return $this->renderPartial('_summary', ['orders' => Orders::getSalesOrders( 'ALL', 1, $params)]);
+        
     }
     
     public function actionPayableSummaryDetailsViewpage(){
@@ -170,9 +188,29 @@ class VendorsController extends CController
         $params['vendorId'] = $_REQUEST['id'];
         $orders = Orders::getSalesOrders( 20, 1, $params);
     
-         
+        $salesSummary = $this->renderPartial('_summary', ['orders' => Orders::getSalesOrders( 'ALL', 1, $params)]);
+        
     
-        return $this->render('receivable-summary-details', ['fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'orders' => $orders, 'userId' => $_REQUEST['id'], 'url' => '/admin/vendors/receivable-summary-details-viewpage']);
+        return $this->render('receivable-summary-details', ['salesSummary'=>$salesSummary, 'fromDateDisplay' => $fromDateDisplay, 'toDateDisplay' => $toDateDisplay, 'orders' => $orders, 'userId' => $_REQUEST['id'], 'url' => '/admin/vendors/receivable-summary-details-viewpage', 'urlSummary' => '/admin/vendors/receivable-summary']);
+    }
+    
+    public function actionReceivableSummary(){
+        $userId = $_REQUEST['userId'];
+        $params = $_REQUEST['filter'];
+    
+        if($params['fromDate'] != ''){
+            $froms = explode('-',$params['fromDate']);
+            $params['fromDate'] = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        }
+        if($params['toDate'] != ''){
+            $tos = explode('-',$params['toDate']);
+            $params['toDate'] = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        }
+        
+        //reight now we jsut reuse
+    
+        return $this->renderPartial('_summary', ['orders' => Orders::getSalesOrders( 'ALL', 1, $params)]);
+    
     }
     
     public function actionReceivableSummaryDetailsViewpage(){
