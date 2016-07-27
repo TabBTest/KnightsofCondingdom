@@ -470,12 +470,23 @@ var Order = {
 
   },
   setUpWorkflow : function(){
+	  $('#checkout-modal .fieldset').hide();
 	  $('#checkout-modal .fieldset:eq(0)').fadeIn('slow');
 	  
 	  $('#checkout-modal .btn-back').off('click');
 	  $('#checkout-modal .btn-back').on('click', function(){
+		  var step = $(this).data('step');
 		  $(this).parents('.fieldset').fadeOut(400, function() {
-	    		$(this).prev().fadeIn();
+			  if(step == 'step2'){
+				  $(this).prev().fadeIn();  
+			  }else if(step == 'step3'){
+				  if(Order.isAddNewDeliveryAddress()){
+					  $(this).parent().find('.fieldset.step2').fadeIn();  
+				  }else{
+					  $(this).parent().find('.fieldset.step1').fadeIn();  
+				  }
+			  }
+	    		
 	    		
 	    	});
 	  });
@@ -498,25 +509,43 @@ var Order = {
 	     });
 
 	     if (next_step) {
-    	   
-	    	 if(Order.isAddNewCC() == false){
-	    		 $('#main-order-summary').submit();
-	    	 }else if($(this).data('cc-info') == 1){
-	    		 
-	    	         $(this).attr('disabled', true);
-	    	         Stripe.card.createToken({
-	    	           number: $('.card-number').val(),
-	    	           cvc: $('.card-cvv').val(),
-	    	           exp_month: $('.card-expiry-month').val(),
-	    	           exp_year: $('.card-expiry-year').val()
-	    	         }, stripeResponseOrderHandler);
-
-	    	       
-	    		 
-	    	 }else{
-	    		 parent_fieldset.fadeOut(400, function () {
-	    	          $(this).next().fadeIn();
-	    	        });
+    	    
+	    	 if($(this).data('step') == 'step1'){
+	    		 if(Order.isAddNewDeliveryAddress()){
+	    			 //move to step 2
+	    			 parent_fieldset.fadeOut(400, function () {
+	    				 if(Order.isAddNewCC()){
+	    					 $('#checkout-modal .fieldset.step2 .btn-next').html('Continue');
+	    				 }else{
+	    					 $('#checkout-modal .fieldset.step2 .btn-next').html('Pay Now');
+	    				 }
+		    	          $(this).parent().find('.fieldset.step2').fadeIn();
+		    	        });
+	    		 }else if(Order.isAddNewCC()){
+	    			 //move to step 3
+	    			 parent_fieldset.fadeOut(400, function () {
+	    				 $(this).parent().find('.fieldset.step3').fadeIn();
+		    	        });
+	    		 }else{
+	    			 $('#main-order-summary').submit();
+	    		 }
+	    	 }else if($(this).data('step') == 'step2'){
+	    		 if(Order.isAddNewCC()){
+	    			 //move to step 3
+	    			 parent_fieldset.fadeOut(400, function () {
+	    				 $(this).parent().find('.fieldset.step3').fadeIn();
+		    	        });
+	    		 }else{
+	    			 $('#main-order-summary').submit();
+	    		 }
+	    	 }else if($(this).data('step') == 'step3'){
+	    		 $(this).attr('disabled', true);
+    	         Stripe.card.createToken({
+    	           number: $('.card-number').val(),
+    	           cvc: $('.card-cvv').val(),
+    	           exp_month: $('.card-expiry-month').val(),
+    	           exp_year: $('.card-expiry-year').val()
+    	         }, stripeResponseOrderHandler);
 	    	 }
 	    	 
 	       //$(this).parent().parent().removeClass('has-error');
@@ -528,10 +557,21 @@ var Order = {
   },
   changeCardToUse : function(){
 	  if($('select[name="cardToUse"]').val() == 'current'){
-		  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Pay Now');
+		  if($('.has-delivery').length == 1 && $('.has-delivery').is(':checked') == true &&  $('select[name="deliveryAddressType"]').length == 1 && $('select[name="deliveryAddressType"]').val() != 'current'){
+			  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Continue');
+		  }else{
+			  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Pay Now');
+		  }
 	  }else{
 		  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Continue');
 	  }
+  },
+  isAddNewDeliveryAddress : function(){
+	  if($('.has-delivery').length == 1 && $('.has-delivery').is(':checked') == true && 
+	  $('select[name="deliveryAddressType"]').length == 1 && $('select[name="deliveryAddressType"]').val() != 'current'){
+		  return true;
+	  }
+	  return false;
   },
   isAddNewCC : function(){
 	  if($('input[name="paymentType"]:checked').val() == 1 && $('select[name="cardToUse"]').val() != 'current'){
@@ -550,7 +590,16 @@ var Order = {
 	  }else{
 		  $('select[name="cardToUse"]').hide();
 		  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Pay Now');
-	  }  
+	  } 
+	  
+	  if($('select[name="deliveryAddressType"]').length == 1){
+		  $('select[name="deliveryAddressType"]').off('change');
+		  $('select[name="deliveryAddressType"]').on('change', Order.changeCardToUse);
+	  }
+	  
+	  if($('.has-delivery').length == 1 && $('.has-delivery').is(':checked') == true &&  $('select[name="deliveryAddressType"]').length == 1 && $('select[name="deliveryAddressType"]').val() != 'current'){
+		  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Continue');
+	  }
   },
   loadVendor: function () {
     var showCompleted = $('#showCompletedOrder').is(':checked') ? 1 : 0;
@@ -803,6 +852,7 @@ var Order = {
       if ($('.has-delivery').length == 1) {
         $('.has-delivery').off('click');
         $('.has-delivery').on('click', function () {
+        	$('#checkout-modal').modal('hide');
           Order.refreshMainOrderSummary();
         });
       }

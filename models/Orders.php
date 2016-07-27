@@ -51,12 +51,16 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['customerId', 'vendorId', 'status'], 'required'],
             [['customerId', 'vendorId', 'status'], 'integer'],
-            [['customBillingName','customBillingAddress','customBillingState', 'customBillingCity','customBillingCardLast4', 'isDelivery','cancelReason','refundTransactionId', 'refundReason','cancelledByUserId','refundedByUserId', 'isCancelled','isRefunded','cancellation_date','refund_date', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
+            [['deliveryAddress','deliveryCity','deliveryState','customBillingName','customBillingAddress','customBillingState', 'customBillingCity','customBillingCardLast4', 'isDelivery','cancelReason','refundTransactionId', 'refundReason','cancelledByUserId','refundedByUserId', 'isCancelled','isRefunded','cancellation_date','refund_date', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
         ];
     }
-    
-    
-    
+    public function getDeliveryAddress(){
+        if($this->deliveryAddress == null){
+            $customerInfo = User::findOne($this->customerId);
+            return  $customerInfo->getFullAddress();
+        }
+        return $this->deliveryAddress.', '.$this->deliveryCity.', '.$this->deliveryState;
+    }
     public function getCancelledBy(){
         return User::findOne($this->cancelledByUserId);
     }

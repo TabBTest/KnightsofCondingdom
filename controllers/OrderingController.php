@@ -287,6 +287,17 @@ class OrderingController extends CController
                         $order->paymentType = Orders::PAYMENT_TYPE_CASH;
                     }
                
+                    $order->deliveryAddress = $user->billingStreetAddress;
+                    $order->deliveryCity = $user->billingCity;
+                    $order->deliveryState = $user->billingState;
+                    $isNewDeliveryAddress = false;
+                    if(isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1){
+                        if($_POST['deliveryAddressType'] == 'new'){
+                            $order->deliveryAddress = $_POST['deliveryStreetAddress'];
+                            $order->deliveryCity = $_POST['deliveryCity'];
+                            $order->deliveryState = $_POST['deliveryState'];
+                        }
+                    }
                     
                     if($order->save()){
                         if($paymentType == Orders::PAYMENT_TYPE_CARD){

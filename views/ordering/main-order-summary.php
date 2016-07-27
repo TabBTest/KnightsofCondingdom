@@ -193,7 +193,7 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
                     <h4 class="modal-title" id="checkout-modal-label">Order Checkout</h4>
                 </div>
                 <div class="modal-body">
-                    <div class='fieldset'>
+                    <div class='fieldset step1'>
                         <?php if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){?>
                             <div class="form-group">
                                 <div class="">
@@ -201,6 +201,12 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
                                     <div class="checkbox">
                                         <label>
                                             <input type="checkbox" <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value="1" class="has-delivery" name="isDelivery" data-amount="<?php echo TenantHelper::getDeliveryAmount()?>"/>
+                                        
+                                             &nbsp;&nbsp;&nbsp;
+                                            <select style='display: <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'block' : 'none' ?>' name='deliveryAddressType'>
+                                                <option value='current'><?php echo $model->getFullAddress()?></option>
+                                                <option value='new'>New Address</option>
+                                            </select>
                                         </label>
                                     </div>
                                 </div>
@@ -237,13 +243,37 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
                         </div>
                         
                         <div class='col-xs-12 form-group text-center'>
-                            <button type="button" class="btn btn-raised btn-primary btn-next">Pay Now</button>
+                            <button type="button" class="btn btn-raised btn-primary btn-next" data-step='step1'>Pay Now</button>
                         </div>
                         
                     </div>
-                    
                     <!-- for new cc -->
-                    <div class='fieldset' style='display: none'>
+                    <div class='fieldset step2' style='display: none'>
+                       
+                        
+                        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+                            <input type='text' class='form-control' name='deliveryStreetAddress'  placeholder='Street Address'/>
+                        </div>
+                        <div class='col-xs-12 col-sm-9 col-md-4 col-md-offset-3 form-group'>
+                            <input type='text' class='form-control' name='deliveryCity'  placeholder='City'/>
+                        </div>
+                        <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+                            <select class='form-control' name='deliveryState'>
+                                <option value="" selected disabled hidden>State</option>
+                                <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
+                                <option value="<?php echo $stateCode?>" ><?php echo $stateCode?></option>
+                            <?php }?>
+                            </select>
+                        </div>
+                      
+                
+                        <div class='col-xs-12 form-group text-center'>
+                            <button type="button" class="btn btn-raised btn-default btn-back" data-step='step2'>Back</button>
+                            <button type="button" class="btn btn-raised btn-primary btn-next btn-next-address" data-step='step2'>Continue</button>
+                        </div>
+                    </div>
+                    <!-- for new cc -->
+                    <div class='fieldset step3' style='display: none'>
                        
                         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
                             <input type='text' class='form-control' name='billingName' placeholder='Billing Name'/>
@@ -291,8 +321,8 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
                         </div>
                 
                         <div class='col-xs-12 form-group text-center'>
-                            <button type="button" class="btn btn-raised btn-default btn-back">Back</button>
-                            <button type="button" class="btn btn-raised btn-primary btn-next btn-next-cc" data-cc-info='1'>Pay Now</button>
+                            <button type="button" class="btn btn-raised btn-default btn-back" data-step='step3'>Back</button>
+                            <button type="button" class="btn btn-raised btn-primary btn-next btn-next-cc" data-step='step3'>Pay Now</button>
                         </div>
                     </div>
                 </div>

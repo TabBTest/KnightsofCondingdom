@@ -19,7 +19,7 @@ use app\models\User;
             <label class='form-label'>Customer Name: <?php echo $customerInfo->getFullName();?></label>
         </div>
         <div class='col-xs-12'>
-            <label class='form-label'>Address: <?php echo $customerInfo->getFullAddress();?></label>
+            <label class='form-label'>Address: <?php echo $orderInfo->getDeliveryAddress();?></label>
         </div>
         <div class='col-xs-12'>
             <label class='form-label'>Contact #: <?php echo $customerInfo->getContactNumber();?></label>
