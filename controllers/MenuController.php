@@ -264,10 +264,8 @@ class MenuController extends CController
                 $allAddOns = [];
                 if($vendorMenuItemAddOn->menuCategoryId > 0){
                     $allAddOns = VendorMenuItemAddOns::findAll(['menuCategoryId' => $vendorMenuItemAddOn->menuCategoryId , 'isArchived' => 0, 'isExclusive' => intval($_POST['isExclusive'])]);
-                    $type = 'category';
                 }else{
                     $allAddOns = VendorMenuItemAddOns::findAll(['vendorMenuItemId' => $vendorMenuItemAddOn->vendorMenuItemId , 'isArchived' => 0, 'isExclusive' => intval($_POST['isExclusive'])]);
-                    $type = 'menu-item';
                 }
                 $vendorMenuItemAddOn->sorting = count($allAddOns)  + 1;
             }
@@ -278,7 +276,11 @@ class MenuController extends CController
             $vendorMenuItemAddOn->isExclusive = intval($_POST['isExclusive']);
             $vendorMenuItemAddOn->save();
     
-            
+            if($vendorMenuItemAddOn->menuCategoryId > 0){
+                $type = 'category';
+            }else{
+                $type = 'menu-item';
+            } 
     
             \Yii::$app->getSession()->setFlash('success', 'Menu Item Add On Saved Successfully');
             $resp['status'] = 1;

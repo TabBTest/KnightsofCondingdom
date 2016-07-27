@@ -144,9 +144,36 @@ class OrderingController extends CController
                     }
                 }
                 
-                //we need to add here the sales tax
                 $subdomain = TenantHelper::getSubDomain();
                 $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
+                
+                
+                $discount = false;
+                $couponDiscountDisplay = false;
+                $vendorCoupon = false;
+                if(isset($_POST['couponCode']) && $_POST['couponCode'] != ''){
+                    $couponCode = $_POST['couponCode'];
+                    $vendorCoupon = VendorCoupons::isValidCoupon($couponCode, $tenantInfo->userId);
+                
+                    if($vendorCoupon->discountType == VendorCoupons::TYPE_AMOUNT){
+                        $couponDiscountDisplay = 'Coupon Discount ($'.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).')';
+                        $discount = floatval($vendorCoupon->discount);
+                
+                    }else if($vendorCoupon->discountType == VendorCoupons::TYPE_PERCENTAGE){
+                        $couponDiscountDisplay = 'Coupon Discount ('.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).'%)';
+                        $discount = $finalAmount * (floatval($vendorCoupon->discount) / 100);
+                    }
+                
+                    if($discount !== false){
+                        if($finalAmount >= $discount){
+                            $finalAmount = $finalAmount - $discount;
+                        }else{
+                            $finalAmount = 0;
+                        }
+                    }
+                }
+                
+                //we need to add here the sales tax
                 $salesTax = 0;
                 $salesTaxPercent = 0;
                 $salesTaxAmount = 0;
@@ -173,30 +200,7 @@ class OrderingController extends CController
                 }
                 
                 $totalFinalAmount += $deliveryFee;
-                $discount = false;
-                $couponDiscountDisplay = false;
-                $vendorCoupon = false;
-                if(isset($_POST['couponCode']) && $_POST['couponCode'] != ''){
-                    $couponCode = $_POST['couponCode'];
-                    $vendorCoupon = VendorCoupons::isValidCoupon($couponCode, $tenantInfo->userId);
                 
-                    if($vendorCoupon->discountType == VendorCoupons::TYPE_AMOUNT){
-                        $couponDiscountDisplay = 'Coupon Discount ($'.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).')';
-                        $discount = floatval($vendorCoupon->discount);
-                        
-                    }else if($vendorCoupon->discountType == VendorCoupons::TYPE_PERCENTAGE){
-                        $couponDiscountDisplay = 'Coupon Discount ('.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).'%)';
-                        $discount = $totalFinalAmount * (floatval($vendorCoupon->discount) / 100);
-                    }
-                    
-                    if($discount !== false){
-                        if($totalFinalAmount >= $discount){
-                            $totalFinalAmount = $totalFinalAmount - $discount;
-                        }else{
-                            $totalFinalAmount = 0;
-                        }
-                    }
-                }
                 
                 //still need to include delivery
                 //still need to check if cash payment
@@ -307,6 +311,24 @@ class OrderingController extends CController
                             }
                     
                         }
+                        
+                        if($discount){
+                            $orderDetails = new OrderDetails();
+                            $orderDetails->orderId = $order->id;
+                            $orderDetails->vendorMenuItemId = 0;
+                            $orderDetails->name = $couponDiscountDisplay;
+                            $orderDetails->amount = $discount;
+                            $orderDetails->quantity = 1;
+                            $orderDetails->totalAmount = $discount;
+                            $orderDetails->type = OrderDetails::TYPE_COUPON;
+                            $orderDetails->save();
+                        
+                            $vendorCouponOrder = new VendorCouponOrders();
+                            $vendorCouponOrder->orderId = $order->id;
+                            $vendorCouponOrder->vendorCouponId = $vendorCoupon->id;
+                            $vendorCouponOrder->save();
+                        }
+                        
                         //add for the sales tax
                         $orderDetails = new OrderDetails();
                         $orderDetails->orderId = $order->id;
@@ -340,22 +362,7 @@ class OrderingController extends CController
                             $orderDetails->type = OrderDetails::TYPE_ADMIN_FEE;
                             $orderDetails->save();
                         }
-                        if($discount){
-                            $orderDetails = new OrderDetails();
-                            $orderDetails->orderId = $order->id;
-                            $orderDetails->vendorMenuItemId = 0;
-                            $orderDetails->name = $couponDiscountDisplay;
-                            $orderDetails->amount = $discount;
-                            $orderDetails->quantity = 1;
-                            $orderDetails->totalAmount = $discount;
-                            $orderDetails->type = OrderDetails::TYPE_COUPON;
-                            $orderDetails->save();
-                            
-                            $vendorCouponOrder = new VendorCouponOrders();
-                            $vendorCouponOrder->orderId = $order->id;
-                            $vendorCouponOrder->vendorCouponId = $vendorCoupon->id;
-                            $vendorCouponOrder->save();
-                        }
+                        
                         
                         \Yii::$app->getSession()->setFlash('success', 'Order submitted successfully.');
 

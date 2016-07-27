@@ -263,7 +263,10 @@ class Orders extends \yii\db\ActiveRecord
         $orderDetails = OrderDetails::findAll(['orderId' => $this->id]);
         $finalAmount = 0;
         foreach($orderDetails as $detail){
-            $finalAmount += $detail->totalAmount;
+            if($detail->type == OrderDetails::TYPE_COUPON)
+                $finalAmount -= $detail->totalAmount;
+            else
+                $finalAmount += $detail->totalAmount;
         }
         return $finalAmount;
     }

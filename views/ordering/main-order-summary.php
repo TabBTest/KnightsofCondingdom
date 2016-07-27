@@ -90,8 +90,40 @@ $vendorCoupon = false;
         } 
     }
     $itemsFinalAmount = $finalAmount;
-    $totalFinalAmount = $finalAmount * $salesTax;
-    $salesTax = $totalFinalAmount - $finalAmount;
+    
+    
+?>
+<?php if($vendorCoupon){?>
+<tr>
+    <td>&nbsp;</td>
+    <td><label class='form-label'>
+    <?php $couponDiscountDisplay = '';
+    $discount = false;
+    if($vendorCoupon->discountType == VendorCoupons::TYPE_AMOUNT){
+        $couponDiscountDisplay = 'Coupon Discount ($'.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).')';
+        $discount = floatval($vendorCoupon->discount);
+        
+    }else if($vendorCoupon->discountType == VendorCoupons::TYPE_PERCENTAGE){
+        $couponDiscountDisplay = 'Coupon Discount ('.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).'%)';
+        $discount = $itemsFinalAmount * (floatval($vendorCoupon->discount) / 100);
+    }
+    
+    if($discount !== false){
+        if($itemsFinalAmount >= $discount){
+            $itemsFinalAmount = $itemsFinalAmount - $discount;
+        }else{
+            $itemsFinalAmount = 0;
+        }
+    }
+    ?>    
+    <?php echo $couponDiscountDisplay?></label></td>
+    <td><label class='form-label discount-amount' data-type='<?php echo $vendorCoupon->discountType?>' data-discount='<?php echo $vendorCoupon->discount?>'>$<?php echo UtilityHelper::formatAmountForDisplay($discount)?></label></td>
+</tr>
+<?php }?>
+<?php 
+
+$totalFinalAmount = $itemsFinalAmount * $salesTax;
+$salesTax = $totalFinalAmount - $itemsFinalAmount;
 ?>
 <tr>
     <td>&nbsp;</td>
@@ -127,33 +159,7 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
     <td><label class='form-label'>$<?php echo UtilityHelper::formatAmountForDisplay($adminFee)?></label></td>
 </tr>
 <?php }?>
-<?php if($vendorCoupon){?>
-<tr>
-    <td>&nbsp;</td>
-    <td><label class='form-label'>
-    <?php $couponDiscountDisplay = '';
-    $discount = false;
-    if($vendorCoupon->discountType == VendorCoupons::TYPE_AMOUNT){
-        $couponDiscountDisplay = 'Coupon Discount ($'.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).')';
-        $discount = floatval($vendorCoupon->discount);
-        
-    }else if($vendorCoupon->discountType == VendorCoupons::TYPE_PERCENTAGE){
-        $couponDiscountDisplay = 'Coupon Discount ('.UtilityHelper::formatAmountForDisplay($vendorCoupon->discount).'%)';
-        $discount = $totalFinalAmount * (floatval($vendorCoupon->discount) / 100);
-    }
-    
-    if($discount !== false){
-        if($totalFinalAmount >= $discount){
-            $totalFinalAmount = $totalFinalAmount - $discount;
-        }else{
-            $totalFinalAmount = 0;
-        }
-    }
-    ?>    
-    <?php echo $couponDiscountDisplay?></label></td>
-    <td><label class='form-label discount-amount' data-type='<?php echo $vendorCoupon->discountType?>' data-discount='<?php echo $vendorCoupon->discount?>'>$<?php echo UtilityHelper::formatAmountForDisplay($discount)?></label></td>
-</tr>
-<?php }?>
+
 <tr>
     <td>&nbsp;</td>
     <td><label class='form-label'>Total</label></td>

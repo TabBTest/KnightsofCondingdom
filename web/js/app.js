@@ -773,6 +773,7 @@ var Order = {
         var resp = $.parseJSON(data);
         if (resp.status == 1) {
           Order.refreshMainOrderSummary();
+          $('#checkout-modal').modal('hide');
         } else {
           Messages.showError('Invalid Coupon Code');
         }
@@ -1200,10 +1201,10 @@ var VendorMenu = {
               $.post('/menu/delete-item-add-ons', 'id=' + itemAddOnId, function (html) {
                 if (type == 'menu-item') {
                   Messages.showSuccess('Menu Item Add-on Deleted Successfully');
-                  VendorMenu.openNewAddOn(menuItemId);
+                  VendorMenu.openNewAddOn(menuItemId, 'additions');
                 } else if (type == 'category') {
                   Messages.showSuccess('Menu Category Add-on Deleted Successfully');
-                  VendorMenu.openNewAddOnCategory(menuCategoryId);
+                  VendorMenu.openNewAddOnCategory(menuCategoryId, 'additions');
                 }
               });
             }
@@ -1219,7 +1220,7 @@ var VendorMenu = {
   },
   openNewAddOn: function (menuItemId, addonType) {
     $.get('/menu/add-item-add-ons', 'id=' + menuItemId, function (html) {
-      $('#custom-modal .modal-title').html('Add Menu Item - Add-ons');
+      $('#custom-modal .modal-title').html('Menu Item - Add-ons');
       $('#custom-modal .modal-body').html(html);
       $('#custom-modal').modal('show');
       $('.nav-tabs a[href="#tab-' + addonType + '"]').tab('show');
@@ -1227,7 +1228,7 @@ var VendorMenu = {
   },
   openNewAddOnCategory: function (menuCategoryId, addonType) {
     $.get('/menu/add-category-add-ons', 'id=' + menuCategoryId, function (html) {
-      $('#custom-modal .modal-title').html('Add Category - Add-ons');
+      $('#custom-modal .modal-title').html('Category - Add-ons');
       $('#custom-modal .modal-body').html(html);
       $('#custom-modal').modal('show');
       $('.nav-tabs a[href="#tab-' + addonType + '"]').tab('show');
