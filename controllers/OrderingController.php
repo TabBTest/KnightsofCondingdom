@@ -222,35 +222,70 @@ class OrderingController extends CController
                 }
                 $order->notes = $notes;
                 
+                
+                
                 if($paymentType == Orders::PAYMENT_TYPE_CARD){
+                   
                     $finalAmount = number_format($totalFinalAmount, 2, '.', '');
                     \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
                     $amount = $finalAmount * 100;
-                    $charge = \Stripe\Charge::create(
-                        array(
-                            "amount" => $amount,
-                            "currency" => "usd",
-                            "customer" => $user->stripeId, // obtained with Stripe.js
-                            "description" => "Order Charge for Customer ID: ".$user->id,
-                           // 'metadata' => $customerOrdersMetaData
-                        )  );
                     
-                    //echo $charge;
-                    $chargeArray = $charge->__toArray(true);
-                    
-                    if($chargeArray['status'] == 'succeeded'){
+                    $isNewCard = false;
+                    $chargeArray = [];
+                    if($_POST['cardToUse'] != 'current'){
+                        $isNewCard = true;
+                    }
+                    if($isNewCard === false){
+                        $charge = \Stripe\Charge::create(
+                            array(
+                                "amount" => $amount,
+                                "currency" => "usd",
+                                "customer" => $user->stripeId, // obtained with Stripe.js
+                                "description" => "Order Charge for Customer ID: ".$user->id,
+                               // 'metadata' => $customerOrdersMetaData
+                            )  );
+                        
+                        //echo $charge;
+                        $chargeArray = $charge->__toArray(true);
+                    }else{
+                        //new card
+                        $charge = \Stripe\Charge::create(
+                            array(
+                                "amount" => $amount,
+                                "currency" => "usd",
+                                "source" => $_POST['stripeToken'],
+                                "description" => "Order Charge for Customer ID: ".$user->id,
+                                // 'metadata' => $customerOrdersMetaData
+                            )  );
+                        
+                        //echo $charge;
+                        $chargeArray = $charge->__toArray(true);
+                    }
+                    if(isset($chargeArray['status']) && $chargeArray['status'] == 'succeeded'){
                         $order->transactionId = $chargeArray['id'];
                         $order->cardLast4 = $user->cardLast4;
+                        
+                        if($isNewCard){
+                            $order->cardLast4 = $chargeArray['source']['last4'];;
+                            $order->customBillingName = $_POST['billingName'];
+                            $order->customBillingAddress = $_POST['billingStreetAddress'];
+                            $order->customBillingCity = $_POST['billingCity'];
+                            $order->customBillingState = $_POST['billingState'];
+                            $order->customBillingCardLast4 = $chargeArray['source']['last4'];;
+                            
+                        }
+                        
+                        
                         $order->paymentType = Orders::PAYMENT_TYPE_CARD;
                         $order->isPaid = 1;
                         $paymentGatewayFee = ($finalAmount * 0.029) + 0.3;
                         $order->paymentGatewayFee = $paymentGatewayFee;
                         
                     }
-                }else if($paymentType == Orders::PAYMENT_TYPE_CASH){
-                    $order->isPaid = 0;
-                    $order->paymentType = Orders::PAYMENT_TYPE_CASH;
-                }
+                    }else if($paymentType == Orders::PAYMENT_TYPE_CASH){
+                        $order->isPaid = 0;
+                        $order->paymentType = Orders::PAYMENT_TYPE_CASH;
+                    }
                
                     
                     if($order->save()){

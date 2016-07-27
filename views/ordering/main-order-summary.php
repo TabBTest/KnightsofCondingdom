@@ -10,12 +10,21 @@ use app\models\MenuCategories;
 use app\controllers\VendorController;
 use app\models\VendorCoupons;
 use app\models\VendorAppConfigOverride;
+use app\models\User;
+
+
 if(isset($params['Orders'])){                         
 ?>
 <div class='col-xs-12 text-center'>
 <table class='table table-condensed'>
     <tbody>
 <?php 
+$model = false;
+if(\Yii::$app->user->identity != null){
+    $model = User::findOne(\Yii::$app->user->identity->id);
+}else{
+    \Yii::$app->response->redirect(['site/login']);
+}
 $finalAmount = 0;
 $itemsFinalAmount = 0;
 $vendorId = false;
@@ -184,44 +193,111 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
                     <h4 class="modal-title" id="checkout-modal-label">Order Checkout</h4>
                 </div>
                 <div class="modal-body">
-                    <?php if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){?>
+                    <div class='fieldset'>
+                        <?php if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){?>
+                            <div class="form-group">
+                                <div class="">
+                                    <label class="">Do you want it delivered?</label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value="1" class="has-delivery" name="isDelivery" data-amount="<?php echo TenantHelper::getDeliveryAmount()?>"/>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php }?>
                         <div class="form-group">
+                            <label class="">Payment Type</label>
+    
                             <div class="">
-                                <label class="">Do you want it delivered?</label>
-                                <div class="checkbox">
+                                <div class="radio radio-primary">
                                     <label>
-                                        <input type="checkbox" <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value="1" class="has-delivery" name="isDelivery" data-amount="<?php echo TenantHelper::getDeliveryAmount()?>"/>
+                                        <input type="radio" value="<?php echo Orders::PAYMENT_TYPE_CARD?>" <?php echo !isset($params['paymentType']) || (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CARD) ? "checked" : ""?> name="paymentType"/>Card
+                                        &nbsp;&nbsp;&nbsp;
+                                        <select style='display: none' name='cardToUse'>
+                                            <option value='current'>Existing credit card ending in <?php echo $model->cardLast4?></option>
+                                            <option value='new'>New Card</option>
+                                        </select>
+                                     </label>
+                                   
+                                </div>
+                                <div class="radio radio-primary">
+                                    <label>
+                                        <input type="radio" value="<?php echo Orders::PAYMENT_TYPE_CASH?>" <?php echo (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CASH) ? "checked" : ""?> name="paymentType"/>Cash
                                     </label>
                                 </div>
                             </div>
                         </div>
-                    <?php }?>
-                    <div class="form-group">
-                        <label class="">Payment Type</label>
-
-                        <div class="">
-                            <div class="radio radio-primary">
-                                <label>
-                                    <input type="radio" value="<?php echo Orders::PAYMENT_TYPE_CARD?>" <?php echo !isset($params['paymentType']) || (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CARD) ? "checked" : ""?> name="paymentType"/>Card
-                                </label>
-                            </div>
-                            <div class="radio radio-primary">
-                                <label>
-                                    <input type="radio" value="<?php echo Orders::PAYMENT_TYPE_CASH?>" <?php echo (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CASH) ? "checked" : ""?> name="paymentType"/>Cash
-                                </label>
+                        <div class="form-group">
+                            <label class="">Coupon Code</label>
+                            <div class="">
+                                <input type="text" class="form-control col-md-6 not-required" data-vendor-id="<?php echo $vendorId?>" name="couponCode" value="<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ""?>"/>
+                                <button type="button" class="btn btn-primary" onclick="javascript: Order.applyCoupon()">Apply</button>
                             </div>
                         </div>
+                        
+                        <div class='col-xs-12 form-group text-center'>
+                            <button type="button" class="btn btn-raised btn-primary btn-next">Pay Now</button>
+                        </div>
+                        
                     </div>
-                    <div class="form-group">
-                        <label class="">Coupon Code</label>
-                        <div class="">
-                            <input type="text" class="form-control col-md-6" data-vendor-id="<?php echo $vendorId?>" name="couponCode" value="<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ""?>"/>
-                            <button type="button" class="btn btn-primary" onclick="javascript: Order.applyCoupon()">Apply</button>
+                    
+                    <!-- for new cc -->
+                    <div class='fieldset' style='display: none'>
+                       
+                        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+                            <input type='text' class='form-control' name='billingName' placeholder='Billing Name'/>
+                        </div>
+                        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+                            <input type='text' class='form-control' name='billingStreetAddress'  placeholder='Billing Street Address'/>
+                        </div>
+                        <div class='col-xs-12 col-sm-9 col-md-6 col-md-offset-3 form-group'>
+                            <input type='text' class='form-control' name='billingCity'  placeholder='City'/>
+                        </div>
+                        <div class='col-xs-6 col-sm-3 col-md-3 form-group'>
+                            <select class='form-control' name='billingState'>
+                                <option value="" selected disabled hidden>State</option>
+                                <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
+                                <option value="<?php echo $stateCode?>" ><?php echo $stateCode?></option>
+                            <?php }?>
+                            </select>
+                        </div>
+                        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+                            <input type='text' class='form-control card-number' placeholder='Credit Card Number'/>
+                        </div>
+                        <div class='col-xs-4 col-md-2 col-md-offset-3 form-group'>
+                            <input type='text' class='form-control card-cvv'    placeholder='CVV'/>
+                        </div>
+                
+                        <div class='col-xs-4 col-md-2 form-group'>
+                              <select  class="form-control card-expiry-month">
+                              <option value=''>Month</option>
+                    		    	<?php for($index = 1 ; $index < 13; $index++){
+                    		    	         $indexVal = $index < 10 ? '0'.$index : $index;
+                    		    	    ?>
+                    		    	<option value="<?php echo $indexVal?>"><?php echo $indexVal?></option>
+                    		    	<?php }?>
+                    		    </select>
+                        </div>
+                        <div class='col-xs-4 col-md-2 form-group'>
+                                 <select  class="form-control card-expiry-year">
+                                 <option value=''>Year</option>
+                    		    	<?php
+                    		    	$curYear = date('Y');
+                    		    	for($index = $curYear ; $index < $curYear + 20; $index++){?>
+                    		    	<option value="<?php echo $index?>"><?php echo $index?></option>
+                    		    	<?php }?>
+                    		    </select>
+                        </div>
+                
+                        <div class='col-xs-12 form-group text-center'>
+                            <button type="button" class="btn btn-raised btn-default btn-back">Back</button>
+                            <button type="button" class="btn btn-raised btn-primary btn-next btn-next-cc" data-cc-info='1'>Pay Now</button>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-raised btn-primary">Pay Now</button>
+                   
                 </div>
             </div>
         </div>

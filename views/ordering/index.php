@@ -11,7 +11,10 @@ $this->title = 'Menu';
 $this->params['breadcrumbs'][] = $this->title;
 
 $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELIVERY) == 1 ? true : false;
+
+$this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_publishable_key'] . '\');', $this::POS_READY);
 ?>
+<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
 <?php echo $this->render('//partials/_show_message', []);?>
 <div class='row'>

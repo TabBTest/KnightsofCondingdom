@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $.material.init();
-
+  
   //if($("#phone").length == 1)
   //$('#phone').mask("(999) 999-9999");
   $(".order-quantity[type='number']").keypress(function (evt) {
@@ -469,6 +469,89 @@ var Order = {
     })
 
   },
+  setUpWorkflow : function(){
+	  $('#checkout-modal .fieldset:eq(0)').fadeIn('slow');
+	  
+	  $('#checkout-modal .btn-back').off('click');
+	  $('#checkout-modal .btn-back').on('click', function(){
+		  $(this).parents('.fieldset').fadeOut(400, function() {
+	    		$(this).prev().fadeIn();
+	    		
+	    	});
+	  });
+	  
+	  $('#checkout-modal .btn-next').off('click');
+	  $('#checkout-modal .btn-next').on('click', function () {
+	     var parent_fieldset = $(this).parents('.fieldset');
+	     var next_step = true;
+	     
+	     parent_fieldset.find('input[type="text"], select').each(function () {
+	       //console.log($(this).attr('id'))
+	       if ($(this).hasClass('not-required')) {
+	         ;
+	       } else if ($(this).val() == "") {
+	         $(this).parent().addClass('has-error');
+	         next_step = false;
+	       } else {
+	         $(this).parent().removeClass('has-error');
+	       }
+	     });
+
+	     if (next_step) {
+    	   
+	    	 if(Order.isAddNewCC() == false){
+	    		 $('#main-order-summary').submit();
+	    	 }else if($(this).data('cc-info') == 1){
+	    		 
+	    	         $(this).attr('disabled', true);
+	    	         Stripe.card.createToken({
+	    	           number: $('.card-number').val(),
+	    	           cvc: $('.card-cvv').val(),
+	    	           exp_month: $('.card-expiry-month').val(),
+	    	           exp_year: $('.card-expiry-year').val()
+	    	         }, stripeResponseOrderHandler);
+
+	    	       
+	    		 
+	    	 }else{
+	    		 parent_fieldset.fadeOut(400, function () {
+	    	          $(this).next().fadeIn();
+	    	        });
+	    	 }
+	    	 
+	       //$(this).parent().parent().removeClass('has-error');
+	       //$(this).parent().parent().find('.help-block').html('');
+	       
+	     }
+
+	   });
+  },
+  changeCardToUse : function(){
+	  if($('select[name="cardToUse"]').val() == 'current'){
+		  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Pay Now');
+	  }else{
+		  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Continue');
+	  }
+  },
+  isAddNewCC : function(){
+	  if($('input[name="paymentType"]:checked').val() == 1 && $('select[name="cardToUse"]').val() != 'current'){
+		  return true;
+	  }
+	  return false;
+  },
+  checkPaymentType : function(){
+	  //card
+	  if($('input[name="paymentType"]:checked').val() == 1){
+		  //we show
+		  $('select[name="cardToUse"]').show();
+		  $('select[name="cardToUse"]').off('change');
+		  $('select[name="cardToUse"]').on('change', Order.changeCardToUse);
+		  Order.changeCardToUse();
+	  }else{
+		  $('select[name="cardToUse"]').hide();
+		  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Pay Now');
+	  }  
+  },
   loadVendor: function () {
     var showCompleted = $('#showCompletedOrder').is(':checked') ? 1 : 0;
 
@@ -723,6 +806,14 @@ var Order = {
           Order.refreshMainOrderSummary();
         });
       }
+      $('#checkout-modal').off('show.bs.modal');
+      $('#checkout-modal').on('show.bs.modal', function (e) {
+    	  Order.setUpWorkflow();
+    	  Order.checkPaymentType();
+      })
+      $('input[name="paymentType"]').off('change');
+      $('input[name="paymentType"]').on('change', Order.checkPaymentType);
+      
     });
   },
   deleteOrderItem: function () {
@@ -1029,6 +1120,27 @@ function stripeResponseHandlerSaveBilling(status, response) {
     $form.append($('<input type="hidden" name="stripeToken" />').val(token));
     $('form#billing-form').submit();
   }
+}
+function stripeResponseOrderHandler(status, response) {
+
+	  // Grab the form:
+	  var $form = $('#main-order-summary');
+
+	  if (response.error) { // Problem!
+
+	    // Show the errors on the form:
+	    Messages.showError(response.error.message);
+	    $form.find('.btn-next-cc').prop('disabled', false); // Re-enable submission
+
+	  } else { // Token created!
+
+	    // Get the token ID:
+	    var token = response.id;
+
+	    // Insert the token into the form so it gets submitted to the server:
+	    $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+	    $('form#main-order-summary').submit();
+	  }
 }
 function stripeResponseHandler(status, response) {
 
