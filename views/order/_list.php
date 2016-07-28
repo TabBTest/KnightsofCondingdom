@@ -12,6 +12,7 @@ $totalCount = $orders['count'];
             <th>First Name</th>
             <th>Last Name</th>
             <th>Order #</th>
+            <th>Advance Order</th>
             <th>Is Paid?</th>
             <th>Type</th>
             <th>Time</th>
@@ -23,7 +24,7 @@ $totalCount = $orders['count'];
     </thead>
     <tbody>
         <tr>
-            <td colspan='11'>No Orders</td>
+            <td colspan='12'>No Orders</td>
         </tr>
     </tbody>
 </table>
@@ -34,6 +35,7 @@ $totalCount = $orders['count'];
             <th>First Name</th>
             <th>Last Name</th>
             <th>Order #</th>
+            <th>Advance Order</th>
             <th>Is Paid?</th>
             <th>Type</th>
             <th>Time</th>
@@ -51,6 +53,7 @@ $totalCount = $orders['count'];
             <td><?php echo $customer->firstName?></td>
             <td><?php echo $customer->lastName?></td>
             <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)"><?php echo $orderInfo->getOrderId()?></a></td>
+            <td><?php echo $orderInfo->isAdvanceOrder == 1 ? 'YES' : '-'?></td>
             <td>
             <?php if($orderInfo->isPaid == 1){
             ?>

@@ -33,6 +33,12 @@ use app\models\User;
         <div class='col-xs-12'>
             <label class='form-label'>Order Type: <?php echo $orderInfo->isDelivery == 1 ? 'For Delivery' : 'For Store Pick-up';?></label>
         </div>
+        <div class='col-xs-12'>
+            <label class='form-label'>Advance Order: <?php echo $orderInfo->isAdvanceOrder == 1 ? 'YES' : '-';?></label>
+        </div>
+        <div class='col-xs-12'>
+            <label class='form-label'>Scheduled Pickup / Delivery Time: <?php echo $orderInfo->isAdvanceOrder == 1 ? \Yii::$app->user->identity->showConvertedTime($orderInfo->advancePickupDeliveryTime ) : '-';?></label>
+        </div>
         <div class='col-xs-12' >
             <label class='form-label'>Is Paid? 
             <?php if($orderInfo->isPaid == 1){

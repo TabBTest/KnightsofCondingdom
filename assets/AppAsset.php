@@ -22,6 +22,7 @@ class AppAsset extends AssetBundle
         'https://fonts.googleapis.com/css?family=Open+Sans:400,700',
         'css/bootstrap-switch.min.css',
         'css/bootstrap-datepicker3.min.css',
+        'css/bootstrap-timepicker.min.css',
         'css/site.css',
     ];
 
@@ -31,6 +32,7 @@ class AppAsset extends AssetBundle
         'js/jquery.bootpag.min.js',
         'js/bootstrap-switch.min.js',
         'js/clipboard.min.js',
+        'js/bootstrap-timepicker.js',
         'js/ga.js',
         'js/app.js',
     ];

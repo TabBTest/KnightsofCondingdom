@@ -500,7 +500,15 @@ var Order = {
 	       //console.log($(this).attr('id'))
 	       if ($(this).hasClass('not-required')) {
 	         ;
-	       } else if ($(this).val() == "") {
+	       } else if ($(this).hasClass('advance-time-pickup')) {
+	    	   
+	    	   if($('.is-advance-order').is(':checked') && Order.isAdvanceDeliveryTimeValid() === false){
+	    		   $(this).parent().addClass('has-error');
+			       next_step = false;  
+	    	   }
+	    	   
+		         
+	       }else if ($(this).val() == "") {
 	         $(this).parent().addClass('has-error');
 	         next_step = false;
 	       } else {
@@ -856,6 +864,11 @@ var Order = {
           Order.refreshMainOrderSummary();
         });
       }
+      if($('.is-advance-order').length == 1){
+    	  $('.is-advance-order').off('click');
+          $('.is-advance-order').on('change', Order.checkIsAdvanceDelivery);
+          Order.checkIsAdvanceDelivery();
+      }
       $('#checkout-modal').off('show.bs.modal');
       $('#checkout-modal').on('show.bs.modal', function (e) {
     	  Order.setUpWorkflow();
@@ -865,6 +878,44 @@ var Order = {
       $('input[name="paymentType"]').on('change', Order.checkPaymentType);
       
     });
+  },
+  isAdvanceDeliveryTimeValid : function(){
+	  var ret = false;
+	  $.ajax({
+	        type: "GET",
+	        url: '/ordering/check-advance-order',
+	        data:  'time='+$('#advanceTimePicker').val(),
+	        async: false,
+	        success: function(data){
+	        	ret = true;
+	        	var resp = $.parseJSON(data);
+	        	if(resp.isValidAdvanceTime == 1){
+	        		ret =  true;
+	        	}else{
+	        		//we show the specific error
+	        		//isStoreOpen":1,"isMoreThanTimeLimit":0,"isWithin24Hours
+	        		if(resp.isStoreOpen == 0){
+	        			Messages.showError('Store is not open on the chosen advance order time.');
+	        		}else if(resp.isMoreThanTimeLimit == 0){
+	        			Messages.showError('Advance order time should be with greater than the minimum time for pickup.');
+	        		}else if(resp.isWithin24Hours == 0){
+	        			Messages.showError('Advance order time should be within the next 24 hours.');
+
+	        		}
+	        		ret =  false;
+	        	}
+	        }
+	  })
+	  return ret;
+  },
+  checkIsAdvanceDelivery : function(){
+	  if($('.is-advance-order').length == 1){
+		if($('.is-advance-order').is(':checked')){
+      		$('.bootstrap-timepicker').show();
+      	}else{
+      		$('.bootstrap-timepicker').hide();
+      	}
+      } 
   },
   deleteOrderItem: function () {
     $('.order-' + $(this).data('key')).remove();

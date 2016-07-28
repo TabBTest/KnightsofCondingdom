@@ -26,6 +26,7 @@ use app\models\AppConfig;
 use app\models\VendorCoupons;
 use app\models\VendorCouponOrders;
 use app\models\VendorAppConfigOverride;
+use app\models\VendorOperatingHours;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -45,7 +46,7 @@ class OrderingController extends CController
                     'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['index', 'summary', 'save', 'history', 'viewpage', 'details', 'menu', 'summary', 'add-item', 'item-order-summary', 'add-order'],
+                        'actions' => ['check-advance-order', 'index', 'summary', 'save', 'history', 'viewpage', 'details', 'menu', 'summary', 'add-item', 'item-order-summary', 'add-order'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -299,6 +300,25 @@ class OrderingController extends CController
                         }
                     }
                     
+                    if(isset($_POST['isAdvanceOrder']) && $_POST['isAdvanceOrder'] == 1){
+                        $order->isAdvanceOrder = 1;
+                        
+                        
+                        $time = $_POST['advanceTime'];
+                        $timeIn24Format =  date("H:i", strtotime($time));
+                        
+                        $userTimeZone = new \DateTimeZone($user->timezone );
+                        $advanceOrderTime = new \DateTime('now', $userTimeZone);
+                        $timeComponent = explode(':', $timeIn24Format);
+                        $advanceOrderTime->setTime($timeComponent[0], $timeComponent[1], 0);
+                        
+                        $utcTimeZone = new \DateTimeZone('UTC');
+                        $advanceOrderTime->setTimezone($utcTimeZone);
+                        
+                        
+                        $order->advancePickupDeliveryTime = $advanceOrderTime->format('Y-m-d H:i:s');
+                    }
+                    
                     if($order->save()){
                         if($paymentType == Orders::PAYMENT_TYPE_CARD){
                             $ch = \Stripe\Charge::retrieve($order->transactionId);
@@ -486,4 +506,107 @@ class OrderingController extends CController
         $orders = Orders::getCustomerOrders($userId, 20, $page);    
         return $this->renderPartial('_history', ['orders' => $orders, 'currentPage' => $page, 'userId' => $userId]);
     }
+    
+
+    public function actionCheckAdvanceOrder(){
+        $time = $_REQUEST['time'];
+        $timeIn24Format =  date("H:i", strtotime($time));
+        
+        $subdomain = TenantHelper::getSubDomain();
+        $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
+        
+        $userVendor = User::findOne($tenantInfo->userId);
+        $user = User::findOne(\Yii::$app->user->id);
+        
+        $userTimeZone = new \DateTimeZone($user->timezone );
+        $vendorTimeZone = new \DateTimeZone($userVendor->timezone );
+        
+        $advanceOrderTime = new \DateTime('now', $userTimeZone);
+        $timeComponent = explode(':', $timeIn24Format);
+        $advanceOrderTime->setTime($timeComponent[0], $timeComponent[1], 0);
+        
+        //var_dump($advanceOrderTime->format('H:i'));
+        
+        //converted already to vendor timezone
+        $advanceOrderTime->setTimezone($vendorTimeZone);
+        //var_dump($advanceOrderTime->format('H:i'));
+        $key = $advanceOrderTime->format('w');
+      
+        //check if its within the open time
+        $operatingHours = VendorOperatingHours::getVendorOperatingHours($userVendor->id, $key);
+        $resp = [];
+        $resp['isStoreOpen'] = 0;
+        $resp['isMoreThanTimeLimit'] = 0;
+        $resp['isWithin24Hours'] = 0;
+        $resp['isValidAdvanceTime'] = 0;
+        $isStoreOpen = false;
+        $isMoreThanTimeLimit = false;
+        
+        foreach($operatingHours as $operatingHour){
+            $date_time = new \DateTime('now', $vendorTimeZone);
+            $timeComponent = explode(':', $operatingHour->startTime);
+            $date_time->setTime($timeComponent[0], $timeComponent[1], 0);
+            
+            $date_time_close = new \DateTime('now', $vendorTimeZone);
+            $timeComponent = explode(':', $operatingHour->endTime);
+            $date_time_close->setTime($timeComponent[0], $timeComponent[1], 0);
+           
+            if($date_time->getTimestamp() <= $advanceOrderTime->getTimestamp() && 
+                $advanceOrderTime->getTimestamp() <= $date_time_close->getTimestamp()){
+                $resp['isStoreOpen'] = 1;
+                $isStoreOpen = true;
+                break;
+            }else{
+                $resp['isStoreOpen'] = 0;
+            }
+        }
+        if($userVendor->isStoreOpen == 0){
+            $resp['isStoreOpen'] = 0;
+        }
+        if($isStoreOpen){
+            //check if its within the time limit for deliver / pickup
+            $mins = 0;
+            if($userVendor->timeToPickUp > 0){
+                $mins = 15 * (intval($userVendor->timeToPickUp) - 1);
+            }
+            //get current vendor time + mins and see if pickup time is greater or equal
+            $currentVendorTimeLimit = new \DateTime('now', $vendorTimeZone);
+            //var_dump($currentVendorTimeLimit->format('H:i'));
+            $currentVendorTimeLimit->modify('+'.$mins.' minutes');
+            //var_dump($currentVendorTimeLimit->format('H:i'));
+            //var_dump(' advance '.$advanceOrderTime->format('H:i'));
+            
+            if($currentVendorTimeLimit->getTimestamp() <= $advanceOrderTime->getTimestamp()){
+                $resp['isMoreThanTimeLimit'] = 1;
+                $isMoreThanTimeLimit = true;
+            }else{
+                $resp['isMoreThanTimeLimit'] = 0;
+            }
+            
+            if($isMoreThanTimeLimit ){
+                //check if its within 24 hrs
+                $currentVendorTimeLimit = new \DateTime('now', $vendorTimeZone);
+                //var_dump($currentVendorTimeLimit->format('m-d H:i'));
+                $currentVendorTimeLimit->modify('+24 hours');
+                //var_dump($currentVendorTimeLimit->format('m-d H:i'));
+                
+                if($currentVendorTimeLimit->getTimestamp() >= $advanceOrderTime->getTimestamp()){
+                    $resp['isWithin24Hours'] = 1;
+                    $resp['isValidAdvanceTime'] = 1;
+                }else{
+                    $resp['isWithin24Hours'] = 0;
+                }
+            }
+        }
+        
+        
+       
+        
+        
+        
+        echo json_encode($resp);
+        die;
+        
+    }
+    
 }

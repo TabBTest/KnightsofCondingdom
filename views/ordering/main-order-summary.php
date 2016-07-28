@@ -199,19 +199,44 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
                                 <div class="">
                                     <label class="">Do you want it delivered?</label>
                                     <div class="checkbox">
-                                        <label>
+                                        <label class='pull-left'>
                                             <input type="checkbox" <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'checked' : '' ?> value="1" class="has-delivery" name="isDelivery" data-amount="<?php echo TenantHelper::getDeliveryAmount()?>"/>
-                                        
-                                             &nbsp;&nbsp;&nbsp;
+                                        </label>
+                                        <div class=' pull-left' style='margin-left: 10px'>
                                             <select style='display: <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'block' : 'none' ?>' name='deliveryAddressType'>
                                                 <option value='current'><?php echo $model->getFullAddress()?></option>
                                                 <option value='new'>New Address</option>
                                             </select>
-                                        </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         <?php }?>
+                        <div class='form-group'>
+                                <div class="">
+                                    <label class="">Is Advance Order?</label>
+                                    <div class="checkbox">
+                                        <label class=' pull-left'>
+                                            <input type="checkbox" <?php echo isset($_POST['isAdvanceOrder']) && $_POST['isAdvanceOrder'] == 1 ? 'checked' : '' ?> value="1" class="is-advance-order" name="isAdvanceOrder" />
+                                        </label>
+                                         <div class="bootstrap-timepicker  pull-left" style='margin-left: 10px'>
+                                            <input id="advanceTimePicker" name="advanceTime" type="text" class="input-small advance-time-pickup" value='<?php echo isset($_POST['advanceTime']) ? $_POST['advanceTime'] : ''?>'>
+                                            <i class="icon-time"></i>
+                                        </div>
+                                 
+                                        <script type="text/javascript">
+                                            $('#advanceTimePicker').timepicker({
+                                                template: false,
+                                                showInputs: true,
+                                                minuteStep: 1,
+                                                defaultTime: 'current'
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                                
+                               
+                        </div>
                         <div class="form-group">
                             <label class="">Payment Type</label>
     
