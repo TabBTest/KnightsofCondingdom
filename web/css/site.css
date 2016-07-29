@@ -212,13 +212,9 @@ form#current-order-form {
     margin-top: 0;
 }
 
-div#search-box-current-orders {
+div#search-box-current-orders, div#search-box-archived-orders {
     margin-top: 26px;
     padding: 0 0 0 0;
-}
-
-div#search-box-current-orders > div.panel-heading:hover {
-    cursor: pointer;
 }
 
 form#archived-order-form {
@@ -241,6 +237,8 @@ div#receivable-summary {
     padding: 0 0 0 0;
 }
 
+div#search-box-current-orders > div.panel-heading:hover,
+div#search-box-archived-orders > div.panel-heading:hover,
 div#search-box-sales-orders > div.panel-heading:hover,
 div#sales-summary > div.panel-heading:hover,
 div#search-box-payable-orders > div.panel-heading:hover,
@@ -253,4 +251,8 @@ div#receivable-summary > div.panel-heading:hover{
 }
 .summary td.amounts{
 	text-align: right;
+}
+
+ul.nav.nav-tabs > li.active {
+    background-color: rgba(255, 255, 255, 0.1);
 }
