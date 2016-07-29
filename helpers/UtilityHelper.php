@@ -185,4 +185,8 @@ class UtilityHelper {
     public static function isSuperAdmin(){
         return false;
     }
+    
+    public static function encodeIdentifier($id){
+        return md5(base64_encode($id));
+    }
 }

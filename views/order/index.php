@@ -6,6 +6,7 @@ use app\models\VendorMenuItem;
 use app\models\Orders;
 use app\helpers\TenantHelper;
 use app\models\User;
+use app\helpers\UtilityHelper;
 $this->title = 'Order Management';
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -94,7 +95,7 @@ $this->registerJs($pageJs, $this::POS_READY);
         <div class="col-xs-9 form-group">
             <label class="form-label">* Orders older than 24 hours are automatically archived.</label>
         </div>
-        <div class="vendor-order-body" data-user-id='<?php echo $userId?>' data-url='<?php echo $url?>'>
+        <div class="vendor-order-body col-xs-12" data-user-id='<?php echo $userId?>' data-eid='<?php echo UtilityHelper::encodeIdentifier($userId)?>' data-url='<?php echo $url?>'>
             <?php echo $this->render('_list', ['orders' => $orders, 'userId' => $userId]);?>
         </div>
     </div>
@@ -141,8 +142,9 @@ $this->registerJs($pageJs, $this::POS_READY);
                 </form>
             </div>
         </div>
-        <div class="vendor-order-archived-body"
+        <div class="vendor-order-archived-body col-xs-12"
              data-user-id="<?= $userId ?>"
+             data-eid='<?php echo UtilityHelper::encodeIdentifier($userId)?>'
              data-url="<?= $urlArchive ?>">
             <?= $this->render('_archive_list', ['orders' => $archivedOrders, 'userId' => $userId]) ?>
         </div>

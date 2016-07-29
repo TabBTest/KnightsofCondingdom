@@ -619,14 +619,14 @@ var Order = {
   },
   loadCurrentOrder: function () {
     var param = $('#current-order-form').serialize();
-    $.get($('.vendor-order-body').data('url'), 'page=1&userId=' + $('.vendor-order-body').data('user-id') + '&' + param, function (html) {
+    $.get($('.vendor-order-body').data('url'), 'page=1&eid='+$('.vendor-order-body').data('eid')+'&userId=' + $('.vendor-order-body').data('user-id') + '&' + param, function (html) {
       $('.vendor-order-body').html(html);
       setupUi();
     });
   },
   loadArchivedOrder: function () {
     var param = $('#archived-order-form').serialize();
-    $.get($('.vendor-order-archived-body').data('url'), 'page=1&userId=' + $('.vendor-order-archived-body').data('user-id') + '&' + param, function (html) {
+    $.get($('.vendor-order-archived-body').data('url'), 'page=1&eid='+$('.vendor-order-archived-body').data('eid')+'&userId=' + $('.vendor-order-archived-body').data('user-id') + '&' + param, function (html) {
       $('.vendor-order-archived-body').html(html);
       setupUi();
     })

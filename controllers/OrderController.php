@@ -6,6 +6,7 @@ use Yii;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\models\Orders;
+use app\helpers\UtilityHelper;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -49,6 +50,9 @@ class OrderController extends CController
     public function actionViewpage(){
         $page = $_REQUEST['page'];
         $userId = $_REQUEST['userId'];
+        if(isset($_REQUEST['eid']) && $_REQUEST['eid'] != UtilityHelper::encodeIdentifier($userId)){
+            return '<div>Invalid Page</div>';
+        }
         $orders = Orders::getVendorOrders($userId, 20, $page, $_REQUEST['filter']);
         return $this->renderPartial('_list', ['orders' => $orders, 'currentPage' => $page, 'userId' => $userId]);
     }
@@ -56,6 +60,9 @@ class OrderController extends CController
     public function actionViewpagearchive(){
         $page = $_REQUEST['page'];
         $userId = $_REQUEST['userId'];
+        if(isset($_REQUEST['eid']) && $_REQUEST['eid'] != UtilityHelper::encodeIdentifier($userId)){
+            return '<div>Invalid Page</div>';
+        }
         $orders = Orders::getVendorArchivedOrders($userId, 20, $page, $_REQUEST['filter']);
         return $this->renderPartial('_archive_list', ['orders' => $orders, 'currentPage' => $page, 'userId' => $userId]);
     }
