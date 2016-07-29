@@ -485,6 +485,14 @@ var Order = {
 				  }else{
 					  $(this).parent().find('.fieldset.step1').fadeIn();  
 				  }
+			  }else if(step == 'step4'){
+				  if(Order.isAddNewCC()){
+					  $(this).parent().find('.fieldset.step3').fadeIn();  
+				  }else if(Order.isAddNewDeliveryAddress()){
+					  $(this).parent().find('.fieldset.step2').fadeIn();  
+				  }else{
+					  $(this).parent().find('.fieldset.step1').fadeIn();  
+				  }
 			  }
 	    		
 	    		
@@ -522,11 +530,7 @@ var Order = {
 	    		 if(Order.isAddNewDeliveryAddress()){
 	    			 //move to step 2
 	    			 parent_fieldset.fadeOut(400, function () {
-	    				 if(Order.isAddNewCC()){
-	    					 $('#checkout-modal .fieldset.step2 .btn-next').html('Continue');
-	    				 }else{
-	    					 $('#checkout-modal .fieldset.step2 .btn-next').html('Pay Now');
-	    				 }
+	    				 
 		    	          $(this).parent().find('.fieldset.step2').fadeIn();
 		    	        });
 	    		 }else if(Order.isAddNewCC()){
@@ -535,7 +539,10 @@ var Order = {
 	    				 $(this).parent().find('.fieldset.step3').fadeIn();
 		    	        });
 	    		 }else{
-	    			 $('#main-order-summary').submit();
+	    			 parent_fieldset.fadeOut(400, function () {
+	    				 $(this).parent().find('.fieldset.step4').fadeIn();
+	    	        });
+	    			// $('#main-order-summary').submit();
 	    		 }
 	    	 }else if($(this).data('step') == 'step2'){
 	    		 if(Order.isAddNewCC()){
@@ -544,7 +551,10 @@ var Order = {
 	    				 $(this).parent().find('.fieldset.step3').fadeIn();
 		    	        });
 	    		 }else{
-	    			 $('#main-order-summary').submit();
+	    			 parent_fieldset.fadeOut(400, function () {
+	    				 $(this).parent().find('.fieldset.step4').fadeIn();
+	    	        });
+	    			 //$('#main-order-summary').submit();
 	    		 }
 	    	 }else if($(this).data('step') == 'step3'){
 	    		 $(this).attr('disabled', true);
@@ -554,6 +564,8 @@ var Order = {
     	           exp_month: $('.card-expiry-month').val(),
     	           exp_year: $('.card-expiry-year').val()
     	         }, stripeResponseOrderHandler);
+	    	 }else if($(this).data('step') == 'step4'){
+	    		 $('#main-order-summary').submit();
 	    	 }
 	    	 
 	       //$(this).parent().parent().removeClass('has-error');
@@ -564,6 +576,7 @@ var Order = {
 	   });
   },
   changeCardToUse : function(){
+	  /*
 	  if($('select[name="cardToUse"]').val() == 'current'){
 		  if($('.has-delivery').length == 1 && $('.has-delivery').is(':checked') == true &&  $('select[name="deliveryAddressType"]').length == 1 && $('select[name="deliveryAddressType"]').val() != 'current'){
 			  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Continue');
@@ -573,6 +586,7 @@ var Order = {
 	  }else{
 		  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Continue');
 	  }
+	  */
   },
   isAddNewDeliveryAddress : function(){
 	  if($('.has-delivery').length == 1 && $('.has-delivery').is(':checked') == true && 
@@ -846,38 +860,47 @@ var Order = {
 
   },
   refreshMainOrderSummary: function () {
-    $.post('/ordering/add-order', $('#item-order-summary, #main-order-summary').serialize(), function (html) {
-      $('.main-order-summary-content').html(html);
-      $('#custom-modal').modal('hide');
-      $('.delete-order-item').off('click');
-      $('.delete-order-item').on('click', Order.deleteOrderItem);
-      $('.edit-order-item').off('click');
-      $('.edit-order-item').on('click', Order.editOrderItem);
-      
-      $('#item-order-summary').html('');
-      $.material.init();
+	  
+	  $.ajax({
+	        type: "POST",
+	        url: '/ordering/add-order',
+	        data:  $('#item-order-summary, #main-order-summary').serialize(),
+	        async: false,
+	        success: function (html) {
+	            $('.main-order-summary-content').html(html);
+	            $('#custom-modal').modal('hide');
+	            $('.delete-order-item').off('click');
+	            $('.delete-order-item').on('click', Order.deleteOrderItem);
+	            $('.edit-order-item').off('click');
+	            $('.edit-order-item').on('click', Order.editOrderItem);
+	            
+	            $('#item-order-summary').html('');
+	            $.material.init();
 
-      if ($('.has-delivery').length == 1) {
-        $('.has-delivery').off('click');
-        $('.has-delivery').on('click', function () {
-        	$('#checkout-modal').modal('hide');
-          Order.refreshMainOrderSummary();
-        });
-      }
-      if($('.is-advance-order').length == 1){
-    	  $('.is-advance-order').off('click');
-          $('.is-advance-order').on('change', Order.checkIsAdvanceDelivery);
-          Order.checkIsAdvanceDelivery();
-      }
-      $('#checkout-modal').off('show.bs.modal');
-      $('#checkout-modal').on('show.bs.modal', function (e) {
-    	  Order.setUpWorkflow();
-    	  Order.checkPaymentType();
-      })
-      $('input[name="paymentType"]').off('change');
-      $('input[name="paymentType"]').on('change', Order.checkPaymentType);
-      
-    });
+	            if ($('.has-delivery').length == 1) {
+	              $('.has-delivery').off('click');
+	              $('.has-delivery').on('click', function () {
+	              	
+	                Order.refreshMainOrderSummary();
+	                $('#checkout-modal').modal('show');
+	              });
+	            }
+	            if($('.is-advance-order').length == 1){
+	          	  $('.is-advance-order').off('click');
+	                $('.is-advance-order').on('change', Order.checkIsAdvanceDelivery);
+	                Order.checkIsAdvanceDelivery();
+	            }
+	            $('#checkout-modal').off('show.bs.modal');
+	            $('#checkout-modal').on('show.bs.modal', function (e) {
+	          	  Order.setUpWorkflow();
+	          	  Order.checkPaymentType();
+	            })
+	            $('input[name="paymentType"]').off('change');
+	            $('input[name="paymentType"]').on('change', Order.checkPaymentType);
+	            
+	          }
+	  })
+	  
   },
   isAdvanceDeliveryTimeValid : function(){
 	  var ret = false;
@@ -1240,7 +1263,12 @@ function stripeResponseOrderHandler(status, response) {
 
 	    // Insert the token into the form so it gets submitted to the server:
 	    $form.append($('<input type="hidden" name="stripeToken" />').val(token));
-	    $('form#main-order-summary').submit();
+	    //$('form#main-order-summary').submit();
+	    
+	    $('#checkout-modal .fieldset:visible').fadeOut(400, function () {
+	    	 $('#checkout-modal .fieldset.step4').fadeIn();
+	    });
+	   
 	  }
 }
 function stripeResponseHandler(status, response) {

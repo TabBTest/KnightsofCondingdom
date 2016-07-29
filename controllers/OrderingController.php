@@ -489,7 +489,7 @@ class OrderingController extends CController
             }            
         }
         
-        return $this->renderPartial('main-order-summary', ['params' => $_POST, 'salesTax' => $salesTax]);
+        return $this->renderPartial('main-order-summary', ['params' => $_POST, 'vendorSalesTax' => $salesTax]);
     }
     public function actionHistory(){
         $userId = \Yii::$app->user->id;
