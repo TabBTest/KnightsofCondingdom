@@ -350,7 +350,7 @@ class VendorsController extends CController
         $vendorMenu = User::getVendorDefaultMenu($user);
         if($vendorMenu === false){
             $vendorMenu = new VendorMenu();
-            $vendorMenu->name = 'default menu';
+            $vendorMenu->name = 'Menu';
             $vendorMenu->vendorId = $user->id;
             $vendorMenu->isDefault = 1;
             $vendorMenu->save();
