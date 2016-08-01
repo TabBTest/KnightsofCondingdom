@@ -54,6 +54,9 @@ $this->registerJs($pageJs, $this::POS_READY);
                         <label class="control-label">Last Name: <input type="text" name="filter[lastName]" class="form-control" /></label>
                     </div>
                     <div class="form-group">
+                        <label class="control-label">Phone : <input type="text" name="filter[phone]" class="form-control" /></label>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label">Order #: <input type="text" name="filter[orderId]" class="form-control" /></label>
                     </div>
                     <div class="form-group">
@@ -114,6 +117,9 @@ $this->registerJs($pageJs, $this::POS_READY);
                     </div>
                     <div class="form-group">
                         <label class="control-label">Last Name: <input type="text" name="filter[lastName]" class="form-control" /></label>
+                    </div>
+                     <div class="form-group">
+                        <label class="control-label">Phone : <input type="text" name="filter[phone]" class="form-control" /></label>
                     </div>
                     <div class="form-group">
                         <label class="control-label">Order #: <input type="text" name="filter[orderId]" class="form-control" /></label>

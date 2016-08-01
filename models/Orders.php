@@ -282,6 +282,9 @@ class Orders extends \yii\db\ActiveRecord
         if(isset($filters['isDelivery']) && $filters['isDelivery'] != ''){
             $extraSQL .= " and isDelivery = ".$filters['isDelivery'];
         }
+        if(isset($filters['phone']) && $filters['phone'] != ''){
+            $extraSQL .= " and customerId in (select id from user where concat(phoneAreaCode, phone3, phone4) like  '". preg_replace('/\D/', '', $filters['phone'])."%')";
+        }
         
         $resp = array();
         $resp['list'] = Orders::find()->where('isArchived = 0 and vendorId = '.$userId.' and TIMESTAMPDIFF(HOUR, date_created, now()) < 24 '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
@@ -312,7 +315,9 @@ class Orders extends \yii\db\ActiveRecord
         if(isset($filters['isDelivery']) && $filters['isDelivery'] != ''){
             $extraSQL .= " and isDelivery = ".$filters['isDelivery'];
         }
-        
+        if(isset($filters['phone']) && $filters['phone'] != ''){
+            $extraSQL .= " and customerId in (select id from user where concat(phoneAreaCode, phone3, phone4) like  '". preg_replace('/\D/', '', $filters['phone'])."%')";
+        }
         $resp = array();
         $resp['list'] = Orders::find()->where('vendorId = '.$userId.' and (isArchived = 1 or TIMESTAMPDIFF(HOUR, date_created, now()) >= 24) '.$extraSQL.' order by id desc limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage))->all();
         $resp['count'] = Orders::find()->where('vendorId = '.$userId.' and (isArchived = 1 or TIMESTAMPDIFF(HOUR, date_created, now()) >= 24) '.$extraSQL)->count();
