@@ -39,7 +39,7 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
         </div>
         <div class='col-xs-12 col-sm-6 col-md-3 col-md-offset-3 form-group'>
             <label class="control-label">City</label>
-            <input type='text' class='form-control' name='User[city]'  placeholder=""/>
+            <input type='text' class='form-control' name='User[city]'  placeholder='City'/>
         </div>
         <div class='col-xs-6 col-sm-3 col-md-1 form-group'>
             <label class="control-label">State</label>
@@ -54,10 +54,17 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             <label class="control-label">Zip</label>
             <input type='text' class='form-control' name='User[postalCode]'  placeholder="Zip"/>
         </div>
-        <div class="col-xs-12 col-md-6 col-md-offset-3 form-group form-inline phone" data-key="phone">
-            <label class="control-label">Phone Number</label><br />
-            <input type="tel" class="form-control short-input" name='User[phoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
+
+        <div class='col-xs-4 col-sm-4 col-md-2 col-md-offset-3 form-group phone' data-key='phone'>
+        <label class="control-label">Phone</label>
+            <input type='tel' class='form-control short-input' name='User[phoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
+        </div>
+        <div class='col-xs-4 col-sm-4  col-md-2 form-group phone' data-key='phone'>
+            <label class="control-label">&nbsp;</label>
             <input type='tel' class='form-control short-input' name='User[phone3]' maxlength="3" placeholder='XXX'/>
+        </div>
+        <div class='col-xs-4 col-sm-4  col-md-2 form-group phone' data-key='phone'>
+            <label class="control-label">&nbsp;</label>
             <input type='tel' class='form-control short-input' name='User[phone4]' maxlength="4" placeholder='XXXX'/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>

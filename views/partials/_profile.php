@@ -44,15 +44,15 @@ use yii\widgets\MaskedInput;
             <label><?php echo $prefix?>Last Name</label>
             <input type='text' class='form-control' name='User[lastName]' value='<?= $model->lastName?>'/>
         </div>
-        <div class='col-xs-12 form-group'>
+        <div class='col-xs-12 col-md-6 col-md-offset-3  form-group'>
             <label>Street Address</label>
             <input type='text' class='form-control' name='User[streetAddress]'  value='<?= $model->streetAddress?>'/>
         </div>
-        <div class='col-xs-12 form-group'>
+        <div class='col-xs-12 col-sm-6 col-md-2 col-md-offset-3 form-group'>
             <label>City</label>
             <input type='text' class='form-control' name='User[city]'  value='<?= $model->city?>'/>
         </div>
-        <div class='col-xs-12 form-group'>
+        <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
             <label>State</label>
             <select class='form-control' id='select-state' name='User[state]'>
                 <option value="">State</option>
@@ -61,25 +61,30 @@ use yii\widgets\MaskedInput;
                 <?php }?>
             </select>
         </div>
-        <div class='col-xs-12 form-group' style='margin: 0'>
-            <label>Phone</label>            
+        <div class='col-xs-6 col-sm-3 col-md-2  form-group'>
+            <label>Postal Code</label>
+            <input type='text' class='form-control' name='User[postalCode]'  value='<?= $model->postalCode?>'/>
+        </div>
+        <div class='col-xs-12 col-md-6 form-group'>
+            <label>Email</label>
+            <input type='text' class='form-control' name='User[email]' id='email'  value='<?php echo $model->email?>'/>
         </div>
         <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+            <label>Phone</label>           
             <input type='tel' class='form-control short-input' name='User[phoneAreaCode]' value='<?php echo $model->phoneAreaCode?>' maxlength="3" placeholder='Area Code'/>
         </div>
         <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+            <label>&nbsp;</label>  
             <input type='tel' class='form-control short-input' name='User[phone3]' value='<?php echo $model->phone3?>' maxlength="3" placeholder='XXX'/>
         </div>
         <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+            <label>&nbsp;</label>
             <input type='tel' class='form-control short-input' name='User[phone4]' value='<?php echo $model->phone4?>' maxlength="4" placeholder='XXXX'/>
         </div>
         
         
 
-        <div class='col-xs-12 form-group'>
-            <label>Email</label>
-            <input type='text' class='form-control' name='User[email]' id='email'  value='<?php echo $model->email?>'/>
-        </div>
+        
         <div class='col-xs-12 form-group'>
             <label>Preferred Timezone</label>
             <select name='User[timezone]' required class='form-control'>

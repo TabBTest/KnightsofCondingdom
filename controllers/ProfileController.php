@@ -131,6 +131,7 @@ class ProfileController extends CController
                 $model->streetAddress = $userData['streetAddress'];
                 $model->city = $userData['city'];
                 $model->state = $userData['state'];
+                $model->postalCode = $userData['postalCode'];
                 $model->email = $userData['email'];
                 $model->timezone = $userData['timezone'];
                 $model->phoneAreaCode = $userData['phoneAreaCode'];

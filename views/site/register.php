@@ -35,15 +35,16 @@ $this->params['breadcrumbs'][] = $this->title;
             <label class="control-label">Owner - Last Name</label>
             <input type='text' class='form-control' name='User[lastName]' placeholder='Business Owner - Last Name'/>
         </div>
-        <div class='col-xs-12 col-md-5 form-group'>
+        <div class='col-xs-12 col-md-3 form-group'>
             <label class="control-label">Street Address</label>
             <input type='text' class='form-control' name='User[streetAddress]'  placeholder='Street Address'/>
         </div>
-        <div class='col-xs-12 col-sm-3 col-md-3 col-md-offset-3 form-group'>
+           
+        <div class='col-xs-12 col-sm-6 col-md-1 col-md-offset-3 form-group'>
             <label class="control-label">City</label>
             <input type='text' class='form-control' name='User[city]'  placeholder='City'/>
         </div>
-        <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+        <div class='col-xs-6 col-sm-1 col-md-1 form-group'>
             <label class="control-label">State</label>
             <select class='form-control' name='User[state]'>
                 <option value="" selected disabled hidden>State</option>
@@ -52,12 +53,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php }?>
             </select>
         </div>
-        <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+        <div class='col-xs-6 col-sm-3 col-md-1 form-group'>
             <label class="control-label">Zip</label>
             <input type='text' class='form-control' name='User[postalCode]'  placeholder="Zip"/>
         </div>
       
-        <div class='col-xs-12 col-md-2 col-md-offset-6 form-group phone' data-key='phone'>
+        <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
             <label class="control-label">Phone Number</label>
             <input type='tel' class='form-control short-input' name='User[phoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
         </div>
@@ -67,9 +68,9 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
         <label class="control-label">&nbsp;</label>
-            <input type='tel' class='form-control short-input' name='User[phone4]' maxlength="4" placeholder='XXXX'/>
+            <input type='text' class='form-control' name='User[phone4]'  maxlength="4" placeholder='XXXX'/>
         </div>
-        
+       
         <div class='col-xs-12 col-md-6 form-group'>
         <label class="control-label">Email</label>
             <input type='text' class='form-control' name='User[email]' id='email'  placeholder='Company Email'/>
@@ -78,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <label class="control-label">Confirm Email</label>
             <input type='text' class='form-control' name='confirmEmail' id='confirmEmail'  placeholder='Confirm Email'/>
         </div>
-        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+        <div class='col-xs-12 col-md-12 col-md-offset-6 form-group'>
             <div align="center" class="g-recaptcha" data-sitekey="<?= $params['recaptcha_site_key'] ?>"></div>
             <script type="text/javascript"
                     src="https://www.google.com/recaptcha/api.js?hl=en">

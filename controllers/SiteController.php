@@ -146,6 +146,7 @@ class SiteController extends CController
                 $user->streetAddress = $userData['streetAddress'];
                 $user->city = $userData['city'];
                 $user->state = $userData['state'];
+                $user->postalCode = $userData['postalCode'];
                 $user->email = $userData['email'];
                 $user->phoneAreaCode = $userData['phoneAreaCode'];
                 $user->phone3 = $userData['phone3'];
@@ -222,6 +223,7 @@ class SiteController extends CController
                 $user->lastName = $userData['lastName'];
                 $user->streetAddress = $userData['streetAddress'];
                 $user->city = $userData['city'];
+                $user->postalCode = $userData['postalCode'];
                 $user->state = $userData['state'];
                 $user->email = $userData['email'];
                 //$user->phoneNumber = $userData['phoneNumber'];
