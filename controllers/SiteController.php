@@ -166,7 +166,7 @@ class SiteController extends CController
                 $user->isPasswordReset = 1;
                 if($user->save()){
                     TenantInfo::addCustomSubdomain($user);
-
+                    /*
                     \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
 
                     // Get the credit card details submitted by the form
@@ -178,9 +178,13 @@ class SiteController extends CController
                       "description" => "Vendor ID: ".$user->id)
                     );
                     $user->stripeId = $customer->id;
-
+                    */
+                    
+                    $user->createNewPaymentProfile();
+                    $user->saveCustomerPaymentProfile($_POST);
+                    
                     if($user->save()){
-                        $user->storeCCInfo();
+                        $user->storeCCInfo($_POST);
                         TenantHelper::doMembershipPayment($user->id);
                     }
                     
@@ -241,7 +245,7 @@ class SiteController extends CController
                 $user->isOptIn = intval($_POST['isOptIn']);
                 $user->isPasswordReset = 1;
                 if($user->save()){
-
+                    /*
                     \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
 
                     // Get the credit card details submitted by the form
@@ -253,9 +257,12 @@ class SiteController extends CController
                         "description" => "Customer ID: ".$user->id)
                     );
                     $user->stripeId = $customer->id;
-
+                    */
+                    $user->createNewPaymentProfile();
+                    $user->saveCustomerPaymentProfile($_POST);
+                    
                     if($user->save()){
-                        $user->storeCCInfo();
+                        $user->storeCCInfo($_POST);
                     }
     
                     NotificationHelper::notifyUserOfAccount($user, $randomPassword);

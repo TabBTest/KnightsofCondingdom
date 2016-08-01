@@ -7,9 +7,7 @@ $params = require(\Yii::$app->basePath . '/config/params.php');
 
 $this->title = 'Register';
 $this->params['breadcrumbs'][] = $this->title;
-$this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_publishable_key'] . '\');', $this::POS_READY);
 ?>
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 
 <?php if(\Yii::$app->getSession()->hasFlash('error')){?>
     <div class="">
@@ -26,21 +24,27 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             <h3>Step 1 - Account Information</h3>
         </div>
         <div class='col-xs-6 col-md-6 col-md-offset-3 form-group'>
+            <label class="control-label">Business Name</label>
             <input type='text' class='form-control' name='User[businessName]' placeholder='Business Name'/>
         </div>
         <div class='col-xs-6 col-md-3 col-md-offset-3 form-group'>
+            <label class="control-label">Owner - First Name</label>
             <input type='text' class='form-control' name='User[firstName]' placeholder='Business Owner - First Name'/>
         </div>
         <div class='col-xs-6 col-md-3 form-group'>
+            <label class="control-label">Owner - Last Name</label>
             <input type='text' class='form-control' name='User[lastName]' placeholder='Business Owner - Last Name'/>
         </div>
-        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+        <div class='col-xs-12 col-md-5 form-group'>
+            <label class="control-label">Street Address</label>
             <input type='text' class='form-control' name='User[streetAddress]'  placeholder='Street Address'/>
         </div>
-        <div class='col-xs-12 col-sm-9 col-md-4 col-md-offset-3 form-group'>
+        <div class='col-xs-12 col-sm-3 col-md-3 col-md-offset-3 form-group'>
+            <label class="control-label">City</label>
             <input type='text' class='form-control' name='User[city]'  placeholder='City'/>
         </div>
         <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+            <label class="control-label">State</label>
             <select class='form-control' name='User[state]'>
                 <option value="" selected disabled hidden>State</option>
                 <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
@@ -48,20 +52,30 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
                 <?php }?>
             </select>
         </div>
-         <div class='col-xs-12 col-md-2 col-md-offset-3 form-group phone' data-key='phone'>
+        <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+            <label class="control-label">Zip</label>
+            <input type='text' class='form-control' name='User[postalCode]'  placeholder="Zip"/>
+        </div>
+      
+        <div class='col-xs-12 col-md-2 col-md-offset-6 form-group phone' data-key='phone'>
+            <label class="control-label">Phone Number</label>
             <input type='tel' class='form-control short-input' name='User[phoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
         </div>
         <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+            <label class="control-label">&nbsp;</label>
             <input type='tel' class='form-control short-input' name='User[phone3]' maxlength="3" placeholder='XXX'/>
         </div>
         <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+        <label class="control-label">&nbsp;</label>
             <input type='tel' class='form-control short-input' name='User[phone4]' maxlength="4" placeholder='XXXX'/>
         </div>
         
-        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+        <div class='col-xs-12 col-md-6 form-group'>
+        <label class="control-label">Email</label>
             <input type='text' class='form-control' name='User[email]' id='email'  placeholder='Company Email'/>
         </div>
-        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+        <div class='col-xs-12 col-md-6 form-group'>
+        <label class="control-label">Confirm Email</label>
             <input type='text' class='form-control' name='confirmEmail' id='confirmEmail'  placeholder='Confirm Email'/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
@@ -80,15 +94,19 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             <h3>Step 2 - Payment Information</h3>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+            <label class="control-label">Billing Name</label>
             <input type='text' class='form-control' name='User[billingName]' placeholder='Billing Name'/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+            <label class="control-label">Billing Street Address</label>
             <input type='text' class='form-control' name='User[billingStreetAddress]'  placeholder='Billing Street Address'/>
         </div>
         <div class='col-xs-12 col-sm-9 col-md-4 col-md-offset-3 form-group'>
+        <label class="control-label">Billing City</label>
             <input type='text' class='form-control' name='User[billingCity]'  placeholder='City'/>
         </div>
         <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+        <label class="control-label">Billing State</label>
             <select class='form-control' name='User[billingState]'>
                 <option value="" selected disabled hidden>State</option>
                 <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
@@ -97,23 +115,29 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             </select>
         </div>
         <div class='col-xs-12 col-md-2 col-md-offset-3 form-group phone' data-key='billing-phone'>
+            <label class="control-label">Billing Phone</label>
             <input type='tel' class='form-control short-input' name='User[billingPhoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
         </div>
         <div class='col-xs-12 col-md-2 form-group phone' data-key='billing-phone'>
+            <label class="control-label">&nbsp;</label>
             <input type='tel' class='form-control short-input' name='User[billingPhone3]' maxlength="3" placeholder='XXX'/>
         </div>
         <div class='col-xs-12 col-md-2 form-group phone' data-key='billing-phone'>
+        <label class="control-label">&nbsp;</label>
             <input type='tel' class='form-control short-input' name='User[billingPhone4]' maxlength="4" placeholder='XXXX'/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <input type='text' class='form-control card-number' placeholder='Credit Card Number'/>
+            <label class="control-label">Credit Card #</label>
+            <input type='text' class='form-control card-number' name='cc' placeholder='Credit Card Number'/>
         </div>
         <div class='col-xs-4 col-md-2 col-md-offset-3 form-group'>
-            <input type='text' class='form-control card-cvv'    placeholder='CVV'/>
+            <label class="control-label">CVV</label>
+            <input type='text' class='form-control card-cvv'  name='cvv'  placeholder='CVV'/>
         </div>
 
         <div class='col-xs-4 col-md-2 form-group'>
-            <select  class="form-control card-expiry-month">
+         <label class="control-label">Expiry Month </label>
+            <select name='ccMonth' class="form-control card-expiry-month">
                 <option value=''>Month</option>
                 <?php for($index = 1 ; $index < 13; $index++){
                     $indexVal = $index < 10 ? '0'.$index : $index;
@@ -123,7 +147,8 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             </select>
         </div>
         <div class='col-xs-4 col-md-2 form-group'>
-            <select  class="form-control card-expiry-year">
+        <label class="control-label">Expiry Year</label>
+            <select name='ccYear' class="form-control card-expiry-year">
                 <option value=''>Year</option>
                 <?php
                 $curYear = date('Y');

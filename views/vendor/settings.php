@@ -49,11 +49,11 @@ $("select[name='TenantCode[HAS_DELIVERY]']").on('change', function() {
 });
 JS;
 
-$this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_publishable_key'] . '\');', $this::POS_READY);
+
 $this->registerJs($pageJs, $this::POS_READY);
 ?>
 
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
 
 <?php echo $this->render('//partials/_show_message', []);?>
 

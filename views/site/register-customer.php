@@ -37,11 +37,11 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             <label class="control-label">Street Address</label>
             <input type='text' class='form-control' name='User[streetAddress]' placeholder=""/>
         </div>
-        <div class='col-xs-12 col-sm-9 col-md-4 col-md-offset-3 form-group'>
+        <div class='col-xs-12 col-sm-6 col-md-3 col-md-offset-3 form-group'>
             <label class="control-label">City</label>
             <input type='text' class='form-control' name='User[city]'  placeholder=""/>
         </div>
-        <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+        <div class='col-xs-6 col-sm-3 col-md-1 form-group'>
             <label class="control-label">State</label>
             <select class='form-control' name='User[state]'>
                 <option value="" selected disabled hidden></option>
@@ -49,6 +49,10 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
                 <option value="<?php echo $stateCode?>" ><?php echo $stateCode?></option>
             <?php }?>
             </select>
+        </div>
+        <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+            <label class="control-label">Zip</label>
+            <input type='text' class='form-control' name='User[postalCode]'  placeholder="Zip"/>
         </div>
         <div class="col-xs-12 col-md-6 col-md-offset-3 form-group form-inline phone" data-key="phone">
             <label class="control-label">Phone Number</label><br />

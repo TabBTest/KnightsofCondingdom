@@ -7,6 +7,11 @@ use app\models\TenantInfo;
 use app\models\VendorMembership;
 use app\models\AppConfig;
 use app\models\VendorAppConfigOverride;
+
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
+use net\authorize\api\contract\v1\SettingType;
+
 class TenantHelper {
     
     static public function isDefaultTenant(){
@@ -88,30 +93,65 @@ class TenantHelper {
         
         $paymentInfo = array();
         $error = false;
-        try{    
+        //try{    
             $totalCharge  = floatval($membershipPrice);
-            $amount = $totalCharge * 100;
             $transactionId = '';
             $isSuccess = false;
             
-            \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
 
-            $charge = \Stripe\Charge::create(
-                array(
-                    "amount" => $amount,
-                    "currency" => "usd",
-                    "customer" => $user->stripeId, // obtained with Stripe.js
-                    "description" => "Vendor Membership - '.$startDate.' - '.$endDate.' : Charge for Vendor ID: ".$user->id,
-                )  );
+            // Common setup for API credentials
+            if($user->cimToken == null)
+                return false;
+            if($user->paymentProfileId == null)
+                return false;
             
-            //echo $charge;
-            $chargeArray = $charge->__toArray(true);
-            if($chargeArray['status'] == 'succeeded'){
-                           
-                    $transactionId = $chargeArray['id'];
+            // Common setup for API credentials (merchant)
+            $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+            $merchantAuthentication->setName(\Yii::$app->params['authorize.net.login.id']);
+            $merchantAuthentication->setTransactionKey(\Yii::$app->params['authorize.net.transaction.key']);
+            
+            $refId = 'ref' . time();
+            
+            $profileToCharge = new AnetAPI\CustomerProfilePaymentType();
+            $profileToCharge->setCustomerProfileId($user->cimToken);
+            $paymentProfile = new AnetAPI\PaymentProfileType();
+            $paymentProfile->setPaymentProfileId($user->paymentProfileId);
+            $profileToCharge->setPaymentProfile($paymentProfile);
+            
+            
+            $transactionRequestType = new AnetAPI\TransactionRequestType();
+            $transactionRequestType->setTransactionType( "authCaptureTransaction");
+            $transactionRequestType->setAmount($totalCharge);
+            $transactionRequestType->setProfile($profileToCharge);
+            
+            $settingsList = [];
+            $newSetting = new SettingType();
+            $newSetting->setSettingName('duplicateWindow');
+            $newSetting->setSettingValue(1);
+            $settingsList[] = $newSetting;
+            $transactionRequestType->setTransactionSettings($settingsList);
+            
+            $request = new AnetAPI\CreateTransactionRequest();
+            $request->setMerchantAuthentication($merchantAuthentication);
+            $request->setRefId( $refId);
+            $request->setTransactionRequest( $transactionRequestType);
+            
+            $controller = new AnetController\CreateTransactionController($request);
+            $response = $controller->executeWithApiResponse( UtilityHelper::getAuthorizeNetMode());
+            if ($response != null)
+            {
+                $tresponse = $response->getTransactionResponse();
+//                 /var_dump($tresponse->getResponseCode());
+                if (($tresponse != null) && ($tresponse->getResponseCode()== '1') )
+                {
+                    //echo  "Charge Customer Profile APPROVED  :" . "\n";
+                    //echo " Charge Customer Profile AUTH CODE : " . $tresponse->getAuthCode() . "\n";
+                    //echo " Charge Customer Profile TRANS ID  : " . $tresponse->getTransId() . "\n";
+                    
+                    $transactionId = $tresponse->getTransId();
                     $error = false;
                     //for($x = 0 ; $x < 50 ; $x++)
-                
+                    
                     $userMemberShip = new VendorMembership();
                     $userMemberShip->vendorId = $user->id;
                     $userMemberShip->startDate = $startDate;
@@ -119,20 +159,42 @@ class TenantHelper {
                     $userMemberShip->transactionId = $transactionId;
                     $userMemberShip->amount = $totalCharge;
                     $userMemberShip->cardLast4 = $user->cardLast4;
-                
+                    
                     if($userMemberShip->save()){
                         return true;
                         ;//NotificationHelper::sendAdminNotificationOfMembershipPurchase($userMemberShip, $totalCharge, $postParams['membershipType']);
-                    }                                    
+                    }
+                    
+                }
+                elseif (($tresponse != null) && ($tresponse->getResponseCode()=="2") )
+                {
+                    ;//echo  "ERROR" . "\n";
+                }
+                elseif (($tresponse != null) && ($tresponse->getResponseCode()=="4") )
+                {
+                    ;//echo  "ERROR: HELD FOR REVIEW:"  . "\n";
+                }
             }
+            else
+            {
+                //echo "no response returned";
+            }
+            return false;
+
+            
+            
     
             
     
     
-        }catch (\Stripe\Error\Card $e){
-            $error = $e->getJsonBody()['error']['message'];
-        }
-        return false;
+//         }catch (\Stripe\Error\Card $e){
+//             $error = $e->getJsonBody()['error']['message'];
+//         }
+//         return false;
+        
+        
+         
+    
     }
     static public function getCloseReason(){
         if(TenantHelper::isDefaultTenant() === false){
@@ -261,4 +323,87 @@ class TenantHelper {
         return '';
     }
     */
+        
+    public static function chargeCustomerCC($user, $totalCharge, $newCCInfo = false){
+        if($user->cimToken == null)
+            return false;
+        
+        if($newCCInfo !== false && $user->paymentProfileId == null)
+            return false;
+        
+        // Common setup for API credentials (merchant)
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName(\Yii::$app->params['authorize.net.login.id']);
+        $merchantAuthentication->setTransactionKey(\Yii::$app->params['authorize.net.transaction.key']);
+        
+        $refId = 'ref' . time();
+        
+        $transactionRequestType = new AnetAPI\TransactionRequestType();
+        $transactionRequestType->setTransactionType( "authCaptureTransaction");
+        $transactionRequestType->setAmount($totalCharge);
+        
+        if($newCCInfo == false){
+            $profileToCharge = new AnetAPI\CustomerProfilePaymentType();
+            $profileToCharge->setCustomerProfileId($user->cimToken);
+            $paymentProfile = new AnetAPI\PaymentProfileType();
+            $paymentProfile->setPaymentProfileId($user->paymentProfileId);
+            $profileToCharge->setPaymentProfile($paymentProfile);
+            $transactionRequestType->setProfile($profileToCharge);
+        }else{
+            //use new card
+            $creditCard = new AnetAPI\CreditCardType();
+            $creditCard->setCardNumber($newCCInfo['cc']);
+            $creditCard->setExpirationDate($newCCInfo['ccYear'].'-'. $newCCInfo['ccMonth']);
+            $creditCard->setCardCode($newCCInfo['cvv']);
+            $paymentOne = new AnetAPI\PaymentType();
+            $paymentOne->setCreditCard($creditCard);
+            $transactionRequestType->setPayment($paymentOne);
+        }
+        
+        
+        $settingsList = [];
+        $newSetting = new SettingType();
+        $newSetting->setSettingName('duplicateWindow');
+        $newSetting->setSettingValue(1);
+        $settingsList[] = $newSetting;
+        $transactionRequestType->setTransactionSettings($settingsList);
+        
+        $request = new AnetAPI\CreateTransactionRequest();
+        $request->setMerchantAuthentication($merchantAuthentication);
+        $request->setRefId( $refId);
+        $request->setTransactionRequest( $transactionRequestType);
+        
+        $controller = new AnetController\CreateTransactionController($request);
+        $response = $controller->executeWithApiResponse( UtilityHelper::getAuthorizeNetMode());
+       
+        if ($response != null)
+        {
+            $tresponse = $response->getTransactionResponse();
+//             var_dump($tresponse->getResponseCode());
+//             die;
+            if (($tresponse != null) && ($tresponse->getResponseCode()== '1') )
+            {
+                //echo  "Charge Customer Profile APPROVED  :" . "\n";
+                //echo " Charge Customer Profile AUTH CODE : " . $tresponse->getAuthCode() . "\n";
+                //echo " Charge Customer Profile TRANS ID  : " . $tresponse->getTransId() . "\n";
+        
+                return $tresponse->getTransId();
+                
+            }
+            elseif (($tresponse != null) && ($tresponse->getResponseCode()=="2") )
+            {
+                ;//echo  "ERROR" . "\n";
+            }
+            elseif (($tresponse != null) && ($tresponse->getResponseCode()=="4") )
+            {
+                ;//echo  "ERROR: HELD FOR REVIEW:"  . "\n";
+            }
+        }
+        else
+        {
+            //echo "no response returned";
+        }
+        die;
+        return false;
+    }
 }

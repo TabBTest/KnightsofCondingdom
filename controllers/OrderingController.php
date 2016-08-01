@@ -119,7 +119,7 @@ class OrderingController extends CController
             $user = User::findOne(\Yii::$app->user->id);
             $userVendor = User::findOne($user->vendorId);
             
-            try{
+            //try{
                 
 
                 $finalAmount = 0;
@@ -228,6 +228,7 @@ class OrderingController extends CController
                 if($paymentType == Orders::PAYMENT_TYPE_CARD){
                    
                     $finalAmount = number_format($totalFinalAmount, 2, '.', '');
+                    
                     \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
                     $amount = $finalAmount * 100;
                     
@@ -236,7 +237,16 @@ class OrderingController extends CController
                     if($_POST['cardToUse'] != 'current'){
                         $isNewCard = true;
                     }
+                    if(($user->cimToken == null || $user->paymentProfileId == null) && $_POST['cardToUse'] == 'current'){
+                        \Yii::$app->getSession()->setFlash('error', 'Credit Card Invalid, please use a new credit card');
+                        return $this->redirect('/ordering/menu');
+                    }
+                    
+                    
+                    $transactionId = false;
+                    $last4 = '';
                     if($isNewCard === false){
+                        /*
                         $charge = \Stripe\Charge::create(
                             array(
                                 "amount" => $amount,
@@ -248,32 +258,38 @@ class OrderingController extends CController
                         
                         //echo $charge;
                         $chargeArray = $charge->__toArray(true);
-                    }else{
-                        //new card
-                        $charge = \Stripe\Charge::create(
-                            array(
-                                "amount" => $amount,
-                                "currency" => "usd",
-                                "source" => $_POST['stripeToken'],
-                                "description" => "Order Charge for Customer ID: ".$user->id,
-                                // 'metadata' => $customerOrdersMetaData
-                            )  );
+                        */
                         
-                        //echo $charge;
-                        $chargeArray = $charge->__toArray(true);
+                        //charge via cc
+                        $last4 = $user->cardLast4;
+                        $transactionId = TenantHelper::chargeCustomerCC($user, $finalAmount, false);
+                    }else{
+                        if($user->cimToken == null || $user->cimToken == ''){
+                            $user->createNewPaymentProfile();
+                        }
+                        $last4 = substr($_POST['cc'], -4);
+                        $transactionId = TenantHelper::chargeCustomerCC($user, $finalAmount, $_POST);
                     }
-                    if(isset($chargeArray['status']) && $chargeArray['status'] == 'succeeded'){
-                        $order->transactionId = $chargeArray['id'];
-                        $order->cardLast4 = $user->cardLast4;
+                    
+                    if($transactionId !== false){
+                        $order->transactionId = $transactionId;
+                        $order->cardLast4 = $last4;
                         
                         if($isNewCard){
-                            $order->cardLast4 = $chargeArray['source']['last4'];;
+                            $order->cardLast4 = $last4;
                             $order->customBillingName = $_POST['billingName'];
                             $order->customBillingAddress = $_POST['billingStreetAddress'];
                             $order->customBillingCity = $_POST['billingCity'];
                             $order->customBillingState = $_POST['billingState'];
-                            $order->customBillingCardLast4 = $chargeArray['source']['last4'];;
+                            $order->customBillingCardLast4 = $last4;
                             
+                        }else{
+                            $order->cardLast4 = $last4;
+                            $order->customBillingName = $user->billingName;
+                            $order->customBillingAddress = $user->billingStreetAddress;
+                            $order->customBillingCity = $user->billingCity;
+                            $order->customBillingState = $user->billingState;
+                            $order->customBillingCardLast4 = $last4;
                         }
                         
                         
@@ -282,8 +298,11 @@ class OrderingController extends CController
                         $paymentGatewayFee = ($finalAmount * 0.029) + 0.3;
                         $order->paymentGatewayFee = $paymentGatewayFee;
                         
+                    }else{
+                        \Yii::$app->getSession()->setFlash('error', 'Error in processing order, please try again.');
+                        return $this->redirect('/ordering/menu');
                     }
-                    }else if($paymentType == Orders::PAYMENT_TYPE_CASH){
+                }else if($paymentType == Orders::PAYMENT_TYPE_CASH){
                         $order->isPaid = 0;
                         $order->paymentType = Orders::PAYMENT_TYPE_CASH;
                     }
@@ -320,11 +339,13 @@ class OrderingController extends CController
                     }
                     
                     if($order->save()){
+                        /*
                         if($paymentType == Orders::PAYMENT_TYPE_CARD){
                             $ch = \Stripe\Charge::retrieve($order->transactionId);
                             $ch->metadata = ['Order ID' => $order->id];
                             $ch->save();
                         }
+                        */
                         
                         foreach($_POST['Orders'] as  $orderKey => $menuItemId){
                             $quantity = $_POST['OrdersQuantity'][$orderKey];   
@@ -444,12 +465,12 @@ class OrderingController extends CController
                     else{
                      \Yii::$app->getSession()->setFlash('error', 'Error in processing order, please try again.');
                      }
-            
+            /*
             }catch (\Stripe\Error\Card $e){
                 $error = $e->getJsonBody()['error']['message'];
                 \Yii::$app->getSession()->setFlash('error', $error);
             }
-            
+            */
             
         }
         return $this->redirect('/ordering/menu');

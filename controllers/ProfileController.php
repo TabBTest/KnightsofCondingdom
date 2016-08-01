@@ -217,24 +217,30 @@ class ProfileController extends CController
                 $model->billingPhone3 = $userData['billingPhone3'];
                 $model->billingPhone4 = $userData['billingPhone4'];
 
-                \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
+                if($model->cimToken == null || $model->cimToken == ''){
+                    //create new customer profile token
+                    $model->createNewPaymentProfile();
+                }
+                //we save the cc
+                //create a new payment profile id
+                $model->saveCustomerPaymentProfile($_POST);
+                
+                //\Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
                 
                 // Get the credit card details submitted by the form
+                /*
                 $token = $_POST['stripeToken'];
                 
                 if($model->stripeId != null && $model->stripeId != ''){
-                    // Create a Customer
                     $customer = \Stripe\Customer::retrieve($model->stripeId);
-                    $customer->source = $token; // obtained with Stripe.js
+                    $customer->source = $token; 
                     $customer->save();
                 }else{
-                    //we create 
                     \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
                     $prefix = 'Vendor';
                     if($model->role == User::ROLE_CUSTOMER){
                         $prefix = 'Customer';
                     }
-                    // Create a Customer
                     $customer = \Stripe\Customer::create(array(
                         "source" => $token,
                         "description" => $prefix." ID: ".$user->id)
@@ -242,12 +248,11 @@ class ProfileController extends CController
                     $model->stripeId = $customer->id;
                     
                 }
-                
-                
+                */
                 if($model->save()){
-                    $model->storeCCInfo();
+                    $model->storeCCInfo($_POST);
                 }
-                
+                //die('ddd');
                 $message = 'Billing Info Saved Successfully';
     
                 if($model->save()){

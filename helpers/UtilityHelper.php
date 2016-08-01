@@ -4,6 +4,11 @@ namespace app\helpers;
 use yii\helpers\Html;
 use app\models\User;
 use app\models\AppConfig;
+use net\authorize\api\constants\ANetEnvironment;
+
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
+
 class UtilityHelper {
 /**
 	 * Check operating system
@@ -189,4 +194,18 @@ class UtilityHelper {
     public static function encodeIdentifier($id){
         return md5(base64_encode($id));
     }
+    
+    public static function getAuthorizeNetMode(){
+        if(\Yii::$app->params['authorize.net.mode'] == 'live')
+            return ANetEnvironment::PRODUCTION;
+        return ANetEnvironment::SANDBOX;
+        
+    }
+    
+    public static function getAuthorizeNetValidationMode(){
+        if(\Yii::$app->params['authorize.net.mode'] == 'live')
+            return 'liveMode';
+        return 'testMode';
+    }
+    
 }

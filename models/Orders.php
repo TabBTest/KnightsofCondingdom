@@ -3,7 +3,9 @@
 namespace app\models;
 
 use Yii;
-use Stripe\Refund;
+
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
 
 /**
  * This is the model class for table "orders".
@@ -80,6 +82,55 @@ class Orders extends \yii\db\ActiveRecord
         $doRefund = false;
         if($this->paymentType == self::PAYMENT_TYPE_CARD){
             //do stripe refund
+            
+            $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+            $merchantAuthentication->setName(\Yii::$app->params['authorize.net.login.id']);
+            $merchantAuthentication->setTransactionKey(\Yii::$app->params['authorize.net.transaction.key']);
+            
+            $refId = 'ref' . time();
+            
+            
+            //create a transaction
+            $transactionRequestType = new AnetAPI\TransactionRequestType();
+            $transactionRequestType->setTransactionType( "voidTransaction");
+            $transactionRequestType->setRefTransId($this->transactionId);
+            
+            $request = new AnetAPI\CreateTransactionRequest();
+            $request->setMerchantAuthentication($merchantAuthentication);
+            $request->setRefId($refId);
+            $request->setTransactionRequest( $transactionRequestType);
+            $controller = new AnetController\CreateTransactionController($request);
+            $response = $controller->executeWithApiResponse( \net\authorize\api\constants\ANetEnvironment::SANDBOX);
+            if ($response != null)
+            {
+                $tresponse = $response->getTransactionResponse();
+                if (($tresponse != null) && ($tresponse->getResponseCode()== '1') )
+                {
+                    //echo "Void transaction SUCCESS AUTH CODE: " . $tresponse->getAuthCode() . "\n";
+                    //echo "Void transaction SUCCESS TRANS ID  : " . $tresponse->getTransId() . "\n";
+                    
+                    if($this->refundTransactionId == null){
+                        $this->refundTransactionId = $tresponse->getTransId();
+                        $this->save();
+                        $doRefund = true;
+                    }
+                    
+                }
+                else
+                {
+                    //echo  "void transaction ERROR : " . $tresponse->getResponseCode() . "\n";
+                    //$errorMessages = $response->getMessages()->getMessage();
+                    //echo "Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText() . "\n";
+                    //use print_r to see whole $response which will have the specific error messages
+                }
+            }
+            else
+            {
+                //echo  "Void transaction Null esponse returned";
+            }
+            //return $response;
+            
+            /*
             \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
            
             $ch = \Stripe\Charge::retrieve($this->transactionId);
@@ -98,6 +149,7 @@ class Orders extends \yii\db\ActiveRecord
                 $this->save();
                 $doRefund = true;
             }
+            */
         }else if($this->paymentType == self::PAYMENT_TYPE_CASH){
             $doRefund = true;
         }

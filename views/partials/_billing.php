@@ -68,16 +68,16 @@ use yii\widgets\MaskedInput;
             </div>
             <div class='col-xs-12 col-md-6 form-group'>
                 <label>Card Number</label>
-                <input type='text' class='form-control card-number'  placeholder='<?php echo 'XXXX-XXXX-XXXX-'.$model->cardLast4?>'/>
+                <input type='text' class='form-control card-number'  name='cc' placeholder='<?php echo 'XXXX-XXXX-XXXX-'.$model->cardLast4?>'/>
             </div>
             <div class='col-xs-4 col-md-2  form-group'>
                 <label>Security Code</label>
-                <input type='text' class='form-control card-cvv'    placeholder='CVV'/>
+                <input type='text' class='form-control card-cvv'  name='cvv'  placeholder='CVV'/>
             </div>
 
             <div class='col-xs-4 col-md-2 form-group'>
                 <label>Expiry Month</label>
-                <select  class="form-control card-expiry-month">
+                <select name='ccMonth' class="form-control card-expiry-month">
                     <option value=''>Month</option>
                     <?php for($index = 1 ; $index < 13; $index++){
                         $indexVal = $index < 10 ? '0'.$index : $index;
@@ -88,7 +88,7 @@ use yii\widgets\MaskedInput;
             </div>
             <div class='col-xs-4 col-md-2 form-group'>
                 <label>Expiry Year</label>
-                <select  class="form-control card-expiry-year">
+                <select name='ccYear' class="form-control card-expiry-year">
                     <option value=''>Year</option>
                     <?php
                     $curYear = date('Y');

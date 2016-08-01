@@ -160,14 +160,14 @@ include('_main_order_summary_info.php');
                             </select>
                         </div>
                         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-                            <input type='text' class='form-control card-number' placeholder='Credit Card Number'/>
+                            <input type='text' class='form-control card-number' name='cc'  placeholder='Credit Card Number'/>
                         </div>
                         <div class='col-xs-4 col-md-2 col-md-offset-3 form-group'>
-                            <input type='text' class='form-control card-cvv'    placeholder='CVV'/>
+                            <input type='text' class='form-control card-cvv'  name='cvv'   placeholder='CVV'/>
                         </div>
                 
                         <div class='col-xs-4 col-md-2 form-group'>
-                              <select  class="form-control card-expiry-month">
+                              <select name='ccMonth'  class="form-control card-expiry-month">
                               <option value=''>Month</option>
                     		    	<?php for($index = 1 ; $index < 13; $index++){
                     		    	         $indexVal = $index < 10 ? '0'.$index : $index;
@@ -177,7 +177,7 @@ include('_main_order_summary_info.php');
                     		    </select>
                         </div>
                         <div class='col-xs-4 col-md-2 form-group'>
-                                 <select  class="form-control card-expiry-year">
+                                 <select name='ccYear'  class="form-control card-expiry-year">
                                  <option value=''>Year</option>
                     		    	<?php
                     		    	$curYear = date('Y');

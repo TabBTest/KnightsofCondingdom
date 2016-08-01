@@ -5,6 +5,8 @@ namespace app\models;
 use Yii;
 use app\helpers\UtilityHelper;
 use app\helpers\TenantHelper;
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
 
 /**
  * This is the model class for table "user".
@@ -66,7 +68,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['email', 'password', 'role'], 'required'],
             [['role', 'vendorId'], 'integer'],
-            [['date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone', 'isOptIn', 'isStoreOpen', 'storeCloseReason', 'timeToPickUp'], 'safe'],
+            [['cimToken', 'paymentProfileId', 'date_created', 'date_updated', 'isPasswordReset', 'cardLast4', 'cardExpiry', 'isActive', 'timezone', 'isOptIn', 'isStoreOpen', 'storeCloseReason', 'timeToPickUp'], 'safe'],
             [['email', 'password','businessName', 'firstName','lastName', 'streetAddress', 'city','phoneAreaCode','phone3','phone4','phoneNumber', 'billingName', 'billingStreetAddress', 'billingCity','billingPhoneAreaCode','billingPhone3','billingPhone4', 'billingPhoneNumber', 'stripeId', 'orderButtonImage'], 'string', 'max' => 250],
             [['state', 'billingState'], 'string', 'max' => 2],
             [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg']
@@ -259,7 +261,68 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $resp;
     }
     
-    public function storeCCInfo(){
+    public function storeCCInfo($params = false){
+        
+        if($this->cimToken == null)
+            return;
+        if($this->paymentProfileId == null)
+            return;
+        
+        // Common setup for API credentials (merchant)      
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName(\Yii::$app->params['authorize.net.login.id']);
+        $merchantAuthentication->setTransactionKey(\Yii::$app->params['authorize.net.transaction.key']);
+        
+        $refId = 'ref' . time();
+        
+        
+        
+        //request requires customerProfileId and customerPaymentProfileId
+        $request = new AnetAPI\GetCustomerPaymentProfileRequest();
+        $request->setMerchantAuthentication($merchantAuthentication);
+        $request->setRefId( $refId);
+        $request->setCustomerProfileId($this->cimToken);
+        $request->setCustomerPaymentProfileId($this->paymentProfileId);
+        
+        $controller = new AnetController\GetCustomerPaymentProfileController($request);
+        $response = $controller->executeWithApiResponse( \net\authorize\api\constants\ANetEnvironment::SANDBOX);
+        if(($response != null)){
+            if ($response->getMessages()->getResultCode() == "Ok")
+            {
+                //echo "GetCustomerPaymentProfile SUCCESS: " . "\n";
+                //echo "Customer Payment Profile Id: " . $response->getPaymentProfile()->getCustomerPaymentProfileId() . "\n";
+                //echo "Customer Payment Profile Billing Address: " . $response->getPaymentProfile()->getbillTo()->getAddress(). "\n";
+                //echo "Customer Payment Profile Card Last 4 " . $response->getPaymentProfile()->getPayment()->getCreditCard()->getCardNumber(). "\n";
+        
+                $last4 = $response->getPaymentProfile()->getPayment()->getCreditCard()->getCardNumber();
+                $this->cardLast4 = str_replace('XXXX', '', $last4);
+                if($params !== false){
+                    $this->cardExpiry = $params['ccYear'].'-'.sprintf("%02d", $params['ccMonth']).'-01';;
+                }
+                $this->save();
+                
+                $cardHistory = new UserCardHistory();
+                $cardHistory->userId = $this->id;
+                $cardHistory->cardLast4 = str_replace('XXXX', '', $last4);;
+                if($params !== false){
+                    $cardHistory->cardExpiry = $params['ccYear'].'-'.sprintf("%02d", $params['ccMonth']).'-01';;
+                }
+                $cardHistory->save();
+//                 var_dump($response);
+//                 die;
+            }
+//             else
+//             {
+//                 echo "GetCustomerPaymentProfile ERROR :  Invalid response\n";
+//                 $errorMessages = $response->getMessages()->getMessage();
+//                 echo "Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText() . "\n";
+//             }
+        }
+//         else{
+//             echo "NULL Response Error";
+//         }
+        //return $response;
+        /*
         \Stripe\Stripe::setApiKey(\Yii::$app->params['stripe_secret_key']);
         $customer = \Stripe\Customer::retrieve($this->stripeId);
         
@@ -279,7 +342,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $cardHistory->cardExpiry = $expiry;
             $cardHistory->save();
         }
-           
+         */  
     }
     public function testCardState(){
         
@@ -486,5 +549,169 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             $totalAmount = $order->getTotalAdminReceivableCost();
         }
         return $totalAmount;
+    }
+    
+    public function createNewCustomerProfile(){
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName(\Yii::$app->params['authorize.net.login.id']);
+        $merchantAuthentication->setTransactionKey(\Yii::$app->params['authorize.net.transaction.key']);
+        
+        $refId = 'ref' . time();
+        
+        $customerprofile = new AnetAPI\CustomerProfileType();
+        $customerprofile->setDescription("Customer ID# ".$this->id);
+        $customerprofile->setMerchantCustomerId($this->id);
+        $customerprofile->setEmail($this->email);
+        //$customerprofile->setPaymentProfiles($paymentprofiles);
+        $request = new AnetAPI\CreateCustomerProfileRequest();
+        $request->setMerchantAuthentication($merchantAuthentication);
+        $request->setRefId( $refId);
+        $request->setProfile($customerprofile);
+        $controller = new AnetController\CreateCustomerProfileController($request);
+        $response = $controller->executeWithApiResponse( UtilityHelper::getAuthorizeNetMode());
+        if (($response != null) && ($response->getMessages()->getResultCode() == "Ok") )
+        {
+            $this->cimToken = $response->getCustomerProfileId();
+            $this->save();
+            return true;
+            //$paymentProfiles = $response->getCustomerPaymentProfileIdList();
+            //echo "SUCCESS: PAYMENT PROFILE ID : " . $paymentProfiles[0] . "\n";
+        }
+        else
+        {
+            echo "ERROR :  Invalid response\n";
+            $errorMessages = $response->getMessages()->getMessage();
+            echo "Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText() . "\n";
+        }
+        return $response;
+    }
+    
+    public static function testCC($user){
+        
+    }
+    
+    public function createNewPaymentProfile(){
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName(\Yii::$app->params['authorize.net.login.id']);
+        $merchantAuthentication->setTransactionKey(\Yii::$app->params['authorize.net.transaction.key']);
+        
+        $refId = 'ref' . time();
+        
+       
+        
+      
+         
+        // Create a Customer Profile Request
+        //  1. create a Payment Profile
+        //  2. create a Customer Profile
+        //  3. Submit a CreateCustomerProfile Request
+        //  4. Validate Profiiel ID returned
+        
+         
+        
+        $customerprofile = new AnetAPI\CustomerProfileType();
+        $customerprofile->setDescription($_SERVER['HTTP_HOST'].' - '." User ID# ".$this->id);
+        $customerprofile->setMerchantCustomerId($this->id);
+        $customerprofile->setEmail($this->email);
+        //$customerprofile->setPaymentProfiles($paymentprofiles);
+        $request = new AnetAPI\CreateCustomerProfileRequest();
+        $request->setMerchantAuthentication($merchantAuthentication);
+        $request->setRefId( $refId);
+        $request->setProfile($customerprofile);
+        //$request->setValidationMode(UtilityHelper::getAuthorizeNetValidationMode());
+        $controller = new AnetController\CreateCustomerProfileController($request);
+        $response = $controller->executeWithApiResponse( UtilityHelper::getAuthorizeNetMode());
+        if (($response != null) && ($response->getMessages()->getResultCode() == "Ok") )
+        {
+        
+            $this->cimToken = $response->getCustomerProfileId();
+            return true; 
+        }else{
+            var_dump($response);
+            die;
+        }
+        return false;
+    }
+    
+    public function saveCustomerPaymentProfile($params){
+        
+        // Common setup for API credentials
+        if($this->cimToken == null || $this->cimToken == ''){
+            return;
+        }
+            
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName(\Yii::$app->params['authorize.net.login.id']);
+        $merchantAuthentication->setTransactionKey(\Yii::$app->params['authorize.net.transaction.key']);
+        $refId = 'ref' . time();
+        // Create the payment data for a credit card
+        $creditCard = new AnetAPI\CreditCardType();
+        $creditCard->setCardNumber(  $params['cc']);
+        $creditCard->setExpirationDate(  $params['ccYear'].'-'. $params['ccMonth']);
+        $creditCard->setCardCode($params['cvv']);
+        $paymentCreditCard = new AnetAPI\PaymentType();
+        $paymentCreditCard->setCreditCard($creditCard);
+       
+        // Create a Customer Profile Request
+        //  1. create a Payment Profile
+        //  2. create a Customer Profile
+        //  3. Submit a CreateCustomerProfile Request
+        //  4. Validate Profiiel ID returned
+        $paymentprofile = new AnetAPI\CustomerPaymentProfileType();
+        $paymentprofile->setCustomerType('individual');
+        $paymentprofile->setPayment($paymentCreditCard);
+        $paymentprofiles[] = $paymentprofile;
+      
+        //Set profile ids of profile to be updated
+        $isNewProfile = true;
+        
+        if($this->paymentProfileId != null && $this->paymentProfileId != ''){
+            //we update
+            $request = new AnetAPI\UpdateCustomerPaymentProfileRequest();
+            $request->setMerchantAuthentication($merchantAuthentication);
+            $request->setCustomerProfileId($this->cimToken);
+            
+            $paymentprofile = new AnetAPI\CustomerPaymentProfileExType();
+            $paymentprofile->setCustomerPaymentProfileId($this->paymentProfileId);
+            $paymentprofile->setPayment($paymentCreditCard);
+            
+            // Submit a UpdatePaymentProfileRequest
+            $request->setPaymentProfile( $paymentprofile );
+            $request->setValidationMode(UtilityHelper::getAuthorizeNetValidationMode());
+            $controller = new AnetController\UpdateCustomerPaymentProfileController($request);
+            $response = $controller->executeWithApiResponse( \net\authorize\api\constants\ANetEnvironment::SANDBOX);
+             
+            $isNewProfile = false;
+        }else{
+            //we create a new profile
+            // Submit a CreateCustomerPaymentProfileRequest to create a new Customer Payment Profile
+            $paymentprofilerequest = new AnetAPI\CreateCustomerPaymentProfileRequest();
+            $paymentprofilerequest->setMerchantAuthentication($merchantAuthentication);
+            //Use an existing profile id
+            $paymentprofilerequest->setCustomerProfileId( $this->cimToken );
+            $paymentprofilerequest->setPaymentProfile( $paymentprofile );
+            $paymentprofilerequest->setValidationMode(UtilityHelper::getAuthorizeNetValidationMode());
+            $controller = new AnetController\CreateCustomerPaymentProfileController($paymentprofilerequest);
+            $response = $controller->executeWithApiResponse( \net\authorize\api\constants\ANetEnvironment::SANDBOX);
+             
+            
+        }
+        
+        
+
+	  // Create the Customer Payment Profile object
+	  if (($response != null) && ($response->getMessages()->getResultCode() == "Ok") )
+	  {
+	      if($isNewProfile){
+    	      $this->paymentProfileId = $response->getCustomerPaymentProfileId();
+    		  $this->save();
+	      }
+	   }
+	  else
+	  {
+		  echo "Update Customer Payment Profile: ERROR Invalid response\n";
+		  $errorMessages = $response->getMessages()->getMessage();
+		  echo "Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText() . "\n";
+	  }
     }
 }

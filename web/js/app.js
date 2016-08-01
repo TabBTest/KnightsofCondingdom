@@ -58,14 +58,18 @@ $(document).ready(function () {
       $(this).parent().parent().find('.help-block').html('');
       if ($(this).data('is-last') == 1) {
         $(this).attr('disabled', true);
+        /*
         Stripe.card.createToken({
           number: $('.card-number').val(),
           cvc: $('.card-cvv').val(),
           exp_month: $('.card-expiry-month').val(),
           exp_year: $('.card-expiry-year').val()
         }, stripeResponseHandler);
-
-
+        */
+        App.ccValidator({number: $('.card-number').val(),
+	        cvc: $('.card-cvv').val(),
+	        exp_month: $('.card-expiry-month').val(),
+	        exp_year: $('.card-expiry-year').val()},stripeResponseHandler);
         //$('.btn-prev-last').attr('disabled', true);
         //$('form input, form textarea, select').DataSaver('remove');
 
@@ -95,12 +99,19 @@ $(document).ready(function () {
     if ($('#billing-form .has-error').length == 0) {
       //we
       //(this).attr('disabled', true);
+    	/*
       Stripe.card.createToken({
         number: $('.card-number').val(),
         cvc: $('.card-cvv').val(),
         exp_month: $('.card-expiry-month').val(),
         exp_year: $('.card-expiry-year').val()
       }, stripeResponseHandlerSaveBilling);
+      */
+    	App.ccValidator({number: $('.card-number').val(),
+    	        cvc: $('.card-cvv').val(),
+    	        exp_month: $('.card-expiry-month').val(),
+    	        exp_year: $('.card-expiry-year').val()},stripeResponseHandlerSaveBilling);
+      	
     }
   })
   // submit
@@ -558,12 +569,19 @@ var Order = {
 	    		 }
 	    	 }else if($(this).data('step') == 'step3'){
 	    		 $(this).attr('disabled', true);
+	    		 /*
     	         Stripe.card.createToken({
     	           number: $('.card-number').val(),
     	           cvc: $('.card-cvv').val(),
     	           exp_month: $('.card-expiry-month').val(),
     	           exp_year: $('.card-expiry-year').val()
     	         }, stripeResponseOrderHandler);
+    	         */
+    	         App.ccValidator({number: $('.card-number').val(),
+    	    	        cvc: $('.card-cvv').val(),
+    	    	        exp_month: $('.card-expiry-month').val(),
+    	    	        exp_year: $('.card-expiry-year').val()},stripeResponseOrderHandler);
+    	         
 	    	 }else if($(this).data('step') == 'step4'){
 	    		 $('#main-order-summary').submit();
 	    	 }
@@ -1228,7 +1246,6 @@ function stripeResponseHandlerSaveBilling(status, response) {
 
   // Grab the form:
   var $form = $('#billing-form');
-
   if (response.error) { // Problem!
 
     // Show the errors on the form:
@@ -1238,10 +1255,11 @@ function stripeResponseHandlerSaveBilling(status, response) {
   } else { // Token created!
 
     // Get the token ID:
-    var token = response.id;
+    //var token = response.id;
 
     // Insert the token into the form so it gets submitted to the server:
-    $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+    //$form.append($('<input type="hidden" name="stripeToken" />').val(token));
+	 
     $('form#billing-form').submit();
   }
 }
@@ -1259,10 +1277,10 @@ function stripeResponseOrderHandler(status, response) {
 	  } else { // Token created!
 
 	    // Get the token ID:
-	    var token = response.id;
+	    //var token = response.id;
 
 	    // Insert the token into the form so it gets submitted to the server:
-	    $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+	    //$form.append($('<input type="hidden" name="stripeToken" />').val(token));
 	    //$('form#main-order-summary').submit();
 	    
 	    $('#checkout-modal .fieldset:visible').fadeOut(400, function () {
@@ -1285,10 +1303,10 @@ function stripeResponseHandler(status, response) {
   } else { // Token created!
 
     // Get the token ID:
-    var token = response.id;
+    //var token = response.id;
 
     // Insert the token into the form so it gets submitted to the server:
-    $form.append($('<input type="hidden" name="stripeToken" />').val(token));
+    //$form.append($('<input type="hidden" name="stripeToken" />').val(token));
     $('form#register-form').submit();
   }
 }
@@ -1803,6 +1821,40 @@ var Messages = {
   }
 };
 
+var App = {
+	ccValidator : function(params, callback){
+		/*
+		 * (number: $('.card-number').val(),
+    	        cvc: $('.card-cvv').val(),
+    	        exp_month: $('.card-expiry-month').val(),
+    	        exp_year: $('.card-expiry-year').val(),stripeResponseHandlerSaveBilling)
+		 */
+		//console.log(params.number);
+		
+		var valid = $.payment.validateCardNumber(params.number);
+		var response = {};
+		
+		if (!valid) {
+		  response.error = {};
+		  response.error.message = 'Invalid Credit Card Number';
+		  return callback(true, response);
+		}
+		var valid = $.payment.validateCardExpiry(params.exp_month, params.exp_year); //=> true
+		if (!valid) {
+		  response.error = {};
+		  response.error.message = 'Invalid Credit Card Expiration Date';
+		  return callback(true, response);
+		}
+		
+		var valid = $.payment.validateCardCVC(params.cvc, $.payment.cardType(params.number)); //=> true
+		if (!valid) {
+		  response.error = {};
+		  response.error.message = 'Invalid Credit Card Expiration Date';
+		  return callback(true, response);
+		}
+		 return callback(true, response);
+	}
+}
 function listLinkActions() {
   $('.show-action').on('click', function (e) {
     e.preventDefault();

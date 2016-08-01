@@ -21,8 +21,16 @@
         "stripe/stripe-php" : "2.*",
         "yiisoft/yii2-redis": "^2.0",
         "bower-asset/bootstrap-material-design": "^0.5.10",
-        "bower-asset/sweetalert": "^1.1"
+        "bower-asset/sweetalert": "^1.1",
+        "ext-curl": "*",
+        "symfony/yaml" : "*",
+  		"authorizenet/authorizenet": "1.8.9",
+  		"jms/serializer": "serializer-master-dev as 1.0"
     },
+    "repositories": [{
+       "type": "vcs",
+       "url": "https://github.com/goetas/serializer.git"
+  	}],
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
         "yiisoft/yii2-debug": "*",

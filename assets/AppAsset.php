@@ -34,9 +34,9 @@ class AppAsset extends AssetBundle
         'js/clipboard.min.js',
         'js/bootstrap-timepicker.js',
         'js/ga.js',
+        '/js/jquery.payment.min.js',
         'js/app.js',
     ];
-
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap\BootstrapAsset',
