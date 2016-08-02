@@ -69,16 +69,10 @@ use yii\widgets\MaskedInput;
             <label>Email</label>
             <input type='text' class='form-control' name='User[email]' id='email'  value='<?php echo $model->email?>'/>
         </div>
-        <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
-            <label>Phone</label>           
+        <div class='col-xs-12 col-md-6 form-group form-inline phone' data-key='phone'>
+            <label class="control-label">Phone</label><br />
             <input type='tel' class='form-control short-input' name='User[phoneAreaCode]' value='<?php echo $model->phoneAreaCode?>' maxlength="3" placeholder='Area Code'/>
-        </div>
-        <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
-            <label>&nbsp;</label>  
             <input type='tel' class='form-control short-input' name='User[phone3]' value='<?php echo $model->phone3?>' maxlength="3" placeholder='XXX'/>
-        </div>
-        <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
-            <label>&nbsp;</label>
             <input type='tel' class='form-control short-input' name='User[phone4]' value='<?php echo $model->phone4?>' maxlength="4" placeholder='XXXX'/>
         </div>
         
@@ -96,11 +90,11 @@ use yii\widgets\MaskedInput;
            
         </div>
         <div class='col-xs-12 form-group'>
-            <button type='button' class='btn btn-info btn-change-password' data-id='<?php echo md5($model->id)?>'>Change Password</button>
+            <button type='button' class='btn btn-primary btn-change-password' data-id='<?php echo md5($model->id)?>'>Change Password</button>
         </div>
         
         <div class='col-xs-12 form-group text-center'>
-            <button class='btn btn-success'>Save</button>
+            <button class='btn btn-primary btn-raised'>Save</button>
         </div>
 
     </form>

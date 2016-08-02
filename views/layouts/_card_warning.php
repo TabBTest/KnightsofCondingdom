@@ -19,8 +19,6 @@ if(!Yii::$app->user->isGuest){
             <div class='alert alert-danger'>Please add your card billing information, update your card <a class="alert-link" href="<?php echo $url?>/">here</a>.</div>
             <?php
         }
-        
-        
         if(Yii::$app->session->get('role') == User::ROLE_VENDOR){
             //we check if membership is expired
              if(Yii::$app->user->identity->isMembershipExpired()){
@@ -28,7 +26,5 @@ if(!Yii::$app->user->isGuest){
                  <div class='alert alert-danger'>Membership is expired, click <a class="alert-link" href='/vendor/settings?view=billing'>here</a> to update your billing information.</div>
              <?php
              }
-           
         }
-        
 }?>

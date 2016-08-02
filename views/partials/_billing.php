@@ -98,7 +98,7 @@ use yii\widgets\MaskedInput;
                 </select>
             </div>
             <div class='col-xs-12 form-group text-center'>
-                <button type='button' class='btn btn-success btn-save-billing'>Save</button>
+                <button type='button' class='btn btn-primary btn-raised btn-save-billing'>Save</button>
             </div>
 
                 
