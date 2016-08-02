@@ -25,54 +25,63 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
         <h1>REGISTER</h1>
         <h3>Step 1 - Account Information</h3>
         </div>
-        <div class='col-xs-6 col-md-3 col-md-offset-3 form-group'>
-            <input type='text' class='form-control' name='User[firstName]' placeholder='First Name'/>
+        <div class="col-xs-6 col-md-3 col-md-offset-3 form-group">
+            <label class="control-label">First Name</label>
+            <input type="text" class="form-control" name="User[firstName]" placeholder=""/>
         </div>
-        <div class='col-xs-6 col-md-3 form-group'>
-            <input type='text' class='form-control' name='User[lastName]' placeholder='Last Name'/>
+        <div class="col-xs-6 col-md-3 form-group">
+            <label class="control-label">Last Name</label>
+            <input type='text' class='form-control' name='User[lastName]' placeholder=""/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <input type='text' class='form-control' name='User[streetAddress]'  placeholder='Street Address'/>
+            <label class="control-label">Street Address</label>
+            <input type='text' class='form-control' name='User[streetAddress]' placeholder=""/>
         </div>
         <div class='col-xs-12 col-sm-9 col-md-4 col-md-offset-3 form-group'>
-            <input type='text' class='form-control' name='User[city]'  placeholder='City'/>
+            <label class="control-label">City</label>
+            <input type='text' class='form-control' name='User[city]'  placeholder=""/>
         </div>
         <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+            <label class="control-label">State</label>
             <select class='form-control' name='User[state]'>
-                <option value="" selected disabled hidden>State</option>
+                <option value="" selected disabled hidden></option>
                 <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
                 <option value="<?php echo $stateCode?>" ><?php echo $stateCode?></option>
             <?php }?>
             </select>
         </div>
-        <div class='col-xs-12 col-md-2 col-md-offset-3 form-group phone' data-key='phone'>
-            <input type='tel' class='form-control short-input' name='User[phoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
-        </div>
-        <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
+        <div class="col-xs-12 col-md-6 col-md-offset-3 form-group form-inline phone" data-key="phone">
+            <label class="control-label">Phone Number</label><br />
+            <input type="tel" class="form-control short-input" name='User[phoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
             <input type='tel' class='form-control short-input' name='User[phone3]' maxlength="3" placeholder='XXX'/>
-        </div>
-        <div class='col-xs-12 col-md-2 form-group phone' data-key='phone'>
             <input type='tel' class='form-control short-input' name='User[phone4]' maxlength="4" placeholder='XXXX'/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <input type='text' class='form-control' name='User[email]' id='email'  placeholder='Email'/>
+            <label class="control-label">Email</label>
+            <input type='text' class='form-control' name='User[email]' id='email'  placeholder=""/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <input type='text' class='form-control' name='confirmEmail' id='confirmEmail'  placeholder='Confirm Email'/>
+            <label class="control-label">Confirm Email</label>
+            <input type='text' class='form-control' name='confirmEmail' id='confirmEmail'  placeholder=""/>
         </div>
         
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
             <input type='hidden' name='isOptIn' value='0'/>
-            <input type='checkbox' class='' value='1' name='isOptIn'/>&nbsp;&nbsp;&nbsp;I want to receive promotional emails
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="1" name="isOptIn" />
+                    I want to receive promotional emails
+                </label>
+            </div>
         </div>
-        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+        <div class='col-xs-12 col-md-12 form-group'>
             <div align="center" class="g-recaptcha" data-sitekey="<?= $params['recaptcha_site_key'] ?>"></div>
             <script type="text/javascript"
                     src="https://www.google.com/recaptcha/api.js?hl=en">
             </script>
         </div>
-        <div class='col-xs-12 form-group text-center'>
-            <button type='button' class='btn btn-success btn-next'>NEXT</button>
+        <div class="col-xs-12 form-group text-center">
+            <button type="button" class="btn btn-primary btn-raised btn-next">NEXT</button>
         </div>
     </div>
     <div class='row fieldset' style='display: none'>
@@ -81,41 +90,44 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             <h3>Step 2 - Payment Information</h3>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <input type='text' class='form-control' name='User[billingName]' placeholder='Billing Name'/>
+            <label class="control-label">Billing Name</label>
+            <input type='text' class='form-control' name='User[billingName]' placeholder="" />
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <input type='text' class='form-control' name='User[billingStreetAddress]'  placeholder='Billing Street Address'/>
+            <label class="control-label">Billing Street Address</label>
+            <input type='text' class='form-control' name='User[billingStreetAddress]' placeholder="" />
         </div>
         <div class='col-xs-12 col-sm-9 col-md-4 col-md-offset-3 form-group'>
-            <input type='text' class='form-control' name='User[billingCity]'  placeholder='City'/>
+            <label class="control-label">Billing City</label>
+            <input type='text' class='form-control' name='User[billingCity]' placeholder="" />
         </div>
         <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+            <label class="control-label">Billing State</label>
             <select class='form-control' name='User[billingState]'>
-                <option value="" selected disabled hidden>State</option>
+                <option value="" selected disabled hidden></option>
                 <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
                 <option value="<?php echo $stateCode?>" ><?php echo $stateCode?></option>
             <?php }?>
             </select>
         </div>
-         <div class='col-xs-12 col-md-2 col-md-offset-3 form-group phone' data-key='billing-phone'>
-            <input type='tel' class='form-control short-input' name='User[billingPhoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
-        </div>
-        <div class='col-xs-12 col-md-2 form-group phone' data-key='billing-phone'>
-            <input type='tel' class='form-control short-input' name='User[billingPhone3]' maxlength="3" placeholder='XXX'/>
-        </div>
-        <div class='col-xs-12 col-md-2 form-group phone' data-key='billing-phone'>
-            <input type='tel' class='form-control short-input' name='User[billingPhone4]' maxlength="4" placeholder='XXXX'/>
+         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group form-inline phone' data-key='billing-phone'>
+             <label class="control-label">Billing Phone Number</label><br />
+             <input type='tel' class='form-control short-input' name='User[billingPhoneAreaCode]'  maxlength="3" placeholder='Area Code'/>
+             <input type='tel' class='form-control short-input' name='User[billingPhone3]' maxlength="3" placeholder='XXX'/>
+             <input type='tel' class='form-control short-input' name='User[billingPhone4]' maxlength="4" placeholder='XXXX'/>
         </div>
         <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-            <input type='text' class='form-control card-number' placeholder='Credit Card Number'/>
+            <label class="control-label">Credit Card Number</label>
+            <input type='text' class='form-control card-number' placeholder=""/>
         </div>
         <div class='col-xs-4 col-md-2 col-md-offset-3 form-group'>
-            <input type='text' class='form-control card-cvv'    placeholder='CVV'/>
+            <label class="control-label">CVV</label>
+            <input type='text' class='form-control card-cvv' placeholder=""/>
         </div>
 
         <div class='col-xs-4 col-md-2 form-group'>
+            <label class="control-label">Expiry Month</label>
               <select  class="form-control card-expiry-month">
-              <option value=''>Month</option>
     		    	<?php for($index = 1 ; $index < 13; $index++){
     		    	         $indexVal = $index < 10 ? '0'.$index : $index;
     		    	    ?>
@@ -124,8 +136,8 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
     		    </select>
         </div>
         <div class='col-xs-4 col-md-2 form-group'>
+            <label class="control-label">Expiry Year</label>
                  <select  class="form-control card-expiry-year">
-                 <option value=''>Year</option>
     		    	<?php
     		    	$curYear = date('Y');
     		    	for($index = $curYear ; $index < $curYear + 20; $index++){?>
@@ -135,7 +147,7 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
         </div>
 
         <div class='col-xs-12 form-group text-center'>
-            <button type='button' class='btn btn-success btn-next btn-register' data-is-last='1'>SUBMIT</button>
+            <button type='button' class='btn btn-primary btn-raised btn-next btn-register' data-is-last='1'>SUBMIT</button>
         </div>
     </div>
     </form>
