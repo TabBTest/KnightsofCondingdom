@@ -143,75 +143,8 @@ $(document).ready(function () {
     })
 
   });
-  $('.edit-category-item').on('click', function () {
 
-    $.get('/menu/edit-category', 'id=' + $(this).data('id'), function (html) {
-      $('#custom-modal .modal-title').html('Edit Category');
-      $('#custom-modal .modal-body').html(html);
-      $('#custom-modal').modal('show');
 
-      $('.delete-menu-category').off('click');
-      $('.delete-menu-category').on('click', function () {
-        var categoryId = $(this).data('menu-category-id');
-        swal({
-            title: "Delete Menu Category?",
-            text: "Are you sure you want to delete this menu category?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonText: 'Yes, remove it',
-            cancelButtonText: 'No, keep it'
-          },
-          function (isConfirm) {
-            if (isConfirm) {
-              $.post('/menu/delete-category', 'id=' + categoryId, function (html) {
-                window.location.href = '/menu';
-              });
-            }
-          }
-        );
-      });
-    })
-
-  });
-  $('.add-menu-item').on('click', function () {
-    var sorting = $('.vendor-menu-category-item-' + $(this).data('category-id')).length + 1;
-    $.get('/menu/add-item', 'id=' + $(this).data('id') + '&categoryId=' + $(this).data('category-id') + '&sorting=' + sorting, function (html) {
-      $('#custom-modal .modal-title').html('Add Menu Item');
-      $('#custom-modal .modal-body').html(html);
-      $('#custom-modal').modal('show');
-    })
-
-  });
-  $('.add-menu-item-add-ons').on('click', VendorMenu.newAddOn);
-
-  $('.edit-menu-item').on('click', function () {
-    $.get('/menu/edit-item', 'id=' + $(this).data('menu-item-id'), function (html) {
-      $('#custom-modal .modal-title').html('Edit Menu Item');
-      $('#custom-modal .modal-body').html(html);
-      $('#custom-modal').modal('show');
-      $('.delete-menu-item').off('click');
-      $('.delete-menu-item').on('click', function () {
-        var itemId = $(this).data('menu-item-id');
-        swal({
-            title: "Delete Item?",
-            text: "Are you sure you want to delete this item?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonText: 'Yes, remove it',
-            cancelButtonText: 'No, keep it'
-          },
-          function (isConfirm) {
-            if (isConfirm) {
-              $.post('/menu/delete-item', 'id=' + itemId, function (html) {
-                window.location.href = '/menu';
-              });
-            }
-          });
-      });
-
-    })
-
-  });
 
   $('.btn-submit-order').on('click', function () {
     var hasOrder = false;
@@ -1324,9 +1257,102 @@ var VendorMenu = {
     });
 
     if ($('#menu-item-form .has-error').length == 0) {
-      $('#menu-item-form').submit();
+      //$('#menu-item-form').submit();
+      
+      $.post($('#menu-item-form').attr('action'), $('#menu-item-form').serialize(), function(data){
+    	  $('#custom-modal').modal('hide');
+    	  var resp = $.parseJSON(data);
+    	  if($('.menu-panel[data-menu-id='+resp.id+']').length == 1)
+    		  $('.menu-panel[data-menu-id='+resp.id+']').replaceWith(resp.html);
+    	  else{
+    		  //addd in the end
+    		  $('#category'+resp.menuCategoryId+' .categories-menu-panel').append(resp.html);
+
+    	  }
+    	  Messages.showSuccess('Menu Item Saved Successfully');
+      })
     }
   },
+  addItem : function (categoryId, menuId) {
+	    var sorting = $('.vendor-menu-category-item-' + categoryId).length + 1;
+	    $.get('/menu/add-item', 'id=' + menuId + '&categoryId=' + categoryId + '&sorting=' + sorting, function (html) {
+	      $('#custom-modal .modal-title').html('Add Menu Item');
+	      $('#custom-modal .modal-body').html(html);
+	      $('#custom-modal').modal('show');
+	    })
+
+  },
+  editItem :  function (menuItemId) {
+	    $.get('/menu/edit-item', 'id=' + menuItemId, function (html) {
+	        $('#custom-modal .modal-title').html('Edit Menu Item');
+	        $('#custom-modal .modal-body').html(html);
+	        $('#custom-modal').modal('show');
+	        $('.delete-menu-item').off('click');
+	        $('.delete-menu-item').on('click', function () {
+	          var itemId = menuItemId;
+	          swal({
+	              title: "Delete Item?",
+	              text: "Are you sure you want to delete this item?",
+	              type: "warning",
+	              showCancelButton: true,
+	              confirmButtonText: 'Yes, remove it',
+	              cancelButtonText: 'No, keep it'
+	            },
+	            function (isConfirm) {
+	              if (isConfirm) {
+	                $.post('/menu/delete-item', 'id=' + itemId, function (html) {
+	                  //window.location.href = '/menu';
+	                  
+	                  if($('.menu-panel[data-menu-id='+itemId+']').length == 1){
+	                	  $('.menu-panel[data-menu-id='+itemId+']').remove();
+	                	  $('#custom-modal').modal('hide');
+	                	  Messages.showSuccess('Menu Item Deleted Successfully');
+	                  }
+	            		  
+	                  
+	                });
+	              }
+	            });
+	        });
+
+	      })
+
+    },
+    editCategoryItem : function (catId) {
+
+        $.get('/menu/edit-category', 'id=' + catId, function (html) {
+          $('#custom-modal .modal-title').html('Edit Category');
+          $('#custom-modal .modal-body').html(html);
+          $('#custom-modal').modal('show');
+
+          $('.delete-menu-category').off('click');
+          $('.delete-menu-category').on('click', function () {
+            var categoryId = $(this).data('menu-category-id');
+            swal({
+                title: "Delete Menu Category?",
+                text: "Are you sure you want to delete this menu category?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: 'Yes, remove it',
+                cancelButtonText: 'No, keep it'
+              },
+              function (isConfirm) {
+                if (isConfirm) {
+                  $.post('/menu/delete-category', 'id=' + categoryId, function (html) {
+                	  //window.location.href = '/menu';
+                      if($('.categories-panel[data-category-id='+categoryId+']').length == 1){
+	                	  $('.categories-panel[data-category-id='+categoryId+']').remove();
+	                	  $('#custom-modal').modal('hide');
+	                	  Messages.showSuccess('Menu Category Deleted Successfully');
+	                  }
+                  });
+                }
+              }
+            );
+          });
+        })
+
+      },
   saveItemAddOns: function () {
     $('#menu-item-add-ons-form .has-error').removeClass('has-error');
     $('#menu-item-add-ons-form input[type="text"]').each(function () {
@@ -1370,7 +1396,19 @@ var VendorMenu = {
     });
 
     if ($('#category-item-form .has-error').length == 0) {
-      $('#category-item-form').submit();
+      $.post($('#category-item-form').attr('action'), $('#category-item-form').serialize(), function(data){
+    	  $('#custom-modal').modal('hide');
+    	  var resp = $.parseJSON(data);
+    	  if($('.categories-panel[data-category-id='+resp.id+']').length == 1)
+    		  $('.categories-panel[data-category-id='+resp.id+']').replaceWith(resp.html);
+    	  else{
+    		  //addd in the end
+    		  $('#menu-'+resp.menuId+' .categories-main-panel').append(resp.html);
+
+    	  }
+    	  Messages.showSuccess('Menu Category Saved Successfully');
+      })
+      
     }
   },
   updateCategorySort: function (sort) {
@@ -1471,11 +1509,11 @@ var VendorMenu = {
       });
     });
   },
-  newAddOn: function () {
-    if ($(this).data('type') == 'menu-item')
-      VendorMenu.openNewAddOn($(this).data('menu-item-id'), 'additions');
-    else if ($(this).data('type') == 'category')
-      VendorMenu.openNewAddOnCategory($(this).data('menu-category-id'), 'additions');
+  newAddOn: function (id, type) {
+    if (type == 'menu-item')
+      VendorMenu.openNewAddOn(id, 'additions');
+    else if (type == 'category')
+      VendorMenu.openNewAddOnCategory(id, 'additions');
   },
   openNewAddOn: function (menuItemId, addonType) {
     $.get('/menu/add-item-add-ons', 'id=' + menuItemId, function (html) {

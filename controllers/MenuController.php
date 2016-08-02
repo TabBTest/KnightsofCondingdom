@@ -99,7 +99,11 @@ class MenuController extends CController
      */
     public function actionIndex()
     {
-        $user = User::findOne(\Yii::$app->user->id);
+        return $this->viewIndex(\Yii::$app->user->id);
+    }
+    
+    private function viewIndex($userId){
+        $user = User::findOne($userId);
         $vendorMenu = User::getVendorDefaultMenu($user);
         if($vendorMenu === false){
             $vendorMenu = new VendorMenu();
@@ -112,6 +116,7 @@ class MenuController extends CController
         $vendorCategories = MenuCategories::find()->where('isArchived = 0 and vendorId = '.$user->id.' order by sorting asc')->all();
         
         return $this->render('index', ['vendorId' => $vendorId, 'menu' => $vendorMenu, 'vendorCategories' => $vendorCategories]);
+        
     }
     
     public function actionAddItem(){
@@ -191,9 +196,18 @@ class MenuController extends CController
             }
             
             \Yii::$app->getSession()->setFlash('success', 'Menu Item Saved Successfully');
+            if(\Yii::$app->request->isAjax){
+                $resp = [];
+                $resp['id'] = $vendorMenuItem->id;
+                $resp['menuCategoryId'] = $vendorMenuItem->menuCategoryId;
+                $resp['html'] =  $this->renderPartial('_item_info', ['item' => $vendorMenuItem], true);
+                echo json_encode($resp);
+                die;
             
+            }
         }
-        return $this->redirect($nextUrl);
+        
+        return $this->viewIndex(isset($_REQUEST['id']) && $_REQUEST['id'] != '' ? $_REQUEST['id'] : \Yii::$app->user->id);
     }
     
     public function actionAddCategoryAddOns(){
@@ -334,6 +348,16 @@ class MenuController extends CController
     
             \Yii::$app->getSession()->setFlash('success', 'Menu Category Saved Successfully');
     
+            if(\Yii::$app->request->isAjax){
+                $resp = [];
+                $resp['id'] = $category->id;
+                $resp['menuId'] =  $category->vendorMenuId;
+                $resp['html'] =  $this->renderPartial('_category_info', ['category' => $category], true);
+                echo json_encode($resp);
+                die;
+            
+            }
+            
         }
         return $this->redirect($nextUrl);
     }
