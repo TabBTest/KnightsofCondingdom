@@ -44,7 +44,8 @@ $this->registerJs($pageJs, $this::POS_READY);
             <div class="panel-heading" data-toggle="collapse" data-target="#search-box-current-orders-body">
                 <h4 class="panel-title">Search Options</h4>
             </div>
-            <div id="search-box-current-orders-body" class="collapse in panel-body">
+            <div id="search-box-current-orders-body" class="collapse in">
+            <div class="panel-body">
                 <form id="current-order-form" class="form-inline">
                     <div class="form-group">
                         <label class="control-label">First Name: <input type="text" name="filter[firstName]" class="form-control" /></label>
@@ -81,6 +82,7 @@ $this->registerJs($pageJs, $this::POS_READY);
                     </div>
                 </form>
             </div>
+            </div>
         </div>
         <div class="col-xs-3 form-group pull-right">
             <?php $vendor = User::findOne($userId)?>
@@ -104,7 +106,8 @@ $this->registerJs($pageJs, $this::POS_READY);
             <div class="panel-heading" data-toggle="collapse" data-target="#search-box-archived-orders-body">
                 <h4 class="panel-title">Search Options</h4>
             </div>
-            <div id="search-box-archived-orders-body" class="collapse in panel-body">
+            <div id="search-box-archived-orders-body" class="collapse in">
+            <div class="panel-body">
                 <form id="archived-order-form" class="form-inline">
                     <div class="form-group">
                         <label class="control-label">First Name: <input type="text" name="filter[firstName]" class="form-control" /></label>
@@ -140,6 +143,7 @@ $this->registerJs($pageJs, $this::POS_READY);
                         </button>
                     </div>
                 </form>
+            </div>
             </div>
         </div>
         <div class="vendor-order-archived-body col-xs-12"

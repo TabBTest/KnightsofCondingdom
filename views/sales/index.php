@@ -20,7 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="panel-heading" data-toggle="collapse" data-target="#search-box-current-orders-body">
                 <h4 class="panel-title">Search Options</h4>
             </div>
-            <div id="search-box-current-orders-body" class="collapse in panel-body">
+            <div id="search-box-current-orders-body" class="collapse in">
+            <div class="panel-body">
                 <form id="sales-form" class="form-inline">
                     <input type='hidden' name="filter[vendorId]" value='<?php echo $userId?>'/>
                     <div class="form-group">
@@ -40,6 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         </button>
                     </div>
                 </form>
+            </div>
             </div>
         </div>
         <div id="search-box-sales-orders" class="col-md-4 col-md-offset-1 panel panel-primary">
