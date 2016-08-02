@@ -105,9 +105,13 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
 <br />
 <div class="row">
     <div class="col-xs-12">
+       
         <button class="btn btn-raised btn-primary pull-right"
                 onclick="javascript: Order.AddOrder()"
                 type="button"><?= $isEdit ? 'Update' : 'Add' ?>
+        </button>
+         <button data-dismiss='modal' style='margin-right: 10px' class="btn btn-raised btn-default pull-right"
+                type="button">Cancel
         </button>
     </div>
     <div class="clearfix"></div>

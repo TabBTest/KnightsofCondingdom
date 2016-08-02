@@ -46,15 +46,14 @@ $this->registerJs('Stripe.setPublishableKey(\'' . \Yii::$app->params['stripe_pub
             <?php if($hasDelivery) { ?>
             <li>
                 <span>
-                    Minimum Delivery Amount: $
-                    <?= UtilityHelper::formatAmountForDisplay(
+                    Minimum Delivery Amount: <?= '$'.UtilityHelper::formatAmountForDisplay(
                         TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_DELIVERY_MINIMUM_AMOUNT)
                     ) ?>
                 </span>
             </li>
             <li>
-                <span>Delivery Charge: $
-                    <?= UtilityHelper::formatAmountForDisplay(
+                <span>Delivery Charge: 
+                    <?= '$'.UtilityHelper::formatAmountForDisplay(
                         TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_DELIVERY_CHARGE)
                     ) ?>
                 </span>
@@ -146,7 +145,17 @@ foreach($allMenus as $index => $menu){
     $openForOrder = $menu->isMenuOpenForOrder();
 ?>
  <div id="menu-<?php echo $menu->id?>" class="tab-pane <?php echo $className?>">
-     
+    <div class="row">
+        <div class="col-xs-12" id="menu-heading"> 
+     <?php if($openForOrder){?>
+        <label class=''>Available For Ordering</label>
+     <?php }else{?>
+     <label class=''>Available from <?php echo $menu->displayMenuAvailabilityInCustomerTimezone()?></label>
+     <?php }?>           
+            
+        </div>
+    </div>
+    
      <div class="row">
         <div class="col-xs-12" id="menu-heading">            
             <div class="pull-right">

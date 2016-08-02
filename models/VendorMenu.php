@@ -51,6 +51,32 @@ class VendorMenu extends \yii\db\ActiveRecord
             'date_updated' => 'Date Updated',
         ];
     }
+    public function displayMenuAvailabilityInCustomerTimezone(){
+        //get the current day
+        $user = User::findOne($this->vendorId);
+        
+        $date_time_zone = new \DateTimeZone($user->timezone );
+        $date_time_current = new \DateTime('now', $date_time_zone);
+        
+        if($this->startTime == null || $this->startTime == ''){
+            return false;
+        }
+        $date_time = new \DateTime('now', $date_time_zone);
+        $timeComponent = explode(':', $this->startTime);
+        $date_time->setTime($timeComponent[0], $timeComponent[1], 0);
+        
+        
+        $date_time_close = new \DateTime('now', $date_time_zone);
+        $timeComponent = explode(':', $this->endTime);
+        $date_time_close->setTime($timeComponent[0], $timeComponent[1], 0);
+        
+        if($date_time->getTimestamp() <= $date_time_current->getTimestamp() && $date_time_current->getTimestamp() <= $date_time_close->getTimestamp()){
+            return true;
+        }
+        
+        
+        return $date_time->format('g:i A').' to '.$date_time_close->format('g:i A');
+    }
     public function isMenuOpenForOrder(){
     
         //get the current day
