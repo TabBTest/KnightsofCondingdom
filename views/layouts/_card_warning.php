@@ -25,7 +25,7 @@ if(!Yii::$app->user->isGuest){
             //we check if membership is expired
              if(Yii::$app->user->identity->isMembershipExpired()){
                  ?>
-                 <div class='alert alert-danger'>Membership is expired</div>
+                 <div class='alert alert-danger'>Membership is expired, click <a style='color: blue' href='/vendor/settings?view=billing'>here</a> to update your billing information.</div>
              <?php
              }
            

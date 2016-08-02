@@ -16,6 +16,7 @@ use app\models\Candidates;
 use yii\base\Application;
 use app\models\TenantInfo;
 use app\models\User;
+use app\helpers\TenantHelper;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -252,6 +253,16 @@ class ProfileController extends CController
                 */
                 if($model->save()){
                     $model->storeCCInfo($_POST);
+                    
+                    
+                    if(Yii::$app->session->get('role') == User::ROLE_VENDOR){
+                        //we check if membership is expired
+                        if(Yii::$app->user->identity->isMembershipExpired()){
+                                TenantHelper::doMembershipPayment($model->id);       
+                               
+                            }
+                    }
+                            
                 }
                 //die('ddd');
                 $message = 'Billing Info Saved Successfully';
