@@ -186,7 +186,8 @@ foreach($allMenus as $index => $menu){
                                     </a>
                                 </h4>
                             </div>
-                            <div id="category<?= $category->id ?>" class="panel-body panel-collapse collapse in">
+                            <div id="category<?= $category->id ?>" class="panel-collapse collapse in">
+                            <div class="panel-body">
                                 <div class="panel-body" style="border: none;">
                                     <ul class="list-group">
                                         <?php
@@ -217,6 +218,7 @@ foreach($allMenus as $index => $menu){
                                         <?php } ?>
                                     </ul>
                                 </div>
+                            </div>
                             </div>
                         </div>
                     </div>
