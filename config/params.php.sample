@@ -21,5 +21,4 @@ return [
     'authorize.net.mode' => 'test',    
     'authorize.net.login.id' => '96tk7ZP2WY',
     'authorize.net.transaction.key' => '47rK9rY22G9Mu2Ev',
-    'authorize.net.public.key' => '7UnT3eU7tKRYAGCzTbdE9w5K2rAfS37SyW5Mtc2h4MuSac623jD4J9wDf598ezd7'
 ];
