@@ -8,15 +8,15 @@ if(!Yii::$app->user->isGuest){
         
         if($cardState == User::CARD_STATE_EXPIRED){
             ?>
-            <div class='alert alert-danger'>Card Information is expired, update your card <a href="<?php echo $url?>/">here</a>.</div>
+            <div class='alert alert-danger'>Card Information is expired, update your card <a class="alert-link" href="<?php echo $url?>/">here</a>.</div>
         <?php
         }else if($cardState == User::CARD_STATE_NEAR_EXPIRE){
             ?>
-            <div class='alert alert-warning'>Your Card would expire in <?php echo date('M Y', strtotime(Yii::$app->user->identity->cardExpiry))?>, update your card <a href="<?php echo $url?>/">here</a>.</div>
+            <div class='alert alert-warning'>Your Card would expire in <?php echo date('M Y', strtotime(Yii::$app->user->identity->cardExpiry))?>, update your card <a class="alert-link" href="<?php echo $url?>/">here</a>.</div>
             <?php            
         }else if($cardState == User::CARD_STATE_NOT_EXISTING){
             ?>
-            <div class='alert alert-danger'>Please add your card billing information, update your card <a href="<?php echo $url?>/">here</a>.</div>
+            <div class='alert alert-danger'>Please add your card billing information, update your card <a class="alert-link" href="<?php echo $url?>/">here</a>.</div>
             <?php
         }
         
@@ -25,7 +25,7 @@ if(!Yii::$app->user->isGuest){
             //we check if membership is expired
              if(Yii::$app->user->identity->isMembershipExpired()){
                  ?>
-                 <div class='alert alert-danger'>Membership is expired, click <a style='color: blue' href='/vendor/settings?view=billing'>here</a> to update your billing information.</div>
+                 <div class='alert alert-danger'>Membership is expired, click <a class="alert-link" href='/vendor/settings?view=billing'>here</a> to update your billing information.</div>
              <?php
              }
            

@@ -28,7 +28,10 @@ use app\models\MenuCategories;
        
         <div class='col-xs-12 form-group'>
             <label class='form-label'>Price</label>
-            <input type='text' name='amount' class='form-control price short-input' value='<?php echo $menuItemAddOns->amount?>'/>
+            <div class="input-group">
+                <span class="input-group-addon">$</span>
+                <input type='text' name='amount' class='form-control price short-input' value='<?php echo $menuItemAddOns->amount?>'/>
+            </div>
         </div>
         <div class='col-xs-12 form-group'>
             <button type='button' class='btn' data-dismiss="modal">Close</button>
