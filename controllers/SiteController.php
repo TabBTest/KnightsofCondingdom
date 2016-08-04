@@ -57,6 +57,10 @@ class SiteController extends CController
             return $this->redirect('/dashboard');
         }
 
+        if (!TenantHelper::isDefaultTenant()) {
+            return $this->redirect('/ordering/menu');
+        }
+
         return $this->render('index');
     }
 
