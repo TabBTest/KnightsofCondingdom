@@ -9,15 +9,30 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php echo $this->render('//partials/_show_message', []);?>
 
-<form id='customer-search-form'>    
-    <div class='col-xs-12 form-group'>
-        <label>First Name:&nbsp;&nbsp; <input type='text' name='filter[firstName]' class='form-control' /> </label>
-        <label>Last Name:&nbsp;&nbsp; <input type='text' name='filter[lastName]' class='form-control' /> </label>
-        <label>Email:&nbsp;&nbsp; <input type='text' name='filter[email]' class='form-control' /> </label>
-        <label style='vertical-align: bottom'>&nbsp;<button type='button' class='btn btn-info' onclick='Customer.search();'>Search</button></label>
+<form class="form-inline" id="customer-search-form">
+    <div class="form-group">
+        <label class="control-label">First Name:</label>
+        <input type="text" name="filter[firstName]" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label class="control-label">Last Name:</label>
+        <input type="text" name="filter[lastName]" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label class="control-label">Email:</label>
+        <input type="text" name="filter[email]" class="form-control" />
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-primary btn-raised" onclick="Customer.search();">Search</button>
     </div>
 </form>
 
 <div class="col-xs-12 vendor-customer-body">
     <?php echo $this->render('_list', ['customers' => User::getVendorCustomers(\Yii::$app->user->id, 20, 1, [])]);?>
 </div>
+
+<style>
+    #customer-search-form > .form-group {
+        margin-right: 10px;
+    }
+</style>
