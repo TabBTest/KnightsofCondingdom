@@ -1,6 +1,6 @@
 <?php 
 use app\helpers\UtilityHelper;
-$vendorId = $params['userId'];
+$vendorId = $_SESSION['__id'];
 ?>
 
 

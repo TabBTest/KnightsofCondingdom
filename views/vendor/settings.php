@@ -60,6 +60,7 @@ $this->registerJs($pageJs, $this::POS_READY);
 <ul class="nav nav-tabs">
     
     <li class="<?php echo $_REQUEST['view'] == 'settings' ? 'active' : ''?>"><a data-toggle="tab" href="#tab-settings">Settings</a></li>
+    <li class="<?php echo $_REQUEST['view'] == 'operating-hours' ? 'active' : ''?>"><a data-toggle="tab" href="#operating-hours">Hours of Operation</a></li>
     <li class="<?php echo $_REQUEST['view'] == 'info' ? 'active' : ''?>"><a data-toggle="tab" href="#tab-profile">Restaurant Info</a></li>
     <li class="<?php echo $_REQUEST['view'] == 'billing' ? 'active' : ''?>"><a data-toggle="tab" href="#billing-info">Billing Info</a></li>
     <?php if(Yii::$app->user->identity->role == User::ROLE_VENDOR){?>
@@ -68,12 +69,11 @@ $this->registerJs($pageJs, $this::POS_READY);
 </ul>
 
 <div class="tab-content">
-    <?php echo $this->render('//partials/_vendor_settings', ['model' => $model]);?>
-    <?php echo $this->render('//partials/_profile', ['model' => $model, 'show' => false]);?>
-    <?php echo $this->render('//partials/_billing', ['model' => $model]);?>
+    <?= $this->render('//partials/_vendor_settings', ['model' => $model]) ?>
+    <?= $this->render('//partials/_operating-hours', ['model' => $model]) ?>
+    <?= $this->render('//partials/_profile', ['model' => $model, 'show' => false]) ?>
+    <?= $this->render('//partials/_billing', ['model' => $model]) ?>
     <?php if(Yii::$app->user->identity->role == User::ROLE_VENDOR){?>
-    <?php echo $this->render('billing/index', ['transactions' =>  VendorMembership::getVendorMemberships($model->id, 20, 1), 'url' => '/vendor/viewpage', 'userId' => $model->id]);?>
-    <?php }?>
-    
-    
+    <?= $this->render('billing/index', ['transactions' =>  VendorMembership::getVendorMemberships($model->id, 20, 1), 'url' => '/vendor/viewpage', 'userId' => $model->id]);?>
+    <?php } ?>
 </div>

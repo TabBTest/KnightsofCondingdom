@@ -14,7 +14,7 @@ use yii\widgets\MaskedInput;
          <?php if(Yii::$app->session->get('role') == User::ROLE_ADMIN){?>
          <div class='col-xs-12 form-group'>
             <label>Is Active?</label>
-            <input type='hidden'  name='User[isActive]' value='0'/>
+            <input type='hidden' name='User[isActive]' value='0'/>
             <input type='checkbox' class='' name='User[isActive]' <?php echo $model->isActive == 1 ? 'checked' : ''?> value='1'/>
         </div>
         <?php }?>

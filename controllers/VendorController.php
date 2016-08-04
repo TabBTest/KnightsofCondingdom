@@ -31,7 +31,7 @@ class VendorController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => [ 'settings', 'save-settings', 'profile', 'billing', 'view-page', 'preview-hours', 'save-time-to-pickup'],
+                        'actions' => [ 'settings', 'save-settings', 'save-operating-hours','profile', 'billing', 'view-page', 'preview-hours', 'save-time-to-pickup'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -85,19 +85,11 @@ class VendorController extends CController
                 $model->orderButtonImage = $_POST['orderButtonImage'];
                 $model->save();
             }
-            
-            if(isset($_POST['isStoreOpen'])){
-                $model = User::findOne($userId);
-                $model->isStoreOpen = $_POST['isStoreOpen'];
-                $model->storeCloseReason = $_POST['storeCloseReason'];
-                $model->save();
-            }
-            
 
             if(Yii::$app->user->identity->role != null && Yii::$app->user->identity->role == User::ROLE_ADMIN){
                 $nextUrl = '/admin/vendors/settings?view=settings&id='.$userId;
-               
             }
+
             if (TenantInfo::isUniqueSubdomain($userId, $codes['SUBDOMAIN'])) {
                 foreach($codes as $code => $val){
                     $tenantInfo = TenantInfo::findOrCreate($userId, $code);
@@ -110,8 +102,25 @@ class VendorController extends CController
             } else {
                 \Yii::$app->getSession()->setFlash('error', 'Subdomain is already taken. Please select a different subdomain.');
             }
-            
-            
+        }
+
+        return $this->redirect($nextUrl);
+    }
+
+    public function actionSaveOperatingHours()
+    {
+        $nextUrl = '/vendor/settings?view=operating-hours';
+
+        if(count($_POST) > 0) {
+            $userId = $_SESSION['__id'];
+
+            if(isset($_POST['isStoreOpen'])){
+                $model = User::findOne($userId);
+                $model->isStoreOpen = $_POST['isStoreOpen'];
+                $model->storeCloseReason = $_POST['storeCloseReason'];
+                $model->save();
+            }
+
             VendorOperatingHours::deleteAll(['vendorId' => $userId]);
             $startTimes = $_POST['startTime'];
             $endTimes = $_POST['endTime'];
@@ -128,9 +137,9 @@ class VendorController extends CController
                     }
                 }
             }
+
+            return $this->redirect($nextUrl);
         }
-       
-        return $this->redirect($nextUrl);      
     }
     
     public function actionBilling(){

@@ -84,11 +84,12 @@ window.location.href = '/';
       </li>
       
      
-     <li class="dropdown  <?php echo  strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? 'active' : ''?>">
+     <li class="dropdown <?php echo  strpos(\Yii::$app->controller->getRoute(), 'settings') !== false ? 'active' : ''?>">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">Profile
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li><a href="/vendor/settings?view=settings">Settings</a></li>
+          <li><a href="/vendor/settings?view=operating-hours">Hours of Operation</a></li>
           <li><a href="/vendor/settings?view=info">Restaurant Info</a></li>
           <li><a href="/vendor/settings?view=billing">Billing Info</a></li>
           <li><a href="/vendor/settings?view=history">Billing History</a></li>

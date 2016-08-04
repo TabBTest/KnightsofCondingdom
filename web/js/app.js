@@ -1541,18 +1541,23 @@ var VendorSettings = {
       if ($.isNumeric($(this).val()) == false && $(this).parents('.row[data-key="' + $(this).data('key') + '"]').is(':visible')) {
         $(this).parent().addClass('has-error');
       }
-    })
+    });
 
-    //we check all the time
-    $('.operating-hours').each(function () {
+    if ($('.vendor-settings-form .has-error').length == 0) {
+      return true;
+    }
+    return false;
+  },
+  validateOperatingHours: function () {
+    $('#operating-hours-form').each(function () {
       if ($(this).find('.start').val() == '' && $(this).find('.end').val() != '') {
         $(this).find('.start').parent().addClass('has-error');
       } else if ($(this).find('.start').val() != '' && $(this).find('.end').val() == '') {
         $(this).find('.end').parent().addClass('has-error');
       }
-    })
+    });
 
-    if ($('.vendor-settings-form .has-error').length == 0) {
+    if ($('#operating-hours-form .has-error').length == 0) {
       return true;
     }
     return false;
@@ -1591,7 +1596,7 @@ var VendorSettings = {
     $('.operating-hr').on('change', VendorSettings.previewHours);
   },
   previewHours: function () {
-    $.post('/vendor/preview-hours', $('.vendor-settings-form').serialize(), function (html) {
+    $.post('/vendor/preview-hours', $('#operating-hours-form').serialize(), function (html) {
       $('.preview-operating-hours').html(html);
     });
   },
