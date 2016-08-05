@@ -163,6 +163,10 @@ $(document).ready(function () {
       Messages.showError('Please add your order');
     }
   });
+  
+  if($('.main-order-summary-content').length == 1){
+	  Order.refreshMainOrderSummary();
+  }
 
   $('.btn-send-promo').on('click', function () {
     $('.promotion-form-email has-error').removeClass('has-error');
@@ -412,6 +416,13 @@ var Order = {
       setupUi();
     })
 
+  },
+  checkOut : function(){
+	  if($('#relogin-modal').data('is-login') == 1){
+		  $('#checkout-modal').modal('show');
+	  }else{
+		  $('#relogin-modal').modal('show');
+	  }
   },
   setUpWorkflow : function(){
 	  $('#checkout-modal .fieldset').hide();

@@ -24,9 +24,32 @@ include('_main_order_summary_info.php');
     <textarea class="form-control" rows="5" cols="25" name="notes" placeholder="Please add your extra instructions here..."><?php echo isset($params['notes']) ? $params['notes'] : ''?></textarea>
 </div>
 <div class="col-xs-12 text-center">
-    <button class="btn btn-raised btn-primary" type="button" data-toggle="modal" data-target="#checkout-modal">Checkout</button>
+    <button class="btn btn-raised btn-primary" type="button" onclick="javascript: Order.checkOut();">Checkout</button>
 </div>
 
+    <div class="modal fade" id="relogin-modal" data-is-login='<?php echo $model !== false ? 1 : 0?>' tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Register / Login</h4>
+                </div>
+                <div class="modal-body">
+                        <div class="col-xs-12 text-center" style="margin-bottom: 10px">
+                            <a class='btn btn-info  btn-raised' href='/site/reg-customer'>Register</a>
+                        </div>
+                        <div class="col-xs-12 text-center" style="margin-bottom: 10px">
+                            <a class='btn btn-info  btn-raised' href='/site/login'>Login</a>
+                        </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="checkout-modal" tabindex="-1" role="dialog" aria-labelledby="checkout-modal-label">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -46,7 +69,7 @@ include('_main_order_summary_info.php');
                                         </label>
                                         <div class=' pull-left' style='margin-left: 10px'>
                                             <select style='display: <?php echo isset($_POST['isDelivery']) && $_POST['isDelivery'] == 1 ? 'block' : 'none' ?>' name='deliveryAddressType'>
-                                                <option value='current'><?php echo $model->getFullAddress()?></option>
+                                                <option value='current'><?php echo $model !== false ? $model->getFullAddress() : ''?></option>
                                                 <option value='new'>New Address</option>
                                             </select>
                                         </div>
@@ -88,7 +111,7 @@ include('_main_order_summary_info.php');
                                         <input type="radio" value="<?php echo Orders::PAYMENT_TYPE_CARD?>" <?php echo !isset($params['paymentType']) || (isset($params['paymentType']) && $params['paymentType'] == Orders::PAYMENT_TYPE_CARD) ? "checked" : ""?> name="paymentType"/>Card
                                         &nbsp;&nbsp;&nbsp;
                                         <select style='display: none' name='cardToUse'>
-                                            <option value='current'>Existing credit card ending in <?php echo $model->cardLast4?></option>
+                                            <option value='current'>Existing credit card ending in <?php echo $model !== false ? $model->cardLast4 : ''?></option>
                                             <option value='new'>New Card</option>
                                         </select>
                                      </label>

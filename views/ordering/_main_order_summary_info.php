@@ -28,7 +28,7 @@ $model = false;
 if(\Yii::$app->user->identity != null){
     $model = User::findOne(\Yii::$app->user->identity->id);
 }else{
-    \Yii::$app->response->redirect(['site/login']);
+    //\Yii::$app->response->redirect(['site/login']);
 }
 $finalAmount = 0;
 $itemsFinalAmount = 0;

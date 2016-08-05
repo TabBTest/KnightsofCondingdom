@@ -33,7 +33,7 @@ use app\models\VendorOperatingHours;
  */
 class OrderingController extends CController
 {
-   
+    const CURRENT_ORDER = 'current-order';
     public function behaviors()
     {
         return [
@@ -453,6 +453,10 @@ class OrderingController extends CController
                         
                         \Yii::$app->getSession()->setFlash('success', 'Order submitted successfully.');
 
+                        if(isset($_COOKIE[self::CURRENT_ORDER])){
+                            setcookie(self::CURRENT_ORDER,'',time() - 3600); // 86400 = 1 day
+                        }
+                        
                         $redis = Yii::$app->redis;
                         $redis->executeCommand('PUBLISH', ['orders',
                                 json_encode([
@@ -499,6 +503,7 @@ class OrderingController extends CController
         return $this->renderPartial('item-order-summary', ['params' => $_POST]);
     }
     public function actionAddOrder(){
+        //var_dump(\Yii::$app->session->get('current-order'));
         
         $subdomain = TenantHelper::getSubDomain();
         $tenantInfo = TenantInfo::findOne(['val' => $subdomain, 'code' => TenantInfo::CODE_SUBDOMAIN]);
@@ -509,8 +514,16 @@ class OrderingController extends CController
                 $salesTax = 1 + (floatval($salesTaxInfo->val) / 100);
             }            
         }
-        
-        return $this->renderPartial('main-order-summary', ['params' => $_POST, 'vendorSalesTax' => $salesTax]);
+        $allParams = [];
+        if(count($_POST) > 0){
+            setcookie(self::CURRENT_ORDER,json_encode($_POST),time() + (86400)); // 86400 = 1 day
+            $allParams = $_POST;
+        }else{
+            if(isset($_COOKIE[self::CURRENT_ORDER])){
+                $allParams = (json_decode($_COOKIE[self::CURRENT_ORDER], true));
+            }
+        }
+        return $this->renderPartial('main-order-summary', ['params' => $allParams, 'vendorSalesTax' => $salesTax]);
     }
     public function actionHistory(){
         $userId = \Yii::$app->user->id;
