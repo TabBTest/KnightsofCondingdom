@@ -77,7 +77,7 @@ class VendorController extends CController
         
         $nextUrl = '/vendor/settings?view=settings';
         if(count($_POST) > 0){
-            $userId = $_POST['userId'];
+            $userId = $_SESSION['__id'];
             $codes = $_POST['TenantCode'];
 
             if ($_POST['orderButtonImage']) {

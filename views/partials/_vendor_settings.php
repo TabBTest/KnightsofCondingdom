@@ -1,10 +1,8 @@
 <?php 
-use app\models\User;
-use app\helpers\UtilityHelper;
-use yii\widgets\MaskedInput;
 use app\models\TenantInfo;
 use app\helpers\TenantHelper;
-use app\models\VendorOperatingHours;
+
+$userId = $_SESSION['__id'];
 ?>
 
 <div id="tab-settings" class="tab-pane <?php echo $_REQUEST['view'] == 'settings' ? 'active' : ''?>">
@@ -59,67 +57,63 @@ use app\models\VendorOperatingHours;
         </div>
     </div>
 
-    <form action='/vendor/save-settings' method='POST' class='vendor-settings-form' onsubmit="return VendorSettings.validateSettings()">
-        <?php
-        $userId = $model->id;
-        ?>
-        <input type='hidden' value='<?php echo $userId?>' name='userId'/>
-        <input type='hidden' value='<?= $model->orderButtonImage ?>' name='orderButtonImage' id="order-now-button-field"/>
-        <?php foreach(TenantInfo::getTenantCodes() as $codeKey => $codeDescription){
-            ?>
-            <?php if($codeKey == TenantInfo::CODE_SUBDOMAIN_REDIRECT){?>
-
-                <div class='row form-group' data-key='<?php echo $codeKey?>'>
-                    <div class='col-xs-12'>
-                        <label class='form-label'><?php echo $codeDescription?></label>
-                        <input type='hidden' value='0' name='TenantCode[<?php echo $codeKey?>]'/>
-                        <input type='checkbox' style='margin-left: 10px' class='' value='1' data-key='<?php echo $codeKey?>' name='TenantCode[<?php echo $codeKey?>]' <?php echo TenantInfo::getTenantValue($userId, $codeKey) == 1 ? 'checked' : ''?>/>
-                    </div>
-                </div>
-            <?php } else if($codeKey == TenantInfo::CODE_HAS_DELIVERY){
-            ?>
-             <div class='row form-group' data-key='<?php echo $codeKey?>'>
-                    <div class='col-xs-12'>
-                        <label class='form-label'><?php echo $codeDescription?></label>
-                        <select class='form-control short-input' data-key='<?php echo $codeKey?>' name='TenantCode[<?php echo $codeKey?>]'>
-                            <option <?php echo TenantInfo::getTenantValue($userId, $codeKey) == 0 ? 'selected' : ''?> value='0'>No</option>
-                            <option <?php echo TenantInfo::getTenantValue($userId, $codeKey) == 1 ? 'selected' : ''?> value='1'>Yes</option>
-                        </select>
-                    </div>
-                </div>
-            <?php 
-            }else{                 
-                ?>
-                <div class='row form-group' data-key='<?php echo $codeKey?>'>
-                <div  class="form-inline">
-                    <div class='col-xs-12'>
-                        <label class='form-label'><?php echo $codeDescription?></label>
-                       
-                        <?php if($codeKey == TenantInfo::CODE_SALES_TAX && TenantInfo::getTenantValue($userId, $codeKey) != ''){
-                        ?>
-                        <br />
-                         <label class='form-label'><i>
-                         <?php 
-                            echo 'Your Sales Tax is '.TenantInfo::getTenantValue($userId, $codeKey).'%';
-                        ?></i>
+    <form action="/vendor/save-settings" method="POST" class="vendor-settings-form" onsubmit="return VendorSettings.validateSettings()">
+        <input type="hidden" value="<?= $model->orderButtonImage ?>" name="orderButtonImage" id="order-now-button-field" />
+        <?php foreach(TenantInfo::getTenantCodes() as $codeKey => $codeDescription) { ?>
+            <?php if($codeKey == TenantInfo::CODE_SUBDOMAIN_REDIRECT) {?>
+                <div class="row form-group" data-key="<?= $codeKey ?>">
+                    <div class="col-xs-12 checkbox">
+                        <input type="hidden" value="0" name="TenantCode[<?= $codeKey ?>]" />
+                        <label class="form-label"><?php echo $codeDescription?>
+                            <input type="checkbox"
+                                   value='1'
+                                   data-key="<?= $codeKey ?>"
+                                   name="TenantCode[<?= $codeKey ?>]"
+                                <?= TenantInfo::getTenantValue($userId, $codeKey) == 1 ? 'checked' : '' ?>
+                            />
                         </label>
-                        <?php 
-                        }?>
-                        
-                        <div>
-                            <?php echo TenantInfo::isDollarAmount($codeKey) ? '$' : ''?><input class='form-control <?php echo TenantInfo::getCustomClasses($codeKey)?>' <?php echo TenantInfo::isPercentage($codeKey) ? 'maxlength="2"' : ''?> data-key='<?php echo $codeKey?>' type='text' name='TenantCode[<?php echo $codeKey?>]' value="<?php echo TenantInfo::getTenantValue($userId, $codeKey)?>"/> <?php echo TenantInfo::isPercentage($codeKey) ? '%' : ''?>
+                    </div>
+                </div>
+            <?php } else if($codeKey == TenantInfo::CODE_HAS_DELIVERY) { ?>
+             <div class="row form-group" data-key="<?= $codeKey?>">
+                 <div class="col-xs-12">
+                     <label class="form-label"><?= $codeDescription ?></label>
+                     <select class="form-control short-input" data-key="<?= $codeKey ?>" name="TenantCode[<?= $codeKey ?>]">
+                         <option <?= TenantInfo::getTenantValue($userId, $codeKey) == 0 ? 'selected' : '' ?> value="0">No</option>
+                         <option <?= TenantInfo::getTenantValue($userId, $codeKey) == 1 ? 'selected' : '' ?> value="1">Yes</option>
+                     </select>
+                    </div>
+             </div>
+            <?php } else { ?>
+                <div class="row form-group" data-key="<?= $codeKey ?>">
+                    <div  class="form-inline">
+                        <div class="col-xs-12">
+                            <label class="form-label"><?= $codeDescription ?></label>
+                            <?php if($codeKey == TenantInfo::CODE_SALES_TAX
+                                && TenantInfo::getTenantValue($userId, $codeKey) != '') { ?>
+                                <br />
+                                <label class='form-label'>
+                                    <i><?= 'Your Sales Tax is ' . TenantInfo::getTenantValue($userId, $codeKey).'%' ?></i>
+                                </label>
+                            <?php } ?>
+                        <div class="input-group">
+                            <?= TenantInfo::isDollarAmount($codeKey) ? '$' : ''?>
+                            <input class="form-control <?= TenantInfo::getCustomClasses($codeKey) ?>"
+                                   <?= TenantInfo::isPercentage($codeKey) ? 'maxlength="2"' : '' ?>
+                                   data-key="<?= $codeKey ?>"
+                                   type="text" name="TenantCode[<?= $codeKey ?>]"
+                                   value="<?= TenantInfo::getTenantValue($userId, $codeKey) ?>"
+                            /> <?= TenantInfo::isPercentage($codeKey) ? '%' : '' ?>
                         </div>
                     </div>
                     </div>
                 </div>
+            <?php } ?>
+        <?php } ?>
 
-
-            <?php }?>
-        <?php }?>
-
-        <div class='row form-group'>
-            <div class='col-xs-12'>
-                <button class='btn btn-primary btn-raised'>Save</button>
+        <div class="row form-group">
+            <div class="col-xs-12">
+                <button class="btn btn-primary btn-raised">Save</button>
             </div>
         </div>
     </form>

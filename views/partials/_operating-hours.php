@@ -9,7 +9,7 @@ $userId = $model->id;
 $operatingTime = UtilityHelper::getOperatingTime();
 ?>
 
-<div id="operating-hours" class="tab-pane <?php echo $_REQUEST['view'] == 'settings' ? 'active' : ''?>">
+<div id="operating-hours" class="tab-pane <?php echo $_REQUEST['view'] == 'operating-hours' ? 'active' : ''?>">
     <form action="/vendor/save-operating-hours" method="POST" id="operating-hours-form" onsubmit="return VendorSettings.validateOperatingHours()">
         <div class='row form-group'>
             <div class='col-xs-12'>
