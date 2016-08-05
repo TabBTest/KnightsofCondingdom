@@ -5,25 +5,37 @@ use app\helpers\TenantHelper;
 $userId = $_SESSION['__id'];
 ?>
 
-<div id="tab-settings" class="tab-pane <?php echo $_REQUEST['view'] == 'settings' ? 'active' : ''?>">
-        <br>
-        <div class='row form-group'>
-        <div class='col-xs-12'>
-            <label class='form-label'>Your Widget</label>
-            <textarea class='form-control copy-content' id='widget-js' rows="5" cols="20"><?php echo $this->render('//partials/_widget', ['model' => $model]);?></textarea>
-<br />
-<a href="javascript: void(0)" data-clipboard-target="#widget-js" class="btn btn-primary btn-copy-widget" data-type='widget'>Copy to Clipboard</a>
-<a target='_blank' href="/preview/widget?id=<?php echo $model->id?>" class="btn btn-primary btn-preview-widget">Preview</a>
+<div id="tab-settings" class="tab-pane <?= $_REQUEST['view'] == 'settings' ? 'active' : '' ?>">
+    <br />
+    <div class="row form-group">
+        <div class="col-xs-12">
+            <label class="form-label">Your Widget</label>
+            <textarea readonly
+                      class="form-control copy-content"
+                      id="widget-js"
+                      rows="5"
+                      cols="20"
+            ><?= $this->render('//partials/_widget', ['model' => $model]);?></textarea>
+            <br />
+            <a href="javascript: void(0)" data-clipboard-target="#widget-js" class="btn btn-primary btn-copy-widget" data-type="widget">Copy to Clipboard</a>
+            <a target="_blank" href="/preview/widget?id=<?= $model->id ?>" class="btn btn-primary btn-preview-widget">Preview</a>
         </div>
     </div>
 
-
-
-    <div class='row form-group'>
-        <div class='col-xs-12'>
-            <label class='form-label'>Your Button</label>
-            <a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="https://<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a>
-            <textarea class='form-control copy-content' id='widget-button' rows="5" cols="20"><a href="https://<?php echo TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style='height: 100px' src="https://<?php echo \Yii::$app->params['defaultSiteURL']?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a></textarea>
+    <div class="row form-group">
+        <div class="col-xs-12">
+            <label class="form-label">Your Button</label>
+            <a href="https://<?= TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank">
+                <img style="height: 100px"
+                     src="https://<?= \Yii::$app->params['defaultSiteURL'] ?>/images/order-buttons/<?= $model->orderButtonImage ?>"
+                />
+            </a>
+            <textarea readonly
+                      class="form-control copy-content"
+                      id="widget-button"
+                      rows="5"
+                      cols="20"
+            ><a href="https://<?= TenantHelper::getVendorSubdomain($model->id)?>/ordering/menu" target="_blank"><img style="height: 100px" src="https://<?= \Yii::$app->params['defaultSiteURL'] ?>/images/order-buttons/<?= $model->orderButtonImage ?>" /></a></textarea>
             <br />
 <a href="javascript: void(0)" data-clipboard-target="#widget-button" class="btn btn-primary btn-copy-widget" data-type='button'>Copy to Clipboard</a>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#change-button-modal">
@@ -117,4 +129,4 @@ $userId = $_SESSION['__id'];
             </div>
         </div>
     </form>
-    </div>
+</div>
