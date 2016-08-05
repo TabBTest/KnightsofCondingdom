@@ -18,33 +18,33 @@ $('#select-order-now-button').on('click', function() {
 $('#select-state').val('$model->state');
 
 if (!$("input[name='TenantCode[SUBDOMAIN_REDIRECT]']").is(":checked")) {
-      $(".row[data-key='REDIRECT_URL']").hide();
+      $("[data-key='REDIRECT_URL']").hide();
 }
 
 $("input[name='TenantCode[SUBDOMAIN_REDIRECT]']").click(function() {
     if(this.checked){
-        $(".row[data-key='REDIRECT_URL']").show();
+        $("[data-key='REDIRECT_URL']").show();
     }
     else{
-        $(".row[data-key='REDIRECT_URL']").hide();
+        $("[data-key='REDIRECT_URL']").hide();
     }
     
 });
 
 if ($("select[name='TenantCode[HAS_DELIVERY]']").val() == 0) {    
-    $(".row[data-key='DELIVERY_CHARGE']").hide();
-    $(".row[data-key='DELIVERY_MINIMUM_AMOUNT']").hide();
+    $("[data-key='DELIVERY_CHARGE']").hide();
+    $("[data-key='DELIVERY_MINIMUM_AMOUNT']").hide();
     
 }
 
 $("select[name='TenantCode[HAS_DELIVERY]']").on('change', function() {
     if($(this).val() == 1){
-        $(".row[data-key='DELIVERY_CHARGE']").show();
-        $(".row[data-key='DELIVERY_MINIMUM_AMOUNT']").show();
+        $("[data-key='DELIVERY_CHARGE']").show();
+        $("[data-key='DELIVERY_MINIMUM_AMOUNT']").show();
     }
     else{
-        $(".row[data-key='DELIVERY_CHARGE']").hide();
-        $(".row[data-key='DELIVERY_MINIMUM_AMOUNT']").hide();
+        $("[data-key='DELIVERY_CHARGE']").hide();
+        $("[data-key='DELIVERY_MINIMUM_AMOUNT']").hide();
     }
 });
 JS;

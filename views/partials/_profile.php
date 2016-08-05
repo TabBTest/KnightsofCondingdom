@@ -11,13 +11,17 @@ use yii\widgets\MaskedInput;
         $userId = $model->id;
         ?>
         <input type='hidden' value='<?php echo $userId?>' name='userId'/>
-         <?php if(Yii::$app->session->get('role') == User::ROLE_ADMIN){?>
-         <div class='col-xs-12 form-group'>
-            <label>Is Active?</label>
-            <input type='hidden' name='User[isActive]' value='0'/>
-            <input type='checkbox' class='' name='User[isActive]' <?php echo $model->isActive == 1 ? 'checked' : ''?> value='1'/>
-        </div>
-        <?php }?>
+        <?php if(Yii::$app->session->get('role') == User::ROLE_ADMIN){?>
+            <div class='col-xs-12 form-group'>
+                <div class="checkbox">
+                    <label>
+                        Is Active?
+                        <input type='checkbox' name='User[isActive]' <?= $model->isActive == 1 ? 'checked' : ''?> value='1'/>
+                    </label>
+                </div>
+                <input type='hidden' name='User[isActive]' value='0'/>
+            </div>
+        <?php } ?>
         <div class="col-xs-12 form-group">
             <img src="/images/users/<?= $model->imageFile ?>" id="logo-thumbnail" class="img-rounded">
         </div>
