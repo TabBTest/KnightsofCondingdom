@@ -78,27 +78,11 @@ $userId = $_SESSION['__id'];
         </div>
     </div>
 
+    <div class="clearfix"></div>
+
     <form action="/vendor/save-settings" method="POST" class="vendor-settings-form" onsubmit="return VendorSettings.validateSettings()">
         <input type="hidden" value="<?= $model->orderButtonImage ?>" name="orderButtonImage" id="order-now-button-field" />
 
-        <div class="form-group" data-key="TAG_LINE">
-            <label class="control-label">Tag Line</label>
-            <input type="text"
-                   class="form-control"
-                   name="TenantCode[TAG_LINE]"
-                   data-key="TAG_LINE"
-                   value="<?= TenantInfo::getTenantValue($userId, 'TAG_LINE') ?>"
-            />
-        </div>
-        <div class="form-group" data-key="EXISTING_URL">
-            <label class="control-label">Existing Website</label>
-            <input type="text"
-                   class="form-control"
-                   name="TenantCode[EXISTING_URL]"
-                   data-key="EXISTING_URL"
-                   value="<?= TenantInfo::getTenantValue($userId, 'EXISTING_URL') ?>"
-            />
-        </div>
         <div class="form-group" data-key="SUBDOMAIN">
             <label class="control-label">Subdomain</label>
             <input type="text"
@@ -147,40 +131,6 @@ $userId = $_SESSION['__id'];
             if ($salesTax != '') { ?>
                 <span>Your current sales tax is <?= $salesTax ?>%.</span>
             <?php } ?>
-        </div>
-        <div class="form-group" data-key="HAS_DELIVERY">
-            <label class="control-label">Do you offer deliveries?</label>
-            <select class="form-control" name="TenantCode[HAS_DELIVERY]" data-key="HAS_DELIVERY">
-                <?php
-                $hasDelivery = TenantInfo::getTenantValue($userId, 'HAS_DELIVERY');
-                ?>
-                <option <?= $hasDelivery == 0 ? 'selected' : '' ?> value="0">No</option>
-                <option <?= $hasDelivery == 1 ? 'selected' : '' ?> value="1">Yes</option>
-            </select>
-        </div>
-        <div class="form-group" data-key="DELIVERY_MINIMUM_AMOUNT">
-            <label class="control-label">Minimum Delivery Amount</label>
-            <div class="input-group">
-                <span class="input-group-addon">$</span>
-                <input type="number"
-                       class="form-control"
-                       name="TenantCode[DELIVERY_MINIMUM_AMOUNT]"
-                       data-key="DELIVERY_MINIMUM_AMOUNT"
-                       value="<?= TenantInfo::getTenantValue($userId, 'DELIVERY_MINIMUM_AMOUNT') ?>"
-                />
-            </div>
-        </div>
-        <div class="form-group" data-key="DELIVERY_CHARGE">
-            <label class="control-label">Delivery Charge</label>
-            <div class="input-group">
-                <span class="input-group-addon">$</span>
-                <input type="number"
-                       class="form-control"
-                       name="TenantCode[DELIVERY_CHARGE]"
-                       data-key="DELIVERY_CHARGE"
-                       value="<?= TenantInfo::getTenantValue($userId, 'DELIVERY_CHARGE') ?>"
-                />
-            </div>
         </div>
         <div class="row form-group">
             <div class="col-xs-12">

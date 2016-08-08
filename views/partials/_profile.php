@@ -3,6 +3,7 @@ use app\models\User;
 use app\helpers\UtilityHelper;
 use yii\widgets\ActiveForm;
 use yii\widgets\MaskedInput;
+use app\models\TenantInfo;
 ?>
 <div id="tab-profile" class="tab-pane <?php echo $_REQUEST['view'] == 'info' ? 'active' : ''?>">
     <br>
@@ -93,6 +94,26 @@ use yii\widgets\MaskedInput;
             </select>
            
         </div>
+
+        <div class="form-group" data-key="TAG_LINE">
+            <label class="control-label">Tag Line</label>
+            <input type="text"
+                   class="form-control"
+                   name="TenantCode[TAG_LINE]"
+                   data-key="TAG_LINE"
+                   value="<?= TenantInfo::getTenantValue($userId, 'TAG_LINE') ?>"
+            />
+        </div>
+        <div class="form-group" data-key="EXISTING_URL">
+            <label class="control-label">Existing Website</label>
+            <input type="text"
+                   class="form-control"
+                   name="TenantCode[EXISTING_URL]"
+                   data-key="EXISTING_URL"
+                   value="<?= TenantInfo::getTenantValue($userId, 'EXISTING_URL') ?>"
+            />
+        </div>
+
         <div class='col-xs-12 form-group'>
             <button type='button' class='btn btn-primary btn-change-password' data-id='<?php echo md5($model->id)?>'>Change Password</button>
         </div>

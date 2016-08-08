@@ -165,6 +165,18 @@ class ProfileController extends CController
                     }
                 }
 
+                $tenantCodes = $_POST['TenantCode'] ? $_POST['TenantCode'] : false;
+
+                if ($tenantCodes) {
+                    foreach($tenantCodes as $tenantCode => $val){
+                        $tenantInfo = TenantInfo::findOrCreate($userId, $tenantCode);
+                        $tenantInfo->code = $tenantCode;
+                        $tenantInfo->userId = $userId;
+                        $tenantInfo->val = $val;
+                        $tenantInfo->save();
+                    }
+                }
+
                 if($model->save()){
 
                     \Yii::$app->getSession()->setFlash('success', $message);

@@ -75,12 +75,12 @@ class VendorController extends CController
     }
     public function actionSaveSettings(){
         
-        $nextUrl = '/vendor/settings?view=settings';
+        $nextUrl = isset($_POST['TenantCode']['HAS_DELIVERY']) ? '/vendor/settings?view=delivery-settings' : '/vendor/settings?view=settings';
         if(count($_POST) > 0){
             $userId = $_SESSION['__id'];
             $codes = $_POST['TenantCode'];
 
-            if ($_POST['orderButtonImage']) {
+            if (isset($_POST['orderButtonImage'])) {
                 $model = User::findOne($_SESSION['__id']);
                 $model->orderButtonImage = $_POST['orderButtonImage'];
                 $model->save();
@@ -90,7 +90,7 @@ class VendorController extends CController
                 $nextUrl = '/admin/vendors/settings?view=settings&id='.$userId;
             }
 
-            if (TenantInfo::isUniqueSubdomain($userId, $codes['SUBDOMAIN'])) {
+            if (!isset($codes['SUBDOMAIN']) || TenantInfo::isUniqueSubdomain($userId, $codes['SUBDOMAIN'])) {
                 foreach($codes as $code => $val){
                     $tenantInfo = TenantInfo::findOrCreate($userId, $code);
                     $tenantInfo->code = $code;
