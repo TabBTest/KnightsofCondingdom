@@ -465,7 +465,7 @@ var Order = {
 	         ;
 	       } else if ($(this).hasClass('advance-time-pickup')) {
 	    	   
-	    	   if($('.is-advance-order').is(':checked') && Order.isAdvanceDeliveryTimeValid() === false){
+	    	   if($('.is-advance-order[value=1]').is(':checked') && Order.isAdvanceDeliveryTimeValid() === false){
 	    		   $(this).parent().addClass('has-error');
 			       next_step = false;  
 	    	   }
@@ -847,7 +847,7 @@ var Order = {
 	                $('#checkout-modal').modal('show');
 	              });
 	            }
-	            if($('.is-advance-order').length == 1){
+	            if($('.is-advance-order').length > 0){
 	          	  $('.is-advance-order').off('click');
 	                $('.is-advance-order').on('change', Order.checkIsAdvanceDelivery);
 	                Order.checkIsAdvanceDelivery();
@@ -894,11 +894,11 @@ var Order = {
 	  return ret;
   },
   checkIsAdvanceDelivery : function(){
-	  if($('.is-advance-order').length == 1){
-		if($('.is-advance-order').is(':checked')){
-      		$('.bootstrap-timepicker').show();
+	  if($('.is-advance-order').length > 0){
+		if($('.is-advance-order[value=1]').is(':checked')){
+      		$('.advance-time-pickup').show();
       	}else{
-      		$('.bootstrap-timepicker').hide();
+      		$('.advance-time-pickup').hide();
       	}
       } 
   },

@@ -77,18 +77,23 @@ include('_main_order_summary_info.php');
                                 </div>
                             </div>
                         <?php }?>
-                        <div class='form-group'>
-                                <div class="">
-                                    <label class="">Is Advance Order?</label>
-                                    <div class="checkbox">
-                                        <label class=' pull-left'>
-                                            <input type="checkbox" <?php echo isset($_POST['isAdvanceOrder']) && $_POST['isAdvanceOrder'] == 1 ? 'checked' : '' ?> value="1" class="is-advance-order" name="isAdvanceOrder" />
-                                        </label>
-                                         <div class="bootstrap-timepicker  pull-left" style='margin-left: 10px'>
+                        <div class="form-group">
+                            <label class="">Delivery?</label>
+    
+                            <div class="">
+                                <div class="radio radio-primary">
+                                    <label>
+                                        <input type="radio" <?php echo !isset($_POST['isAdvanceOrder']) || (isset($_POST['isAdvanceOrder']) && $_POST['isAdvanceOrder'] == 0) ? 'checked' : '' ?> value="0" class="is-advance-order" name="isAdvanceOrder" /> Now                                        &nbsp;&nbsp;&nbsp;
+                                       
+                                     </label>
+                                   
+                                </div>
+                                <div class="radio radio-primary">
+                                    <label>
+                                        <input type="radio" <?php echo isset($_POST['isAdvanceOrder']) && $_POST['isAdvanceOrder'] == 1 ? 'checked' : '' ?> value="1" class="is-advance-order" name="isAdvanceOrder" /> Later
+                                        &nbsp;&nbsp;&nbsp;
                                             <input id="advanceTimePicker" name="advanceTime" type="text" class="input-small advance-time-pickup" value='<?php echo isset($_POST['advanceTime']) ? $_POST['advanceTime'] : ''?>'>
                                             <i class="icon-time"></i>
-                                        </div>
-                                 
                                         <script type="text/javascript">
                                             $('#advanceTimePicker').timepicker({
                                                 template: false,
@@ -97,11 +102,11 @@ include('_main_order_summary_info.php');
                                                 defaultTime: 'current'
                                             });
                                         </script>
-                                    </div>
+                                    </label>
                                 </div>
-                                
-                               
+                            </div>
                         </div>
+                        
                         <div class="form-group">
                             <label class="">Payment Type</label>
     
