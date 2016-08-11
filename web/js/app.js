@@ -277,6 +277,7 @@ $(document).ready(function () {
       $('#custom-modal').modal('show');
       $('.add-ons-popover').popover({'placement': 'top', 'trigger': 'hover'});
       $.material.init();
+      $.material.input();
       Order.showItemOrderSummary();
       $('.order-changes').off('change');
       $('.order-changes').on('change', Order.showItemOrderSummary);

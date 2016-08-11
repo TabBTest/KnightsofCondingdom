@@ -28,14 +28,11 @@ class AppConfig extends \yii\db\ActiveRecord
         return isset($appConfig[$code]) ? $appConfig[$code] : '';
     }
     
-    public function getInputOptions(){
-        /*
-        if($this->code == self::UNSIGNED_EMAIL_RECIPIENT || $this->code == self::ADMIN_NEW_CANDIDATES_EMAIL_RECIPIENT){
-            return ['type'=>'text', 'width'=>''];
-        }
-        */
+    public function getInputOptions()
+    {
         return ['type'=>'number', 'width'=>'width: 85px;'];
     }
+
     /**
      * @inheritdoc
      */

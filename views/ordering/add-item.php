@@ -19,15 +19,30 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
         </div>
         <div class="form-group col-xs-12">
             <label class="control-label">Quantity</label>
-            <input type="hidden" name="Orders[<?= $key ?>]" value="<?= $item->id ?>" min="0" />
-            <input style="width: 100px"
-                   data-is-edit="<?= $isEdit ? 1 : 0 ?>"
-                   class="form-control order-quantity order-changes"
-                   type="number"
-                   name="OrdersQuantity[<?= $key ?>]"
-                   value="1"
-                   min="0"
-            />
+            <div class="input-group">
+                <input type="hidden" name="Orders[<?= $key ?>]" value="<?= $item->id ?>" min="0" />
+                <input id="add-order-quantity-field"
+                       style="width: 60px"
+                       data-is-edit="<?= $isEdit ? 1 : 0 ?>"
+                       class="form-control order-quantity order-changes"
+                       type="number"
+                       name="OrdersQuantity[<?= $key ?>]"
+                       value="1"
+                       min="1"
+                />
+                <button type="button"
+                        class="btn btn-default btn-raised fa fa-angle-down input-num-control"
+                        style="padding: 8px 16px 8px 16px; margin-left: 3px;"
+                        aria-hidden="true"
+                        onclick="$(this).siblings('input').val(function(index, value) {return value == 1 ? 1 : --value })">
+                </button>
+                <button type="button"
+                        class="btn btn-default btn-raised fa fa-angle-up input-num-control"
+                        style="padding: 8px 16px 8px 16px; margin-left: 3px;"
+                        aria-hidden="true"
+                        onclick="$(this).siblings('input').val(function(index, value) {return ++value })">
+                </button>
+            </div>
         </div>
 
         <?php if (count($addOns) > 0) { ?>
