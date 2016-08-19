@@ -27,6 +27,7 @@ use app\models\VendorCoupons;
 use app\models\VendorCouponOrders;
 use app\models\VendorAppConfigOverride;
 use app\models\VendorOperatingHours;
+use Dompdf\Dompdf;
 
 /**
  * ApplicationController implements the CRUD actions for ApplicationType model.
@@ -46,7 +47,7 @@ class OrderingController extends CController
                     'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['check-advance-order', 'index', 'summary', 'save', 'history', 'viewpage', 'details', 'menu', 'summary', 'add-item', 'item-order-summary', 'add-order'],
+                        'actions' => ['pdf', 'check-advance-order', 'index', 'summary', 'save', 'history', 'viewpage', 'details', 'menu', 'summary', 'add-item', 'item-order-summary', 'add-order'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -64,6 +65,14 @@ class OrderingController extends CController
         ];
     }
 
+
+    public function actionPdf(){
+        $id = $_REQUEST['id'];
+        $order = Orders::findOne($id);
+        
+        $orderPdf = ($order->generateOrderPdf());
+        return \Yii::$app->response->sendFile($orderPdf);
+    }
     /**
      * Lists all ApplicationType models.
      * @return mixed
@@ -455,6 +464,34 @@ class OrderingController extends CController
 
                         if(isset($_COOKIE[self::CURRENT_ORDER])){
                             setcookie(self::CURRENT_ORDER,'',time() - 3600); // 86400 = 1 day
+                        }
+                        //cehck if fax
+                        $isSendFax = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_SEND_FAX_ON_ORDER]);
+                        
+                        if($isSendFax && $isSendFax->val  == 1){
+                            $faxNumber = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_FAX_NUMBER]);
+                            $startTimeIsNA = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_FAX_START_TIME_IS_NA]);
+                            $confirmTimeIsNA = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_FAX_CONFIRM_TIME_IS_NA]);
+                            $pickupTimeIsNA = TenantInfo::findOne(['userId' => $tenantInfo->userId, 'code' => TenantInfo::CODE_FAX_PICKUP_TIME_IS_NA]);
+                            $order->isFaxOrder = 1;
+                            //generate fax
+                            if($startTimeIsNA && $startTimeIsNA->val == 1){
+                                $order->faxStartTimeIsNA = 1;
+                            }
+                            if($confirmTimeIsNA && $confirmTimeIsNA->val  == 1){
+                                $order->faxConfirmTimeIsNA = 1;
+                            }
+                            if($pickupTimeIsNA && $pickupTimeIsNA->val == 1){
+                                $order->faxPickupTimeIsNA = 1;
+                            }
+                            
+                            
+                            $order->save();
+                            $pdfFilePath = $order->generateOrderPdf();
+                            //send fax
+                            $order->sendFax();
+                           
+                            
                         }
                         
                         $redis = Yii::$app->redis;

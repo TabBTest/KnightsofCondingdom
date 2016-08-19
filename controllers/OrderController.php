@@ -21,7 +21,7 @@ class OrderController extends CController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index','cancel','refund', 'viewpage',  'viewpagearchive', 'confirm', 'start', 'pickup', 'mark-paid', 'archive'],
+                        'actions' => ['send-fax', 'index','cancel','refund', 'viewpage',  'viewpagearchive', 'confirm', 'start', 'pickup', 'mark-paid', 'archive'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -35,6 +35,7 @@ class OrderController extends CController
             ],
         ];
     }
+    
 
     /**
      * Lists all ApplicationType models.
@@ -96,6 +97,12 @@ class OrderController extends CController
         $order = Orders::findOne($orderId);
         $order->isPaid = 1;
         $order->save();
+        die;
+    }
+    public function actionSendFax(){
+        $orderId = $_REQUEST['id'];
+        $order = Orders::findOne($orderId);
+        $order->sendFax();
         die;
     }
     public function actionArchive(){

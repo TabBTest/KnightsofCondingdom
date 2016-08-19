@@ -27,7 +27,7 @@ $userId = $model->id;
                 <span class="input-group-addon">$</span>
                 <input type="number"
                        step="0.01"
-                       class="form-control"
+                       class="form-control short-input"
                        name="TenantCode[DELIVERY_MINIMUM_AMOUNT]"
                        data-key="DELIVERY_MINIMUM_AMOUNT"
                        value="<?= TenantInfo::getTenantValue($userId, 'DELIVERY_MINIMUM_AMOUNT') ?>"
@@ -40,7 +40,7 @@ $userId = $model->id;
                 <span class="input-group-addon">$</span>
                 <input type="number"
                        step="0.01"
-                       class="form-control"
+                       class="form-control short-input"
                        name="TenantCode[DELIVERY_CHARGE]"
                        data-key="DELIVERY_CHARGE"
                        value="<?= TenantInfo::getTenantValue($userId, 'DELIVERY_CHARGE') ?>"

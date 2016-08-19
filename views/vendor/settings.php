@@ -47,6 +47,21 @@ $("select[name='TenantCode[HAS_DELIVERY]']").on('change', function() {
         $("[data-key='DELIVERY_MINIMUM_AMOUNT']").hide();
     }
 });
+
+if ($("select[name='TenantCode[SEND_FAX_ON_ORDER]']").val() == 0) {    
+    $(".show-fax-data").hide();
+    
+}
+
+$("select[name='TenantCode[SEND_FAX_ON_ORDER]']").on('change', function() {
+    if($(this).val() == 1){
+        $(".show-fax-data").show();
+    }
+    else{
+        $(".show-fax-data").hide();
+    }
+});
+
 JS;
 
 

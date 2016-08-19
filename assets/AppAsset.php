@@ -35,6 +35,7 @@ class AppAsset extends AssetBundle
         'js/bootstrap-timepicker.js',
         'js/ga.js',
         '/js/jquery.payment.min.js',
+        '/js/jquery.mask.js',
         'js/app.js',
     ];
     public $depends = [

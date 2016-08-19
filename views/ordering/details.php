@@ -48,17 +48,49 @@ use app\models\User;
             }else{
             ?>
                 <i class="fa fa-times alert-danger" aria-hidden="true"></i>
-                <button class='btn btn-xs btn-info' onclick='javascript: Order.markAsPaid(<?php echo $orderInfo->id?>)' type='button'>Mark As Paid</button>
+                <button class='btn btn-xs btn-raised btn-info' onclick='javascript: Order.markAsPaid(<?php echo $orderInfo->id?>)' type='button'>Mark As Paid</button>
             <?php 
             }?>
             </label>
         </div>
+        <div class='col-xs-12' >
+            <label class='form-label'>Is Fax? 
+            <?php if($orderInfo->isFaxOrder == 1){
+            ?> YES
+            <?php 
+            }else{
+            ?>
+                NO
+            <?php 
+            }?>
+            </label>
+        </div>
+        <?php if($orderInfo->isFaxOrder == 1){?>
+        <div class='col-xs-12' >
+            <label class='form-label'>Is Fax Sent? 
+            <?php if($orderInfo->isFaxSent == 1){
+            ?> YES, 
+            <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->faxSentDate );?>
+            <?php 
+            }else{
+            ?>
+                NO
+                <button class='btn btn-xs btn-raised  btn-info' onclick='javascript: Order.resendFax(<?php echo $orderInfo->id?>)' type='button'>Resend Fax</button>
+                
+            <?php 
+            }?>
+            </label>
+        </div>
+        <?php }?>
     </div>
     <div class='col-xs-6'>
         <div class='col-xs-12'>
             <label class='form-label'>CONFIRM : 
-            <?php if($orderInfo->date_created != null){?>
-            <?php if($orderInfo->confirmedDateTime == null){?>
+            <?php if($orderInfo->faxConfirmTimeIsNA == 1){
+                 echo 'NA';
+            }else if($orderInfo->date_created != null){?>
+            <?php
+            if($orderInfo->confirmedDateTime == null){?>
             <button type='button' class='btn btn-raised btn-primary btn-sm' onclick='javascript: Order.confirm(<?php echo $orderInfo->id?>)'>CONFIRM</button>
             <?php }else{?>
             <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->confirmedDateTime );?>
@@ -68,7 +100,9 @@ use app\models\User;
         </div>
         <div class='col-xs-12'>
             <label class='form-label'>START : 
-           <?php if($orderInfo->confirmedDateTime != null){?>
+           <?php if($orderInfo->faxStartTimeIsNA == 1){
+                 echo 'NA';
+            }else if($orderInfo->confirmedDateTime != null){?>
             <?php if($orderInfo->startDateTime == null){?>
             <button type='button' class='btn btn-raised btn-primary btn-sm'  onclick='javascript: Order.start(<?php echo $orderInfo->id?>)'>START</button>
             <?php }else{?>
@@ -81,7 +115,9 @@ use app\models\User;
         </div>
         <div class='col-xs-12'>
             <label class='form-label'>PICKED UP? : 
-           <?php if($orderInfo->startDateTime != null){?>
+           <?php if($orderInfo->faxPickupTimeIsNA == 1){
+                 echo 'NA';
+            }else if($orderInfo->startDateTime != null){?>
             <?php if($orderInfo->pickedUpDateTime == null){?>
             <button type='button' class='btn btn-raised btn-primary btn-sm'  onclick='javascript: Order.pickup(<?php echo $orderInfo->id?>)'>PICKED UP</button>
             <?php }else{?>

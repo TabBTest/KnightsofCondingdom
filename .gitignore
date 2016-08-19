@@ -33,3 +33,4 @@ config/params.php
 web/menu-images/
 web/images/users
 web/images/order-buttons
+web/orders

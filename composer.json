@@ -25,7 +25,8 @@
         "ext-curl": "*",
         "symfony/yaml" : "*",
   		"authorizenet/authorizenet": "1.8.9",
-  		"jms/serializer": "serializer-master-dev as 1.0"
+  		"jms/serializer": "serializer-master-dev as 1.0",
+        "dompdf/dompdf": "^0.7.0"
     },
     "repositories": [{
        "type": "vcs",

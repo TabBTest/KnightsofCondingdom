@@ -2,7 +2,7 @@ $(document).ready(function () {
   $.material.init();
   
   //if($("#phone").length == 1)
-  //$('#phone').mask("(999) 999-9999");
+  $('.fax-number').mask("(999) 999-9999");
   $(".order-quantity[type='number']").keypress(function (evt) {
     evt.preventDefault();
   });
@@ -729,6 +729,24 @@ var Order = {
           });
         }
       });
+  },
+  resendFax : function(orderId){
+	    swal({
+	        title: "Resend Order # " + (10000 + orderId) + " to Fax?",
+	        text: "Are you sure you want to resend fax for this order?",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonText: 'Yes, confirm',
+	        cancelButtonText: 'No'
+	      },
+	      function (isConfirm) {
+	        if (isConfirm) {
+	          $.post('/order/send-fax', 'id=' + orderId, function () {
+	            //Order.loadVendor();
+	            Customer.viewOrder(orderId);
+	          });
+	        }
+	      });
   },
   archiveOrder: function (orderId) {
     swal({
@@ -1554,6 +1572,13 @@ var VendorSettings = {
         $(this).parent().addClass('has-error');
       }
     });
+    
+    if($('select[name="TenantCode[SEND_FAX_ON_ORDER]"]').length == 1 && $('select[name="TenantCode[SEND_FAX_ON_ORDER]"]').val() == 1){
+    	//we validate the phone
+    	if($('.fax-number').val().length != 14){
+    		$('.fax-number').parent().addClass('has-error');
+    	}
+    }
 
     if ($('.vendor-settings-form .has-error').length == 0) {
       return true;

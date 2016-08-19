@@ -23,6 +23,13 @@ class TenantInfo extends \yii\db\ActiveRecord
     const CODE_DELIVERY_MINIMUM_AMOUNT = 'DELIVERY_MINIMUM_AMOUNT';
     const CODE_DELIVERY_CHARGE = 'DELIVERY_CHARGE';
     
+    const CODE_SEND_FAX_ON_ORDER = 'SEND_FAX_ON_ORDER';
+    const CODE_FAX_CONFIRM_TIME_IS_NA = 'FAX_CONFIRM_TIME_IS_NA';
+    const CODE_FAX_START_TIME_IS_NA = 'FAX_START_TIME_IS_NA';
+    const CODE_FAX_PICKUP_TIME_IS_NA = 'FAX_PICKUP_TIME_IS_NA';
+    const CODE_FAX_NUMBER= 'FAX_NUMBER';
+    
+    
     const CODE_TAG_LINE = 'TAG_LINE';
     const CODE_EXISTING_URL = 'EXISTING_URL';
     /**
@@ -61,7 +68,13 @@ class TenantInfo extends \yii\db\ActiveRecord
         $tenantCustom[self::CODE_DELIVERY_MINIMUM_AMOUNT] = 'Delivery Minimum Amount';
         $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'Delivery Charge Amount';
         
+        $tenantCustom[self::CODE_SEND_FAX_ON_ORDER] = 'Send Fax on New Order?';
+        $tenantCustom[self::CODE_FAX_NUMBER] = 'Fax Number';
+        $tenantCustom[self::CODE_FAX_CONFIRM_TIME_IS_NA] = 'Is Fax Confirm Time N/A?';
+        $tenantCustom[self::CODE_FAX_START_TIME_IS_NA] = 'Is Fax Start Time N/A?';
+        $tenantCustom[self::CODE_FAX_PICKUP_TIME_IS_NA] = 'Is Fax Pickup Time N/A?';
         
+       
 
         return $tenantCustom;
     }
@@ -71,6 +84,8 @@ class TenantInfo extends \yii\db\ActiveRecord
         $tenantCustom[self::CODE_SALES_TAX] = 'numeric xs-input';
         $tenantCustom[self::CODE_DELIVERY_CHARGE] = 'numeric short-input';
         $tenantCustom[self::CODE_DELIVERY_MINIMUM_AMOUNT] = 'numeric short-input';
+        $tenantCustom[self::CODE_FAX_NUMBER] = 'short-input fax-number';
+        
         $tenantCustom[self::CODE_SUBDOMAIN] = 'short-input';
         
         

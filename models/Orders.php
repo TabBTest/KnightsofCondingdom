@@ -6,6 +6,8 @@ use Yii;
 
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
+use app\helpers\UtilityHelper;
+use Dompdf\Dompdf;
 
 /**
  * This is the model class for table "orders".
@@ -53,10 +55,11 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['customerId', 'vendorId', 'status'], 'required'],
             [['customerId', 'vendorId', 'status'], 'integer'],
-            [['isAdvanceOrder', 'advancePickupDeliveryTime', 'deliveryAddress','deliveryCity','deliveryState','customBillingName','customBillingAddress','customBillingState', 'customBillingCity','customBillingCardLast4', 'isDelivery','cancelReason','refundTransactionId', 'refundReason','cancelledByUserId','refundedByUserId', 'isCancelled','isRefunded','cancellation_date','refund_date', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
+            [['faxStartTimeIsNA','faxConfirmTimeIsNA','faxPickupTimeIsNA', 'isFaxOrder','isFaxSent','faxSentDate', 'isAdvanceOrder', 'advancePickupDeliveryTime', 'deliveryAddress','deliveryCity','deliveryState','customBillingName','customBillingAddress','customBillingState', 'customBillingCity','customBillingCardLast4', 'isDelivery','cancelReason','refundTransactionId', 'refundReason','cancelledByUserId','refundedByUserId', 'isCancelled','isRefunded','cancellation_date','refund_date', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
         ];
     }
-        
+    
+    
     public function getDeliveryAddress(){
         if($this->deliveryAddress == null){
             $customerInfo = User::findOne($this->customerId);
@@ -423,5 +426,46 @@ class Orders extends \yii\db\ActiveRecord
         //do we include the cc charge here
         //return $this->getFoodCost() + $this->getWebFee() + $this->getSalesTax() + $this->getDeliveryCharge() - $this->getDiscount();
         return $this->getWebFee();
+    }
+    
+    public function generateOrderPdf(){
+        $filePath = $this->getOrderFile();
+        if(is_file($filePath)){
+            rename($filePath, $filePath.'-'.strtotime('now'));
+        }
+        $id = $this->id;
+        $order = Orders::findOne($id);
+        $orderDetails = OrderDetails::findAll(['orderId' => $id]);
+        $html = Yii::$app->controller->renderPartial('//ordering/pdf', ['orders' => $orderDetails, 'orderInfo' => $order], true);
+        
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        
+        
+        // Render the HTML as PDF
+        $dompdf->render();
+        
+        // Output the generated PDF to Browser
+        $pdf = $dompdf->output();
+        
+        file_put_contents($filePath, $pdf);
+        return $filePath;
+    }
+    
+    public function getOrderFile(){
+        $fileName = 'Order-'.$this->getOrderId().'.pdf';
+        $file = realpath(\Yii::$app->basePath) . '/web/orders/'.md5($this->vendorId).'/'.md5($this->customerId).'/';
+        UtilityHelper::createPath($file);
+        return $file.$fileName;
+    }
+    
+    public function sendFax(){
+        $isFaxSent = 0;
+        //call api
+        if($isFaxSent == 1){
+            $this->isFaxSent = 1;
+            $this->faxSentDate = date('Y-m-d H:i:s', strtotime('now'));
+            $this->save();
+        }
     }
 }

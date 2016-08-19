@@ -119,7 +119,7 @@ $userId = $_SESSION['__id'];
             <div class="input-group">
                 <input type="number"
                        maxlength="2"
-                       class="form-control"
+                       class="form-control short-input"
                        name="TenantCode[SALES_TAX]"
                        data-key="SALES_TAX"
                        value="<?= TenantInfo::getTenantValue($userId, 'SALES_TAX') ?>"
@@ -132,6 +132,68 @@ $userId = $_SESSION['__id'];
                 <span>Your current sales tax is <?= $salesTax ?>%.</span>
             <?php } ?>
         </div>
+        
+         <div class="form-group" data-key="<?php echo TenantInfo::CODE_SEND_FAX_ON_ORDER?>">
+            <label class="control-label"><?php echo TenantInfo::getTenantCodes()[TenantInfo::CODE_SEND_FAX_ON_ORDER]?></label>
+            <select class="form-control" name="TenantCode[<?php echo TenantInfo::CODE_SEND_FAX_ON_ORDER?>]" data-key="<?php echo TenantInfo::CODE_SEND_FAX_ON_ORDER?>">
+                <?php
+                $sendFaxOnNewDelivery = TenantInfo::getTenantValue($userId,  TenantInfo::CODE_SEND_FAX_ON_ORDER );
+                ?>
+                <option <?= $sendFaxOnNewDelivery == 0 ? 'selected' : '' ?> value="0">No</option>
+                <option <?= $sendFaxOnNewDelivery == 1 ? 'selected' : '' ?> value="1">Yes</option>
+            </select>
+        </div>
+        <div class="form-group show-fax-data" data-key="<?php echo TenantInfo::CODE_FAX_NUMBER?>">
+            <label class="control-label"><?php echo TenantInfo::getTenantCodes()[TenantInfo::CODE_FAX_NUMBER]?></label>
+            <div class="input-group">
+                <input type="text"
+                       class="form-control short-input fax-number"
+                       name="TenantCode[<?php echo TenantInfo::CODE_FAX_NUMBER?>]"
+                       data-key="<?php echo TenantInfo::CODE_FAX_NUMBER?>"
+                       value="<?= TenantInfo::getTenantValue($userId, TenantInfo::CODE_FAX_NUMBER) ?>"
+                />
+            </div>
+        </div>
+         <div class="form-group show-fax-data" data-key="<?php echo TenantInfo::CODE_FAX_CONFIRM_TIME_IS_NA?>">
+            <div class="checkbox">
+                <label>
+                    <?php echo TenantInfo::getTenantCodes()[TenantInfo::CODE_FAX_CONFIRM_TIME_IS_NA]?>
+                    <input type="checkbox"
+                           name="TenantCode[<?php echo TenantInfo::CODE_FAX_CONFIRM_TIME_IS_NA?>]"
+                           data-key="<?php echo TenantInfo::CODE_FAX_CONFIRM_TIME_IS_NA?>"
+                           value="1"
+                           <?= TenantInfo::getTenantValue($userId, TenantInfo::CODE_FAX_CONFIRM_TIME_IS_NA) == 1 ? 'checked' : '' ?>
+                    />
+                </label>
+            </div>
+        </div>
+        <div class="form-group show-fax-data" data-key="<?php echo TenantInfo::CODE_FAX_START_TIME_IS_NA?>">
+            <div class="checkbox">
+                <label>
+                    <?php echo TenantInfo::getTenantCodes()[TenantInfo::CODE_FAX_START_TIME_IS_NA]?>
+                    <input type="checkbox"
+                           name="TenantCode[<?php echo TenantInfo::CODE_FAX_START_TIME_IS_NA?>]"
+                           data-key="<?php echo TenantInfo::CODE_FAX_START_TIME_IS_NA?>"
+                           value="1"
+                           <?= TenantInfo::getTenantValue($userId, TenantInfo::CODE_FAX_START_TIME_IS_NA) == 1 ? 'checked' : '' ?>
+                    />
+                </label>
+            </div>
+        </div>
+        <div class="form-group show-fax-data" data-key="<?php echo TenantInfo::CODE_FAX_PICKUP_TIME_IS_NA?>">
+            <div class="checkbox">
+                <label>
+                    <?php echo TenantInfo::getTenantCodes()[TenantInfo::CODE_FAX_PICKUP_TIME_IS_NA]?>
+                    <input type="checkbox"
+                           name="TenantCode[<?php echo TenantInfo::CODE_FAX_PICKUP_TIME_IS_NA?>]"
+                           data-key="<?php echo TenantInfo::CODE_FAX_PICKUP_TIME_IS_NA?>"
+                           value="1"
+                           <?= TenantInfo::getTenantValue($userId, TenantInfo::CODE_FAX_PICKUP_TIME_IS_NA) == 1 ? 'checked' : '' ?>
+                    />
+                </label>
+            </div>
+        </div>
+        
         <div class="row form-group">
             <div class="col-xs-12">
                 <button class="btn btn-primary btn-raised">Save</button>
