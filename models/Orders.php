@@ -528,7 +528,7 @@ class Orders extends \yii\db\ActiveRecord
         $postfields =  array(
         'file' => '@' . realpath($orderPdf).';type=application/pdf;name='.basename($orderPdf),
         'fax_number' => '1'.$faxNumber,
-       // 'delete_file' => 0
+        'delete_file' => 1
         );
         
        // $postfields['file'] =  new \CurlFile($orderPdf, 'application/pdf', basename($orderPdf));
