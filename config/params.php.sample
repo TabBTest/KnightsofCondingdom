@@ -21,4 +21,5 @@ return [
     'authorize.net.mode' => 'test',    
     'authorize.net.login.id' => '96tk7ZP2WY',
     'authorize.net.transaction.key' => '47rK9rY22G9Mu2Ev',
+    'fax.to.api.key' => 'f1972310-6622-11e6-b2b0-998feaf69e9f'
 ];

@@ -34,6 +34,10 @@ class Orders extends \yii\db\ActiveRecord
     const MAGIC_NUMBER = 10000;
     
     private $_detailList = false;
+    const FAX_STATUS_PROCESSING = 1;
+    const FAX_STATUS_ERROR = 2;
+    const FAX_STATUS_SENT = 3;
+    const FAX_STATUS_NUMBER_BLOCKED = 4;
     
     public function getOrderId(){
         $orderId = self::MAGIC_NUMBER + $this->id;
@@ -55,7 +59,7 @@ class Orders extends \yii\db\ActiveRecord
         return [
             [['customerId', 'vendorId', 'status'], 'required'],
             [['customerId', 'vendorId', 'status'], 'integer'],
-            [['faxStartTimeIsNA','faxConfirmTimeIsNA','faxPickupTimeIsNA', 'isFaxOrder','isFaxSent','faxSentDate', 'isAdvanceOrder', 'advancePickupDeliveryTime', 'deliveryAddress','deliveryCity','deliveryState','customBillingName','customBillingAddress','customBillingState', 'customBillingCity','customBillingCardLast4', 'isDelivery','cancelReason','refundTransactionId', 'refundReason','cancelledByUserId','refundedByUserId', 'isCancelled','isRefunded','cancellation_date','refund_date', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
+            [['faxJobId', 'faxStartTimeIsNA','faxConfirmTimeIsNA','faxPickupTimeIsNA', 'isFaxOrder','isFaxSent','faxSentDate', 'isAdvanceOrder', 'advancePickupDeliveryTime', 'deliveryAddress','deliveryCity','deliveryState','customBillingName','customBillingAddress','customBillingState', 'customBillingCity','customBillingCardLast4', 'isDelivery','cancelReason','refundTransactionId', 'refundReason','cancelledByUserId','refundedByUserId', 'isCancelled','isRefunded','cancellation_date','refund_date', 'confirmedDateTime', 'startDateTime', 'pickedUpDateTime', 'date_created', 'transactionId', 'cardLast4', 'notes', 'paymentType', 'isPaid', 'isArchived', 'paymentGatewayFee'], 'safe'],
         ];
     }
     
@@ -245,10 +249,13 @@ class Orders extends \yii\db\ActiveRecord
             $extraSQL .= " and vendorId = ".$filters['vendorId'];
         }
         if(isset($filters['fromDate']) && $filters['fromDate'] != ''){
-            $extraSQL .= " and date(confirmedDateTime) >= '".$filters['fromDate']."'";
+            //$extraSQL .= " and date(confirmedDateTime) >= '".$filters['fromDate']."'";
+            $extraSQL .= " and date(date_created) >= '".$filters['fromDate']."'";
+            
         }
         if(isset($filters['toDate']) && $filters['toDate'] != ''){
-            $extraSQL .= " and date(confirmedDateTime) <= '".$filters['toDate']."'";
+            //$extraSQL .= " and date(confirmedDateTime) <= '".$filters['toDate']."'";
+            $extraSQL .= " and date(date_created) >= '".$filters['toDate']."'";
         }
     
         $resp = array();
@@ -458,14 +465,103 @@ class Orders extends \yii\db\ActiveRecord
         UtilityHelper::createPath($file);
         return $file.$fileName;
     }
-    
+    public function isFaxSent(){
+        if($this->isFaxOrder == 1 && $this->isFaxSent != self::FAX_STATUS_SENT){
+            //call the api
+            
+            // initialise the curl request
+            $faxToApiKey = \Yii::$app->params['fax.to.api.key'];
+            $ch = curl_init();
+            // send a file
+            $url = 'https://fax.to/api/v1/fax/'.$this->faxJobId.'/status?api_key='.$faxToApiKey;
+           //var_dump($url);
+            $options = array(
+                CURLOPT_URL => $url,
+                CURLOPT_HEADER => false,
+                CURLOPT_POST => 0,
+                CURLOPT_RETURNTRANSFER => true
+            ); // cURL options
+            curl_setopt_array($ch, $options);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            // output the response
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+           $resp = curl_exec($ch);
+        
+            curl_close($ch);
+            
+            //var_dump($resp);
+            $json = json_decode($resp, true);
+            if(isset($json['status'])){
+                if($json['status'] == 'success'){
+                    $this->isFaxSent = self::FAX_STATUS_SENT;
+                    if($this->faxSentDate == null)
+                        $this->faxSentDate = date('Y-m-d H:i:s', strtotime('now'));
+                }else if($json['status'] == 'pending'){
+                    $this->isFaxSent = self::FAX_STATUS_PROCESSING;
+                }else{
+                    $this->isFaxSent = self::FAX_STATUS_ERROR;
+                }
+                $this->save();
+            }
+            
+        }
+    }
     public function sendFax(){
         $isFaxSent = 0;
         //call api
-        if($isFaxSent == 1){
-            $this->isFaxSent = 1;
-            $this->faxSentDate = date('Y-m-d H:i:s', strtotime('now'));
-            $this->save();
+        
+        // initialise the curl request
+        $faxToApiKey = \Yii::$app->params['fax.to.api.key'];
+       
+        $faxNumberData = TenantInfo::findOne(['userId' => $this->vendorId, 'code' => TenantInfo::CODE_FAX_NUMBER]);
+        if($faxNumberData){
+            $faxNumber  = str_replace(array("+1", "(", ")", " ", "-", "+"), "", $faxNumberData->val);
         }
+        //$faxNumber = '9725884552';
+        
+        $request = curl_init('https://fax.to/api/v1/fax?api_key='.$faxToApiKey);
+        $orderPdf = $this->getOrderFile();
+        if(!is_file($orderPdf)){
+            $orderPdf = $this->generateOrderPdf();
+        }
+        //$headers = array("Content-Type: multipart/form-data", "Accept: application/json"); // cURL headers for file uploading
+        $postfields =  array(
+        'file' => '@' . realpath($orderPdf).';type=application/pdf;name='.basename($orderPdf),
+        'fax_number' => '1'.$faxNumber,
+       // 'delete_file' => 0
+        );
+        
+       // $postfields['file'] =  new \CurlFile($orderPdf, 'application/pdf', basename($orderPdf));
+        
+        $ch = curl_init();
+        $options = array(
+            CURLOPT_URL => 'https://fax.to/api/v1/fax?api_key='.$faxToApiKey,
+            CURLOPT_HEADER => false,
+            CURLOPT_POST => 1,
+            //CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_POSTFIELDS => $postfields,
+            CURLOPT_RETURNTRANSFER => true
+        ); // cURL options
+        curl_setopt_array($ch, $options);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $resp = curl_exec($ch);
+        
+        curl_close($ch);
+        
+        //var_dump($resp);
+        $json = json_decode($resp, true);
+        
+        if(isset($json['status']) && $json['status'] == 'executed'){
+            $this->faxJobId = $json['fax_job_id'];
+            $this->save();
+            
+            //var_dump($json);
+            if($this->isFaxSent != self::FAX_STATUS_SENT){
+                $this->isFaxSent = self::FAX_STATUS_PROCESSING;
+                //$this->faxSentDate = date('Y-m-d H:i:s', strtotime('now'));
+                $this->save();
+            }
+        }
+        
     }
 }

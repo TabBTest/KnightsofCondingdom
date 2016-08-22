@@ -68,10 +68,14 @@ class OrderingController extends CController
 
     public function actionPdf(){
         $id = $_REQUEST['id'];
+        $id = 31;
         $order = Orders::findOne($id);
         
-        $orderPdf = ($order->generateOrderPdf());
-        return \Yii::$app->response->sendFile($orderPdf);
+        //$orderPdf = ($order->generateOrderPdf());
+        //return \Yii::$app->response->sendFile($orderPdf);
+        
+        //$order->sendFax();
+        $order->isFaxSent();
     }
     /**
      * Lists all ApplicationType models.

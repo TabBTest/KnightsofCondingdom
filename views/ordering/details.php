@@ -3,6 +3,7 @@ use app\models\VendorMenuItem;
 use app\helpers\UtilityHelper;
 use app\models\OrderDetails;
 use app\models\User;
+use app\models\Orders;
 ?>
 
 <div class='row form-group'>
@@ -65,16 +66,24 @@ use app\models\User;
             }?>
             </label>
         </div>
-        <?php if($orderInfo->isFaxOrder == 1){?>
+        <?php if($orderInfo->isFaxOrder == 1){
+        $orderInfo->isFaxSent();
+        ?>
         <div class='col-xs-12' >
             <label class='form-label'>Is Fax Sent? 
-            <?php if($orderInfo->isFaxSent == 1){
+            <?php if($orderInfo->isFaxSent == Orders::FAX_STATUS_SENT){
             ?> YES, 
             <?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->faxSentDate );?>
             <?php 
             }else{
+                $faxStat = '';
+                if($orderInfo->isFaxSent == Orders::FAX_STATUS_ERROR){
+                    $faxStat = 'Error';
+                }else if($orderInfo->isFaxSent == Orders::FAX_STATUS_PROCESSING){
+                    $faxStat = 'Pending';
+                }
+                echo $faxStat;
             ?>
-                NO
                 <button class='btn btn-xs btn-raised  btn-info' onclick='javascript: Order.resendFax(<?php echo $orderInfo->id?>)' type='button'>Resend Fax</button>
                 
             <?php 
