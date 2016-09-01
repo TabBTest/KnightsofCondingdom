@@ -1,5 +1,6 @@
 <?php 
 use app\helpers\UtilityHelper;
+use app\models\VendorMenuItemAddOns;
 
 $addOns =  $item->getAddOns();
 
@@ -65,7 +66,23 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
                                    value="<?= $addOn->id ?>"
                                    class="order-changes add-on-<?= $addOn->id ?>"
                             />
-                            <?= $addOn->name ?> - $<?= UtilityHelper::formatAmountForDisplay($addOn->amount) ?>
+                            <?= $addOn->name ?>
+                            <?php if($addOn->isSpecialOrder == 0){?>
+                             - $<?= UtilityHelper::formatAmountForDisplay($addOn->amount) ?>
+                            <?php }else{?>
+                            <select class='order-changes' name="AddOnsSpecial[<?= $key ?>][<?= $addOn->id ?>]">
+                                <?php if($addOn->isSpecialFull){?>
+                                    <option value='<?php echo VendorMenuItemAddOns::SPECIAL_TYPE_FULL?>'>Full - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amountFull) ?></option>
+                                <?php }?>
+                                <?php if($addOn->isSpecialHalf){?>
+                                    <option value='<?php echo VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF?>'>Left Half - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amountHalf) ?></option>
+                                    <option value='<?php echo VendorMenuItemAddOns::SPECIAL_TYPE_RIGHT_HALF?>'>Right Half - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amountHalf) ?></option>
+                                <?php }?>
+                                <?php if($addOn->isSpecialSide){?>
+                                    <option value='<?php echo VendorMenuItemAddOns::SPECIAL_TYPE_ON_THE_SIDE?>'>On the side - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amountSide) ?></option>
+                                <?php }?>
+                            </select>
+                            <?php }?>
                         </label>
                     </div>
                 </div>
@@ -88,7 +105,24 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
                             <input type="checkbox"
                                    name="AddOns[<?= $key ?>][<?= $addOn->id ?>]"
                                    value="<?= $addOn->id ?>" class="order-changes add-on-<?= $addOn->id ?>"
-                            /> <?= $addOn->name ?> - $<?= UtilityHelper::formatAmountForDisplay($addOn->amount) ?>
+                            /> <?= $addOn->name ?>
+                            <?php if($addOn->isSpecialOrder == 0){?>
+                             - $<?= UtilityHelper::formatAmountForDisplay($addOn->amount) ?>
+                            <?php }else{?>
+                            <select class='order-changes add-on-special-<?= $addOn->id ?>' name="AddOnsSpecial[<?= $key ?>][<?= $addOn->id ?>]">
+                                <?php if($addOn->isSpecialFull){?>
+                                    <option value='<?php echo VendorMenuItemAddOns::SPECIAL_TYPE_FULL?>'>Full - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amountFull) ?></option>
+                                <?php }?>
+                                <?php if($addOn->isSpecialHalf){?>
+                                    <option value='<?php echo VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF?>'>Left Half - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amountHalf) ?></option>
+                                    <option value='<?php echo VendorMenuItemAddOns::SPECIAL_TYPE_RIGHT_HALF?>'>Right Half - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amountHalf) ?></option>
+                                <?php }?>
+                                <?php if($addOn->isSpecialSide){?>
+                                    <option value='<?php echo VendorMenuItemAddOns::SPECIAL_TYPE_ON_THE_SIDE?>'>On the side - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amountSide) ?></option>
+                                <?php }?>
+                            </select>
+                            <?php }?>
+                            
                         </label>
                     </div>
                 </div>

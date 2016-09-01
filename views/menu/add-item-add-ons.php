@@ -9,12 +9,21 @@ use app\models\MenuCategories;
     <input type='hidden' name='id' value='<?php echo $menuItemAddOns->id?>'/>
     <input type='hidden' name='sorting' value='<?php echo $menuItemAddOns->sorting?>'/>
     <div class='row'>
-        <div class='col-xs-12 form-group'>
+        <div class='col-xs-6 form-group'>
             <label class='form-label'>Add-on Type</label>
             <select  name='isExclusive' class='form-control short-input'>
                 <option <?php echo $menuItemAddOns->isExclusive == 0 ? 'selected' : ''?> value='0'>Addition</option>
                 <option <?php echo $menuItemAddOns->isExclusive == 1 ? 'selected' : ''?> value='1'>Exclusive</option>
             </select>
+            
+        </div>
+        <div class='col-xs-6 form-group'>
+            
+            <input type='hidden' name='isSpecialOrder' value="0"/>
+            <input type='checkbox' name='isSpecialOrder' class='special-order' <?php echo $menuItemAddOns->isSpecialOrder == 1 ? 'checked' : ''?> onclick="javascript: VendorMenu.specialOrderChange();"  value="1"/>
+            <label class='form-label'>Is Special Order?</label>
+                                    
+           
             
         </div>
         <div class='col-xs-12 form-group'>
@@ -26,13 +35,45 @@ use app\models\MenuCategories;
             <textarea class='form-control' name='description' rows='2' cols='20'><?php echo $menuItemAddOns->description?></textarea>
         </div>
        
-        <div class='col-xs-12 form-group'>
+        <div class='col-xs-12 form-group non-special-price'>
             <label class='form-label'>Price</label>
             <div class="input-group">
                 <span class="input-group-addon">$</span>
                 <input type='text' name='amount' class='form-control price short-input' value='<?php echo $menuItemAddOns->amount?>'/>
             </div>
         </div>
+        
+        <div class='col-xs-12 form-group special-price'>
+            <input type='hidden' name='isSpecialFull' value="0"/>
+            <input type='checkbox' name='isSpecialFull' class='' <?php echo $menuItemAddOns->isSpecialFull == 1 ? 'checked' : ''?> value="1"/>
+            
+            <label class='form-label'>Full - Price</label>
+            <div class="input-group">
+                <span class="input-group-addon">$</span>
+                <input type='text' name='amountFull' class='form-control price-custom short-input' value='<?php echo $menuItemAddOns->amountFull?>'/>
+            </div>
+        </div>
+        
+        <div class='col-xs-12 form-group special-price'>
+            <input type='hidden' name='isSpecialHalf' value="0"/>
+            <input type='checkbox' name='isSpecialHalf' class='' <?php echo $menuItemAddOns->isSpecialHalf == 1 ? 'checked' : ''?> value="1"/>
+            <label class='form-label'>Half - Price</label>
+            <div class="input-group">
+                <span class="input-group-addon">$</span>
+                <input type='text' name='amountHalf' class='form-control price-custom short-input' value='<?php echo $menuItemAddOns->amountHalf?>'/>
+            </div>
+        </div>
+        
+        <div class='col-xs-12 form-group special-price'>
+            <input type='hidden' name='isSpecialSide' value="0"/>
+            <input type='checkbox' name='isSpecialSide' class='' <?php echo $menuItemAddOns->isSpecialSide == 1 ? 'checked' : ''?> value="1"/>
+            <label class='form-label'>On The Side - Price</label>
+            <div class="input-group">
+                <span class="input-group-addon">$</span>
+                <input type='text' name='amountSide' class='form-control price-custom short-input' value='<?php echo $menuItemAddOns->amountSide?>'/>
+            </div>
+        </div>
+        
         <div class='col-xs-12 form-group'>
             <button type='button' class='btn' data-dismiss="modal">Close</button>
             <?php if($menuItemAddOns->isNewRecord == false){?>

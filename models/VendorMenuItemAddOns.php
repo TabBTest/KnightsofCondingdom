@@ -18,6 +18,10 @@ use Yii;
  */
 class VendorMenuItemAddOns extends \yii\db\ActiveRecord
 {
+    const SPECIAL_TYPE_FULL = '1';
+    const SPECIAL_TYPE_LEFT_HALF = '2';
+    const SPECIAL_TYPE_RIGHT_HALF = '3';
+    const SPECIAL_TYPE_ON_THE_SIDE = '4';
     /**
      * @inheritdoc
      */
@@ -36,11 +40,12 @@ class VendorMenuItemAddOns extends \yii\db\ActiveRecord
             [['vendorMenuItemId', 'isArchived'], 'integer'],
             [['description'], 'string'],
             [['amount'], 'number'],
-            [['date_created', 'date_updated', 'sorting', 'isExclusive', 'menuCategoryId'], 'safe'],
+            [['isSpecialFull','isSpecialHalf','isSpecialSide', 'isSpecialOrder','amountFull','amountHalf','amountSide', 'date_created', 'date_updated', 'sorting', 'isExclusive', 'menuCategoryId'], 'safe'],
             [['name'], 'string', 'max' => 250],
         ];
     }
-
+    
+    
     /**
      * @inheritdoc
      */

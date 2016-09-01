@@ -14,7 +14,13 @@
                             <h4><i class="fa fa-arrows" aria-hidden="true"></i> <?php echo $addOn->name?></h4>
                         </div>
                         <div class="panel-title pull-right">
-                            <label class="price-on-colored-panel">$<?php echo $addOn->amount?></label>
+                            <label class="price-on-colored-panel">
+                            <?php if($addOn->isSpecialOrder == 0){?>
+                            $<?php echo $addOn->amount?>
+                            <?php }else{?>
+                            Special Order
+                            <?php }?>
+                            </label>
                             <a class="btn btn-xs btn-raised btn-default edit-menu-item-add-on"
                                 href="javascript: VendorMenu.editAddOn(<?php echo $addOn->id?>)"
                                 data-menu-item-add-on-id="<?php echo $addOn->id?>">

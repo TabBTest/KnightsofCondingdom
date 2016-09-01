@@ -24,10 +24,28 @@ foreach($params['Orders'] as $orderKey => $menuItemId){
 if(isset($params['AddOnsExclusive'][$orderKey])){
             $menuItemAddOn = VendorMenuItemAddOns::findOne($params['AddOnsExclusive'][$orderKey]);
             $totalAddonAmount =  $quantity * $menuItemAddOn->amount;
+            $itemName = $menuItemAddOn->name;
+            if(isset($params['AddOnsSpecial'][$orderKey][$addOnId])){
+                if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_FULL){
+                    $totalAddonAmount =  $quantity * $menuItemAddOn->amountFull;
+                    $itemName .= ' - Full';
+                }else if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF
+                    || $params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_RIGHT_HALF){
+                    $totalAddonAmount =  $quantity * $menuItemAddOn->amountHalf;
+                    if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF){
+                        $itemName .= ' - Left Half';
+                    }else{
+                        $itemName .= ' - Right Half';
+                    }
+                }else if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_ON_THE_SIDE){
+                    $totalAddonAmount =  $quantity * $menuItemAddOn->amountSide;
+                    $itemName .= ' - On this side';                    
+                }
+            }
             $finalAmount += $totalAddonAmount;
 ?>
         <tr>
-            <td>Add-ons: <?php echo $quantity?> <?php echo $menuItemAddOn->name?></td>
+            <td>Add-ons: <?php echo $quantity?> <?php echo $itemName?></td>
             <td>$<?php echo UtilityHelper::formatAmountForDisplay($totalAddonAmount)?></td>
         </tr>
 <?php 
@@ -40,10 +58,29 @@ if(isset($params['AddOnsExclusive'][$orderKey])){
             
             $menuItemAddOn = VendorMenuItemAddOns::findOne($addOnId);
             $totalAddonAmount =  $quantity * $menuItemAddOn->amount;
+            $itemName = $menuItemAddOn->name;
+            if(isset($params['AddOnsSpecial'][$orderKey][$addOnId])){
+                if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_FULL){
+                    $totalAddonAmount =  $quantity * $menuItemAddOn->amountFull;
+                    $itemName .= ' - Full';
+                }else if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF
+                    || $params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_RIGHT_HALF){
+                    $totalAddonAmount =  $quantity * $menuItemAddOn->amountHalf;
+                    if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF){
+                        $itemName .= ' - Left Half';
+                    }else{
+                        $itemName .= ' - Right Half';
+                    }
+                }else if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_ON_THE_SIDE){
+                    $totalAddonAmount =  $quantity * $menuItemAddOn->amountSide;
+                    $itemName .= ' - On this side';                    
+                }
+            }
             $finalAmount += $totalAddonAmount;
+            
             ?>
         <tr>
-            <td>Add-ons: <?php echo $quantity?> <?php echo $menuItemAddOn->name?></td>
+            <td>Add-ons: <?php echo $quantity?> <?php echo $itemName?></td>
             <td>$<?php echo UtilityHelper::formatAmountForDisplay($totalAddonAmount)?></td>
         </tr>
     <?php 

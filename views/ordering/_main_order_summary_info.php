@@ -53,7 +53,7 @@ $vendorCoupon = false;
             <a href='javascript: void(0)' class='delete-order-item' data-key='<?php echo $orderKey?>'>
             <i class="fa fa-times" aria-hidden="true"></i>
             </a>
-            <a href='javascript: void(0)' class='edit-order-item' data-menu-item-id='<?php echo $menuItem->id?>'  data-key='<?php echo $orderKey?>'>
+            <a href='javascript: void(0)' class='edit-order-item' data-menu-item-title='<?php echo $menuItem->name?>' data-menu-item-id='<?php echo $menuItem->id?>'  data-key='<?php echo $orderKey?>'>
             <i class="fa fa-pencil" aria-hidden="true"></i>
             </a>
             <?php }?>
@@ -75,6 +75,25 @@ $vendorCoupon = false;
             
                 $menuItemAddOn = VendorMenuItemAddOns::findOne($params['AddOnsExclusive'][$orderKey]);
                 $totalAddonAmount =  $quantity * $menuItemAddOn->amount;
+                
+                $itemName = $menuItemAddOn->name;
+                if(isset($params['AddOnsSpecial'][$orderKey][$addOnId])){
+                    if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_FULL){
+                        $totalAddonAmount =  $quantity * $menuItemAddOn->amountFull;
+                        $itemName .= ' - Full';
+                    }else if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF
+                        || $params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_RIGHT_HALF){
+                        $totalAddonAmount =  $quantity * $menuItemAddOn->amountHalf;
+                        if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF){
+                            $itemName .= ' - Left Half';
+                        }else{
+                            $itemName .= ' - Right Half';
+                        }
+                    }else if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_ON_THE_SIDE){
+                        $totalAddonAmount =  $quantity * $menuItemAddOn->amountSide;
+                        $itemName .= ' - On this side';
+                    }
+                }
                 $finalAmount += $totalAddonAmount;
                 ?>
                     <tr class='order-<?php echo $orderKey?>'>
@@ -82,8 +101,11 @@ $vendorCoupon = false;
                         <td class='menu-name' style='padding-left: 20px;'>
                         <?php if($viewOnly == false){?>
                         <input type='hidden' name='AddOnsExclusive[<?php echo $orderKey?>]' value='<?php echo $menuItemAddOn->id?>' class='additionals <?php echo $orderKey?> exclusive' data-add-on-id='<?php echo $menuItemAddOn->id?>' />
+                            <?php if(isset($params['AddOnsSpecial'][$orderKey][$addOnId])){?>
+                            <input type='hidden' name='AddOnsSpecial[<?php echo $orderKey?>][<?php echo $menuItemAddOn->id?>]' class='additionals-special <?php echo $orderKey?>' data-add-on-id='<?php echo $menuItemAddOn->id?>' value='<?php echo $params['AddOnsSpecial'][$orderKey][$addOnId]?>' />
+                            <?php }?>
                         <?php }?>
-                        Add-ons: <?php echo $quantity?> <?php echo $menuItemAddOn->name?></td>
+                        Add-ons: <?php echo $quantity?> <?php echo $itemName?></td>
                         <td class='amount'>$<?php echo UtilityHelper::formatAmountForDisplay($totalAddonAmount)?></td>
                     </tr>
                 <?php 
@@ -96,15 +118,38 @@ $vendorCoupon = false;
             foreach($params['AddOns'][$orderKey] as $addOnId => $elem){
                 $menuItemAddOn = VendorMenuItemAddOns::findOne($addOnId);
                 $totalAddonAmount =  $quantity * $menuItemAddOn->amount;
+                
+                $itemName = $menuItemAddOn->name;
+                if(isset($params['AddOnsSpecial'][$orderKey][$addOnId])){
+                    if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_FULL){
+                        $totalAddonAmount =  $quantity * $menuItemAddOn->amountFull;
+                        $itemName .= ' - Full';
+                    }else if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF
+                        || $params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_RIGHT_HALF){
+                        $totalAddonAmount =  $quantity * $menuItemAddOn->amountHalf;
+                        if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF){
+                            $itemName .= ' - Left Half';
+                        }else{
+                            $itemName .= ' - Right Half';
+                        }
+                    }else if($params['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_ON_THE_SIDE){
+                        $totalAddonAmount =  $quantity * $menuItemAddOn->amountSide;
+                        $itemName .= ' - On this side';
+                    }
+                }
                 $finalAmount += $totalAddonAmount;
+                
                 ?>
             <tr class='order-<?php echo $orderKey?>'>
                 <td></td>
                 <td class='menu-name' style='padding-left: 20px;'>
                 <?php if($viewOnly == false){?>
                 <input type='hidden' name='AddOns[<?php echo $orderKey?>][<?php echo $menuItemAddOn->id?>]' class='additionals <?php echo $orderKey?>' data-add-on-id='<?php echo $menuItemAddOn->id?>' value='<?php echo $quantity?>' />
+                    <?php if(isset($params['AddOnsSpecial'][$orderKey][$addOnId])){?>
+                    <input type='hidden' name='AddOnsSpecial[<?php echo $orderKey?>][<?php echo $menuItemAddOn->id?>]' class='additionals-special <?php echo $orderKey?>' data-add-on-id='<?php echo $menuItemAddOn->id?>' value='<?php echo $params['AddOnsSpecial'][$orderKey][$addOnId]?>' />
+                    <?php }?>
                 <?php }?>
-                Add-ons: <?php echo $quantity?> <?php echo $menuItemAddOn->name?></td>
+                Add-ons: <?php echo $quantity?> <?php echo $itemName?></td>
                 <td class='amount'>$<?php echo UtilityHelper::formatAmountForDisplay($totalAddonAmount)?></td>
             </tr>
         <?php 

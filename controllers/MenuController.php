@@ -288,6 +288,16 @@ class MenuController extends CController
             $vendorMenuItemAddOn->description = $_POST['description'];
             $vendorMenuItemAddOn->amount = floatval($_POST['amount']);
             $vendorMenuItemAddOn->isExclusive = intval($_POST['isExclusive']);
+            
+            $vendorMenuItemAddOn->isSpecialOrder = intval($_POST['isSpecialOrder']);
+            $vendorMenuItemAddOn->isSpecialFull = intval($_POST['isSpecialFull']);
+            $vendorMenuItemAddOn->isSpecialHalf = intval($_POST['isSpecialHalf']);
+            $vendorMenuItemAddOn->isSpecialSide = intval($_POST['isSpecialSide']);
+            
+            $vendorMenuItemAddOn->amountFull = floatval($_POST['amountFull']);
+            $vendorMenuItemAddOn->amountHalf = floatval($_POST['amountHalf']);
+            $vendorMenuItemAddOn->amountSide = floatval($_POST['amountSide']);
+            
             $vendorMenuItemAddOn->save();
     
             if($vendorMenuItemAddOn->menuCategoryId > 0){

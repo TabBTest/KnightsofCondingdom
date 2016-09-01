@@ -382,13 +382,34 @@ class OrderingController extends CController
                             if(isset($_POST['AddOnsExclusive'][$orderKey])){
                                     $menuItemAddOn = VendorMenuItemAddOns::findOne($_POST['AddOnsExclusive'][$orderKey]);
                             
+                                    $itemName = $menuItemAddOn->name;
+                                    $addOnAmount = $menuItemAddOn->amount;
+                                    $addOnId = $menuItemAddOn->id;
+                                    if(isset($_POST['AddOnsSpecial'][$orderKey][$addOnId])){
+                                        if($_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_FULL){
+                                            $addOnAmount = $menuItemAddOn->amountFull;
+                                            $itemName .= ' - Full';
+                                        }else if($_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF
+                                            || $_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_RIGHT_HALF){
+                                            $addOnAmount = $menuItemAddOn->amountHalf;
+                                            if($_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF){
+                                                $itemName .= ' - Left Half';
+                                            }else{
+                                                $itemName .= ' - Right Half';
+                                            }
+                                        }else if($_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_ON_THE_SIDE){
+                                            $addOnAmount = $menuItemAddOn->amountSide;
+                                            $itemName .= ' - On this side';
+                                        }
+                                    }
+                                    
                                     $orderDetails = new OrderDetails();
                                     $orderDetails->orderId = $order->id;
                                     $orderDetails->vendorMenuItemId = 0;
-                                    $orderDetails->name = $menuItemAddOn->name;
-                                    $orderDetails->amount = $menuItemAddOn->amount;
+                                    $orderDetails->name = $itemName;
+                                    $orderDetails->amount = $addOnAmount;
                                     $orderDetails->quantity = intval($quantity);
-                                    $orderDetails->totalAmount = intval($quantity) * $menuItemAddOn->amount;
+                                    $orderDetails->totalAmount = intval($quantity) * $addOnAmount;
                                     $orderDetails->type = OrderDetails::TYPE_MENU_ITEM_ADD_ON;
                                     $orderDetails->save();
                                
@@ -398,13 +419,34 @@ class OrderingController extends CController
                                 foreach($_POST['AddOns'][$orderKey] as $addOnId => $elem){
                                     $menuItemAddOn = VendorMenuItemAddOns::findOne($addOnId);
                                     
+                                    $itemName = $menuItemAddOn->name;
+                                    $addOnAmount = $menuItemAddOn->amount;
+                                    $addOnId = $menuItemAddOn->id;
+                                    if(isset($_POST['AddOnsSpecial'][$orderKey][$addOnId])){
+                                        if($_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_FULL){
+                                            $addOnAmount = $menuItemAddOn->amountFull;
+                                            $itemName .= ' - Full';
+                                        }else if($_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF
+                                            || $_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_RIGHT_HALF){
+                                            $addOnAmount = $menuItemAddOn->amountHalf;
+                                            if($_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF){
+                                                $itemName .= ' - Left Half';
+                                            }else{
+                                                $itemName .= ' - Right Half';
+                                            }
+                                        }else if($_POST['AddOnsSpecial'][$orderKey][$addOnId] == VendorMenuItemAddOns::SPECIAL_TYPE_ON_THE_SIDE){
+                                            $addOnAmount = $menuItemAddOn->amountSide;
+                                            $itemName .= ' - On this side';
+                                        }
+                                    }
+                                    
                                     $orderDetails = new OrderDetails();
                                     $orderDetails->orderId = $order->id;
                                     $orderDetails->vendorMenuItemId = 0;
-                                    $orderDetails->name = $menuItemAddOn->name;
-                                    $orderDetails->amount = $menuItemAddOn->amount;
+                                    $orderDetails->name = $itemName;
+                                    $orderDetails->amount = $addOnAmount;
                                     $orderDetails->quantity = intval($quantity);
-                                    $orderDetails->totalAmount = intval($quantity) * $menuItemAddOn->amount;
+                                    $orderDetails->totalAmount = intval($quantity) * $addOnAmount;
                                     $orderDetails->type = OrderDetails::TYPE_MENU_ITEM_ADD_ON;
                                     $orderDetails->save();                                    
                                 }
