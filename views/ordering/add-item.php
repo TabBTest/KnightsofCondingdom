@@ -111,7 +111,7 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
                             <?php if($addOn->isSpecialOrder == 0){?>
                              - $<?= UtilityHelper::formatAmountForDisplay($addOn->amount) ?>
                             <?php }else{?>
-                            <select class='order-changes add-on-special-<?= $addOn->id ?>' name="AddOnsSpecial[<?= $key ?>][<?= $addOn->id ?>]">
+                            <select class='order-changes add-on-special-<?= $addOn->id ?> form-control' name="AddOnsSpecial[<?= $key ?>][<?= $addOn->id ?>]">
                                 <?php if($addOn->isSpecialHalf){?>
                                     <option value='<?php echo VendorMenuItemAddOns::SPECIAL_TYPE_LEFT_HALF?>'>Left Half - $<?php echo UtilityHelper::formatAmountForDisplay($addOn->amountHalf) ?></option>
                                 <?php }?>

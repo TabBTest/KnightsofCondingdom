@@ -1595,6 +1595,7 @@ var VendorMenu = {
       $('#custom-modal .modal-body').html(html);
       $('#custom-modal').modal('show');
       $('.nav-tabs a[href="#tab-' + addonType + '"]').tab('show');
+      $.material.init();
     })
   },
   openNewAddOnCategory: function (menuCategoryId, addonType) {
@@ -1603,6 +1604,7 @@ var VendorMenu = {
       $('#custom-modal .modal-body').html(html);
       $('#custom-modal').modal('show');
       $('.nav-tabs a[href="#tab-' + addonType + '"]').tab('show');
+      $.material.init();
     })
   }
 }
