@@ -20,7 +20,7 @@ $totalCount = $orders['count'];
         <?php foreach($list as $orderInfo){?>
         <tr class="" data-id="<?php echo $orderInfo->id?>">
             <td><a href="javascript: Customer.viewOrder(<?php echo $orderInfo->id?>)"># <?php echo $orderInfo->getOrderId()?></a></td>
-            <td>$<?php echo $orderInfo->getTotalAmount()?></td>
+            <td>$<?php echo number_format($orderInfo->getTotalAmount(), 2)?></td>
             <td><?php echo \Yii::$app->user->identity->showConvertedTime($orderInfo->date_created );?></td>
             <td><?php echo  $orderInfo->transactionId;?></td>
             <td>           
