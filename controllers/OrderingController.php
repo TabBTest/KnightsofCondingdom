@@ -497,7 +497,7 @@ class OrderingController extends CController
                             $orderDetails = new OrderDetails();
                             $orderDetails->orderId = $order->id;
                             $orderDetails->vendorMenuItemId = 0;
-                            $orderDetails->name = 'Web Fee';
+                            $orderDetails->name = 'Admin Fee';
                             $orderDetails->amount = $adminFee;
                             $orderDetails->quantity = 1;
                             $orderDetails->totalAmount = $adminFee;
