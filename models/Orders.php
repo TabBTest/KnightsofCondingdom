@@ -502,10 +502,23 @@ class Orders extends \yii\db\ActiveRecord
                     $this->isFaxSent = self::FAX_STATUS_ERROR;
                 }
                 $this->save();
+                
+                $orderFax = OrderFax::findOne(['orderId' => $this->id, 'faxJobId' => $this->faxJobId]);
+                if($orderFax){
+                    $orderFax->isFaxSent = $this->isFaxSent;
+                    $orderFax->save();
+                }
+                
             }
             
         }
     }
+    
+    public function getTotalFaxAttempts(){
+        $orderFaxes = OrderFax::findAll(['orderId' => $this->id]);
+        return count($orderFaxes);
+    }
+    
     public function sendFax(){
         $isFaxSent = 0;
         //call api
@@ -561,6 +574,12 @@ class Orders extends \yii\db\ActiveRecord
                 //$this->faxSentDate = date('Y-m-d H:i:s', strtotime('now'));
                 $this->save();
             }
+            
+            $orderFax = new OrderFax();
+            $orderFax->orderId = $this->id;
+            $orderFax->faxJobId = $this->faxJobId;
+            $orderFax->isFaxSent = $this->isFaxSent;
+            $orderFax->save();
         }
         
     }
