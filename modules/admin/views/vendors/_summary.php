@@ -44,7 +44,7 @@ foreach($orders['list'] as $order){
             <td class='amounts'>($<?php echo UtilityHelper::formatAmountForDisplay($totalDiscount)?>)</td>
         </tr>
         <tr>
-            <td>Total Web Fee</td>
+            <td>Total Admin Fee</td>
             <td class='amounts'>($<?php echo UtilityHelper::formatAmountForDisplay($totalWebFee)?>)</td>
         </tr>
         <tr>

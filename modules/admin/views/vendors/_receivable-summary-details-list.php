@@ -35,7 +35,7 @@ $totalCount = $orders['count'];
             <th>Food Cost</th>
             <th>Sales Tax</th>
             <th>Delivery Charge</th>
-            <th>Web Fee</th>
+            <th>Admin Fee</th>
             <th>Discount</th>
             <th>Total Cost</th>
             <th>Credit Card Fee</th>
