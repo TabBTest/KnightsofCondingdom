@@ -35,13 +35,13 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
                         class="btn btn-default btn-raised fa fa-angle-down input-num-control"
                         style="padding: 8px 16px 8px 16px; margin-left: 3px;"
                         aria-hidden="true"
-                        onclick="$(this).siblings('input').val(function(index, value) {return value == 1 ? 1 : --value })">
+                        onclick="$(this).siblings('input').val(function(index, value) {return value == 1 ? 1 : --value }); Order.showItemOrderSummary()">
                 </button>
                 <button type="button"
                         class="btn btn-default btn-raised fa fa-angle-up input-num-control"
                         style="padding: 8px 16px 8px 16px; margin-left: 3px;"
                         aria-hidden="true"
-                        onclick="$(this).siblings('input').val(function(index, value) {return ++value })">
+                        onclick="$(this).siblings('input').val(function(index, value) {return ++value });  Order.showItemOrderSummary()">
                 </button>
             </div>
         </div>
