@@ -112,14 +112,22 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
     <div class="panel panel-primary">
     <ul class="nav nav-tabs">    
 <?php 
+$hasActiveMenuAlready = false;
 $allMenus = VendorMenu::findAll(['vendorId' => $vendor->id]);
 foreach($allMenus as $index => $menus){
     $className = '';
+    $openForOrder = $menus->isMenuOpenForOrder();
     if(isset($_REQUEST['menuId']) && $_REQUEST['menuId'] != ''){
-        if($_REQUEST['menuId'] == $menus->id)
+        if($_REQUEST['menuId'] == $menus->id){
             $className = 'active';
-    }else if($index == 0){
-        $className = 'active';
+            $hasActiveMenuAlready = true;
+        }
+    }else { //if($index == 0){
+        //$className = 'active';
+        if($openForOrder && $hasActiveMenuAlready == false){
+            $hasActiveMenuAlready = true;
+            $className = 'active';
+        }
     }
 ?>
  <li class="<?php echo $className?>">
@@ -132,17 +140,26 @@ foreach($allMenus as $index => $menus){
             
             <div class="tab-content">
 <?php 
+$hasActiveMenuAlready = false;
 foreach($allMenus as $index => $menu){
     $className = '';
-    if(isset($_REQUEST['menuId']) && $_REQUEST['menuId'] != ''){
-        if($_REQUEST['menuId'] == $menu->id)
-            $className = 'active';
-    }else if($index == 0){
-        $className = 'active';
-    }
     $openForOrder = $menu->isMenuOpenForOrder();
-    if($openForOrder === false)
-        continue;
+    if(isset($_REQUEST['menuId']) && $_REQUEST['menuId'] != ''){
+        if($_REQUEST['menuId'] == $menu->id){
+            $className = 'active';
+            $hasActiveMenuAlready = true;
+        }
+    }else {//if($index == 0){
+        //$className = 'active';
+        
+        if($openForOrder && $hasActiveMenuAlready == false){
+            $hasActiveMenuAlready = true;
+            $className = 'active';
+        }
+    }
+    
+    
+    
 ?>
  <div id="menu-<?php echo $menu->id?>" class="tab-pane <?php echo $className?>">
     <div class="row">
