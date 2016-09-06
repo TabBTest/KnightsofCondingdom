@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\helpers\UtilityHelper;
 
 /**
  * This is the model class for table "vendor_menu".
@@ -75,7 +76,7 @@ class VendorMenu extends \yii\db\ActiveRecord
         }
         
         
-        return $date_time->format('g:i A').' to '.$date_time_close->format('g:i A');
+        return $date_time->format('g:i A').' to '.$date_time_close->format('g:i A').' '. UtilityHelper::getTimeZoneDisplay($user->timezone);
     }
     public function isMenuOpenForOrder(){
     
