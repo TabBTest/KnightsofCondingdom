@@ -190,11 +190,12 @@ $vendorCoupon = false;
 <?php 
 $totalFinalAmount = $itemsFinalAmount * $vendorSalesTax;
 $salesTax = $totalFinalAmount - $itemsFinalAmount;
+$taxPercent = ($vendorSalesTax - 1) * 100;
 ?>
 <tr>
     <td>&nbsp;</td>
     <td class='menu-name'><label class='form-label'>    
-    Sales Tax</label></td>
+    Sales Tax (<?php echo $taxPercent?>%)</label></td>
     <td class='amount'><label class='form-label'>$<?php echo UtilityHelper::formatAmountForDisplay($salesTax)?></label></td>
 </tr>
 <?php 
