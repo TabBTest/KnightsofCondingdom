@@ -27,7 +27,6 @@ class AppAsset extends AssetBundle
     ];
 
     public $js = [
-        'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js',
         'js/bootstrap-datepicker.js',
         'js/jquery.bootpag.min.js',
         'js/bootstrap-switch.min.js',
@@ -40,6 +39,7 @@ class AppAsset extends AssetBundle
     ];
     public $depends = [
         'yii\web\YiiAsset',
+        'app\assets\JQueryUIAsset',
         'yii\bootstrap\BootstrapAsset',
         'app\assets\BootstrapMaterialDesignAsset',
         'app\assets\AlertConfirmAsset',
