@@ -17,6 +17,7 @@ $totalCount = $vendors['count'];
             <th>Last Name</th>
             <th>Phone</th>
             <th>Email</th>
+            <th>Total Faxes</th>
             <th>Total Cost</th>
             <th>&nbsp;</th>
         </tr>
@@ -29,6 +30,7 @@ $totalCount = $vendors['count'];
             <td><?= $customer->lastName ?></td>
             <td><a href='tel:<?php echo $customer->phoneNumber?>'><?= $customer->phoneNumber?></a></td>
             <td><a href='mailto:<?php echo $customer->email?>'><?= $customer->email ?></td>
+            <td>$<?php echo $customer->getTotalFaxes($fromDate, $toDate)?></td>
             <td>$<?php echo $customer->getTotalReceivableCost($fromDate, $toDate)?></td>
             <td><a href="/admin/vendors/receivable-summary-details?id=<?php echo $customer->id?>&fromDate=<?php echo $fromDate?>&toDate=<?php echo $toDate?>"><i class='fa fa-eye'></i></a></td>       
         </tr>

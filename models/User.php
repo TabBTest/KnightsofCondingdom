@@ -546,9 +546,33 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $orders = Orders::getSalesOrders('ALL', 1, $params);
         $totalAmount = 0;
         foreach($orders['list'] as $order){
-            $totalAmount = $order->getTotalAdminReceivableCost();
+            $totalAmount += $order->getTotalAdminReceivableCost();
         }
         return $totalAmount;
+    }
+    
+    public function getTotalFaxes($fromDate, $toDate){
+        //in the perspective of admin
+        $fromDateReal = '';
+        $toDateReal = '';
+        $params = [];
+        $params['vendorId'] = $this->id;
+        if($fromDate != null && $fromDate != ''){
+            $froms = explode('-',$fromDate);
+            $fromDateReal = $froms[2].'-'.$froms[0].'-'.$froms[1];
+        }
+        if($toDate != null && $toDate != ''){
+            $tos = explode('-',$toDate);
+            $toDateReal = $tos[2].'-'.$tos[0].'-'.$tos[1];
+        }
+        $params['fromDate'] = $fromDateReal;
+        $params['toDate'] = $toDateReal;
+        $orders = Orders::getOrders('ALL', 1, $params);
+        $totalFaxAttempts = 0;
+        foreach($orders['list'] as $order){
+            $totalFaxAttempts += $order->getTotalFaxAttempts();
+        }
+        return $totalFaxAttempts;
     }
     
     public function createNewCustomerProfile(){

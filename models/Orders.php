@@ -268,6 +268,34 @@ class Orders extends \yii\db\ActiveRecord
         $resp['count'] = Orders::find()->where('isRefunded = 0 and isPaid = 1 '.$extraSQL)->count();
         return $resp;
     }
+    
+    public static function getOrders($resultsPerPage, $page, $filters){
+    
+        $extraSQL = '';
+     
+        if(isset($filters['vendorId']) && $filters['vendorId'] != ''){
+            $extraSQL .= " and vendorId = ".$filters['vendorId'];
+        }
+        if(isset($filters['fromDate']) && $filters['fromDate'] != ''){
+            //$extraSQL .= " and date(confirmedDateTime) >= '".$filters['fromDate']."'";
+            $extraSQL .= " and date(date_created) >= '".$filters['fromDate']."'";
+    
+        }
+        if(isset($filters['toDate']) && $filters['toDate'] != ''){
+            //$extraSQL .= " and date(confirmedDateTime) <= '".$filters['toDate']."'";
+            $extraSQL .= " and date(date_created) >= '".$filters['toDate']."'";
+        }
+    
+        $resp = array();
+        $limitSql = '';
+        if($resultsPerPage != 'ALL' ){
+            $limitSql = ' limit '.$resultsPerPage.' offset '.(($page-1)*$resultsPerPage);
+        }
+    
+        $resp['list'] = Orders::find()->where(' id > 0 '.$extraSQL.' order by id desc '.$limitSql)->all();
+        $resp['count'] = Orders::find()->where(' id > 0  '.$extraSQL)->count();
+        return $resp;
+    }
     public static function getVendorOrders($userId, $resultsPerPage, $page, $filters){
         
         $extraSQL = '';

@@ -8,7 +8,7 @@ $totalDiscount = 0;
 $totalWebFee = 0;
 $totalCCFee = 0;
 $totalGrandTotal = 0;
-
+$totalFaxAttempts = 0;
 foreach($orders['list'] as $order){
     $totalFoodCost += $order->getFoodCost();
     $totalSalesTax += $order->getSalesTax();
@@ -17,11 +17,16 @@ foreach($orders['list'] as $order){
     $totalWebFee += $order->getWebFee();
     $totalCCFee += $order->getCCFee();
     $totalGrandTotal += $order->getTotalReceivableCost();
+    $totalFaxAttempts += $order->getTotalFaxAttempts();
 }
 ?>
 
 <table class='table table-condensed table-striped summary'>
     <tbody>
+        <tr>
+            <td>Total Faxes</td>
+            <td class='amounts'><?php echo $totalFaxAttempts?></td>
+        </tr>
         <tr>
             <td>Total Food Cost</td>
             <td class='amounts'>$<?php echo UtilityHelper::formatAmountForDisplay($totalFoodCost)?></td>
