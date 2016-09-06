@@ -141,6 +141,8 @@ foreach($allMenus as $index => $menu){
         $className = 'active';
     }
     $openForOrder = $menu->isMenuOpenForOrder();
+    if($openForOrder === false)
+        continue;
 ?>
  <div id="menu-<?php echo $menu->id?>" class="tab-pane <?php echo $className?>">
     <div class="row">
