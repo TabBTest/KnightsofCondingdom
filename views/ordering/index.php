@@ -12,6 +12,23 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELIVERY) == 1 ? true : false;
 
+$hasActiveMenuAlready = false;
+$allMenus = VendorMenu::findAll(['vendorId' => $vendor->id]);
+
+function testIfMenuIsOpen($menu) {
+    return ($menu->isMenuOpenForOrder());
+}
+
+function testIfMenuIsClosed($menu) {
+    return (!$menu->isMenuOpenForOrder());
+}
+
+function getMenuNames($menu) {
+    return $menu->name;
+}
+
+$availableMenus = array_map("getMenuNames", array_filter($allMenus, "testIfMenuIsOpen"));
+$unavailableMenus = array_map("getMenuNames", array_filter($allMenus, "testIfMenuIsClosed"));
 ?>
 
 <?php echo $this->render('//partials/_show_message', []);?>
@@ -57,6 +74,18 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
                 </span>
             </li>
             <?php } ?>
+            <li>
+                <span>
+                    <i class="fa fa-cutlery" aria-hidden="true"></i>
+                    Now Serving: <?= implode(", ", $availableMenus) ?>
+                </span>
+            </li>
+            <li>
+                <span>
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    Not Available: <?= implode(", ", $unavailableMenus) ?>
+                </span>
+            </li>
         </ul>
     </div>
 
@@ -110,10 +139,8 @@ $hasDelivery = TenantInfo::getTenantValue($vendor->id, TenantInfo::CODE_HAS_DELI
 <div class="row">
     <div class="col-xs-12 col-md-8">
     <div class="panel panel-primary">
-    <ul class="nav nav-tabs">    
-<?php 
-$hasActiveMenuAlready = false;
-$allMenus = VendorMenu::findAll(['vendorId' => $vendor->id]);
+    <ul class="nav nav-tabs">
+<?php
 foreach($allMenus as $index => $menus){
     $className = '';
     $openForOrder = $menus->isMenuOpenForOrder();
