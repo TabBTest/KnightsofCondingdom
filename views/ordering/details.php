@@ -206,7 +206,9 @@ use app\models\Orders;
                     $isAddOn = $detail->type == OrderDetails::TYPE_MENU_ITEM_ADD_ON ? true : false;
                 ?>
                 <tr>
-                    <td style='padding-left: <?php echo $isAddOn  ? '20px' : '0px'?>'><?php echo $isAddOn ? 'Add-ons: ': ''?><?php echo $detail->name?>
+                    <td style='padding-left: <?php echo $isAddOn  ? '20px' : '0px'?>'>
+                        <?php echo $isAddOn ? 'Add-ons: ': ''?>
+                        <?php echo $detail->name?>
                         <?php if($detail->notes != null && $detail->notes != ''){?>
                         <br />
                         <label class='form-label'><?php echo 'Notes: '.$detail->notes?></label>

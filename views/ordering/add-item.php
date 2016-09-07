@@ -135,7 +135,7 @@ $isEdit = isset($_REQUEST['key']) ? true : false;
             <?php } ?>
         <?php } ?>
         <div class="form-group col-xs-12">
-            <label for="order-notes-field" class="control-label">Note</label>
+            <label for="order-notes-field" class="control-label">Have Special Prep Instructions?  Please Explain:</label>
             <div>
                 <textarea class="form-control"
                           rows="3"

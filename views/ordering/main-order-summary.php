@@ -109,7 +109,7 @@ include('_main_order_summary_info.php');
                         
                        <div class='new-address row' style='display: none'>
                             <div class='col-xs-12'>
-                                <label class="">New Delivery Address</label>
+                                <label class="">New Delivery Address:</label>
                             </div>
                             <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
                                 <input type='text' class='form-control' name='deliveryStreetAddress'  placeholder='Street Address'/>
@@ -165,6 +165,9 @@ include('_main_order_summary_info.php');
                             </div>
                         </div>
                         <div class='new-card row' style='display: none'>
+                                <div class='col-xs-12'>
+                                    <label>New Card Details:</label>
+                                  </div>
                                 <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
                                     <input type='text' class='form-control' name='User[billingName]' placeholder='Billing Name'/>
                                 </div>

@@ -222,7 +222,7 @@ if(TenantHelper::isVendorAllowDelivery($itemsFinalAmount)){
 <tr>
     <td>&nbsp;</td>
     <td class='menu-name'><label class='form-label'>    
-    Web Fee</label></td>
+    Admin Fee</label></td>
     <td class='amount'><label class='form-label'>$<?php echo UtilityHelper::formatAmountForDisplay($adminFee)?></label></td>
 </tr>
 <?php }?>
