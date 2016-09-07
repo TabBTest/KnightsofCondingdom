@@ -23,12 +23,23 @@ function testIfMenuIsClosed($menu) {
     return (!$menu->isMenuOpenForOrder());
 }
 
-function getMenuNames($menu) {
-    return $menu->name;
+function getMenuLinkHTML($menu) {
+    return <<<HTML
+<a class="menu-link-notes" data-toggle="tab" href="#menu-{$menu->id}">{$menu->name}</a>
+HTML;
 }
 
-$availableMenus = array_map("getMenuNames", array_filter($allMenus, "testIfMenuIsOpen"));
-$unavailableMenus = array_map("getMenuNames", array_filter($allMenus, "testIfMenuIsClosed"));
+$availableMenus = array_map("getMenuLinkHTML", array_filter($allMenus, "testIfMenuIsOpen"));
+$unavailableMenus = array_map("getMenuLinkHTML", array_filter($allMenus, "testIfMenuIsClosed"));
+
+$js = <<<JS
+$('a.menu-link-notes').click(function() {
+    $('ul.nav.nav-tabs').find('.active').removeClass('active');
+    $('li > a[href=\"' + $(this).attr('href') + '\"]').parent().addClass('active');
+});
+JS;
+
+$this->registerJs($js, $this::POS_READY);
 ?>
 
 <?php echo $this->render('//partials/_show_message', []);?>
@@ -74,18 +85,22 @@ $unavailableMenus = array_map("getMenuNames", array_filter($allMenus, "testIfMen
                 </span>
             </li>
             <?php } ?>
+            <?php if ($availableMenus) { ?>
             <li>
                 <span>
                     <i class="fa fa-cutlery" aria-hidden="true"></i>
                     Now Serving: <?= implode(", ", $availableMenus) ?>
                 </span>
             </li>
+            <?php } ?>
+            <?php if ($unavailableMenus) { ?>
             <li>
                 <span>
                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                    Not Available: <?= implode(", ", $unavailableMenus) ?>
+                    Unavailable: <?= implode(", ", $unavailableMenus) ?>
                 </span>
             </li>
+            <?php } ?>
         </ul>
     </div>
 
@@ -157,7 +172,7 @@ foreach($allMenus as $index => $menus){
         }
     }
 ?>
- <li class="<?php echo $className?>">
+ <li class="<?php echo $className?> nav-menu-tab">
  <a data-toggle="tab" href="#menu-<?php echo $menus->id?>"><?php echo $menus->name?></a></li>
 <?php 
 }?>
