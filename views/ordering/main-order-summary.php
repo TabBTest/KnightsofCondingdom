@@ -78,7 +78,7 @@ include('_main_order_summary_info.php');
                             </div>
                         <?php }?>
                         <div class="form-group">
-                            <label class="">Delivery?</label>
+                            <label class="">Pickup / Delivery?</label>
     
                             <div class="">
                                 <div class="radio radio-primary">
@@ -107,6 +107,41 @@ include('_main_order_summary_info.php');
                             </div>
                         </div>
                         
+                       <div class='new-address row' style='display: none'>
+                            <div class='col-xs-12'>
+                                <label class="">New Delivery Address</label>
+                            </div>
+                            <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+                                <input type='text' class='form-control' name='deliveryStreetAddress'  placeholder='Street Address'/>
+                            </div>
+                            <div class='col-xs-12 col-sm-9 col-md-4 col-md-offset-3 form-group'>
+                                <input type='text' class='form-control' name='deliveryCity'  placeholder='City'/>
+                            </div>
+                            <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
+                                <select class='form-control' name='deliveryState'>
+                                    <option value="" selected disabled hidden>State</option>
+                                    <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
+                                    <option value="<?php echo $stateCode?>" ><?php echo $stateCode?></option>
+                                <?php }?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="">Coupon Code</label>
+                            <div class="">
+                                <input type="text" class="form-control col-md-6 not-required" data-vendor-id="<?php echo $vendorId?>" name="couponCode" value="<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ""?>"/>
+                                <button type="button" class="btn btn-primary" onclick="javascript: Order.applyCoupon()">Apply</button>
+                            </div>
+                        </div>
+                        
+                        <div class='col-xs-12 form-group text-center'>
+                            <button type="button" class="btn btn-raised btn-primary btn-next" data-step='step1'>Continue</button>
+                        </div>
+                        
+                    </div>
+                    <!-- for new cc -->
+                    <div class='fieldset step2' style='display: none'>
+                       
                         <div class="form-group">
                             <label class="">Payment Type</label>
     
@@ -129,100 +164,70 @@ include('_main_order_summary_info.php');
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="">Coupon Code</label>
-                            <div class="">
-                                <input type="text" class="form-control col-md-6 not-required" data-vendor-id="<?php echo $vendorId?>" name="couponCode" value="<?php echo $vendorCoupon !== false ? $vendorCoupon->code : ""?>"/>
-                                <button type="button" class="btn btn-primary" onclick="javascript: Order.applyCoupon()">Apply</button>
-                            </div>
-                        </div>
+                        <div class='new-card row' style='display: none'>
+                                <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+                                    <input type='text' class='form-control' name='User[billingName]' placeholder='Billing Name'/>
+                                </div>
+                                <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+                                    <input type='text' class='form-control' name='User[billingStreetAddress]'  placeholder='Billing Street Address'/>
+                                </div>
+                                <div class='col-xs-12 col-sm-3 col-md-3 col-md-offset-3 form-group'>
+                                    <input type='text' class='form-control' name='User[billingCity]'  placeholder='City'/>
+                                </div>
+                                <div class='col-xs-6 col-sm-3 col-md-3 form-group'>
+                                    <select class='form-control' name='User[billingState]'>
+                                        <option value="" selected disabled hidden>State</option>
+                                        <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
+                                        <option value="<?php echo $stateCode?>" ><?php echo $stateCode?></option>
+                                    <?php }?>
+                                    </select>
+                                </div>
+                                <div class='col-xs-6 col-sm-3 col-md-3 form-group'>
+                                    <input type='text' class='form-control' name='User[billingZip]'  placeholder='Zip'/>
+                                </div>
+                                
+                                
+                                <input type='hidden' name='User[billingPhoneAreaCode]' value='<?php echo $model->billingPhoneAreaCode?>'/>
+                                <input type='hidden' name='User[billingPhone3]' value='<?php echo $model->billingPhone3?>'/>
+                                <input type='hidden' name='User[billingPhone4]' value='<?php echo $model->billingPhone4?>'/>
+                                <input type='hidden' name='User[cardLast4]' class='billing-last-4' value=''/>
                         
-                        <div class='col-xs-12 form-group text-center'>
-                            <button type="button" class="btn btn-raised btn-primary btn-next" data-step='step1'>Continue</button>
-                        </div>
+                                <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
+                                    <input type='text' class='form-control card-number' name='cc'  placeholder='Credit Card Number'/>
+                                </div>
+                                <div class='col-xs-4 col-md-2 col-md-offset-3 form-group'>
+                                    <input type='text' class='form-control card-cvv'  name='cvv'   placeholder='CVV'/>
+                                </div>
                         
-                    </div>
-                    <!-- for new cc -->
-                    <div class='fieldset step2' style='display: none'>
-                       
-                        
-                        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-                            <input type='text' class='form-control' name='deliveryStreetAddress'  placeholder='Street Address'/>
+                                <div class='col-xs-4 col-md-2 form-group'>
+                                      <select name='ccMonth'  class="form-control card-expiry-month">
+                                      <option value=''>Month</option>
+                            		    	<?php for($index = 1 ; $index < 13; $index++){
+                            		    	         $indexVal = $index < 10 ? '0'.$index : $index;
+                            		    	    ?>
+                            		    	<option value="<?php echo $indexVal?>"><?php echo $indexVal?></option>
+                            		    	<?php }?>
+                            		    </select>
+                                </div>
+                                <div class='col-xs-4 col-md-2 form-group'>
+                                         <select name='ccYear'  class="form-control card-expiry-year">
+                                         <option value=''>Year</option>
+                            		    	<?php
+                            		    	$curYear = date('Y');
+                            		    	for($index = $curYear ; $index < $curYear + 20; $index++){?>
+                            		    	<option value="<?php echo $index?>"><?php echo $index?></option>
+                            		    	<?php }?>
+                            		    </select>
+                                </div>
                         </div>
-                        <div class='col-xs-12 col-sm-9 col-md-4 col-md-offset-3 form-group'>
-                            <input type='text' class='form-control' name='deliveryCity'  placeholder='City'/>
-                        </div>
-                        <div class='col-xs-6 col-sm-3 col-md-2 form-group'>
-                            <select class='form-control' name='deliveryState'>
-                                <option value="" selected disabled hidden>State</option>
-                                <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
-                                <option value="<?php echo $stateCode?>" ><?php echo $stateCode?></option>
-                            <?php }?>
-                            </select>
-                        </div>
-                      
-                
                         <div class='col-xs-12 form-group text-center'>
                             <button type="button" class="btn btn-raised btn-default btn-back" data-step='step2'>Back</button>
-                            <button type="button" class="btn btn-raised btn-primary btn-next btn-next-address" data-step='step2'>Continue</button>
-                        </div>
-                    </div>
-                    <!-- for new cc -->
-                    <div class='fieldset step3' style='display: none'>
-                       
-                        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-                            <input type='text' class='form-control' name='billingName' placeholder='Billing Name'/>
-                        </div>
-                        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-                            <input type='text' class='form-control' name='billingStreetAddress'  placeholder='Billing Street Address'/>
-                        </div>
-                        <div class='col-xs-12 col-sm-9 col-md-6 col-md-offset-3 form-group'>
-                            <input type='text' class='form-control' name='billingCity'  placeholder='City'/>
-                        </div>
-                        <div class='col-xs-6 col-sm-3 col-md-3 form-group'>
-                            <select class='form-control' name='billingState'>
-                                <option value="" selected disabled hidden>State</option>
-                                <?php foreach(UtilityHelper::getStateList() as $stateCode){?>
-                                <option value="<?php echo $stateCode?>" ><?php echo $stateCode?></option>
-                            <?php }?>
-                            </select>
-                        </div>
-                        <div class='col-xs-12 col-md-6 col-md-offset-3 form-group'>
-                            <input type='text' class='form-control card-number' name='cc'  placeholder='Credit Card Number'/>
-                        </div>
-                        <div class='col-xs-4 col-md-2 col-md-offset-3 form-group'>
-                            <input type='text' class='form-control card-cvv'  name='cvv'   placeholder='CVV'/>
-                        </div>
-                
-                        <div class='col-xs-4 col-md-2 form-group'>
-                              <select name='ccMonth'  class="form-control card-expiry-month">
-                              <option value=''>Month</option>
-                    		    	<?php for($index = 1 ; $index < 13; $index++){
-                    		    	         $indexVal = $index < 10 ? '0'.$index : $index;
-                    		    	    ?>
-                    		    	<option value="<?php echo $indexVal?>"><?php echo $indexVal?></option>
-                    		    	<?php }?>
-                    		    </select>
-                        </div>
-                        <div class='col-xs-4 col-md-2 form-group'>
-                                 <select name='ccYear'  class="form-control card-expiry-year">
-                                 <option value=''>Year</option>
-                    		    	<?php
-                    		    	$curYear = date('Y');
-                    		    	for($index = $curYear ; $index < $curYear + 20; $index++){?>
-                    		    	<option value="<?php echo $index?>"><?php echo $index?></option>
-                    		    	<?php }?>
-                    		    </select>
-                        </div>
-                
-                        <div class='col-xs-12 form-group text-center'>
-                            <button type="button" class="btn btn-raised btn-default btn-back" data-step='step3'>Back</button>
-                            <button type="button" class="btn btn-raised btn-primary btn-next btn-next-cc" data-step='step3'>Continue</button>
+                            <button type="button" class="btn btn-raised btn-primary btn-next btn-next-cc" data-step='step2'>Continue</button>
                         </div>
                     </div>
                     
                     <!-- last step for order confirmation -->
-                    <div class='fieldset step4' style='display: none'>
+                    <div class='fieldset step3' style='display: none'>
                        
                         <?php 
                         $viewOnly = true;
@@ -231,8 +236,8 @@ include('_main_order_summary_info.php');
                         
                 
                         <div class='col-xs-12 form-group text-center'>
-                            <button type="button" class="btn btn-raised btn-default btn-back" data-step='step4'>Back</button>
-                            <button type="button" class="btn btn-raised btn-primary btn-next" data-step='step4'>Pay Now</button>
+                            <button type="button" class="btn btn-raised btn-default btn-back" data-step='step3'>Back</button>
+                            <button type="button" class="btn btn-raised btn-primary btn-next" data-step='step3'>Pay Now</button>
                         </div>
                     </div>
                     

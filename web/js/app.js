@@ -436,12 +436,16 @@ var Order = {
 			  if(step == 'step2'){
 				  $(this).prev().fadeIn();  
 			  }else if(step == 'step3'){
+				  /*
 				  if(Order.isAddNewDeliveryAddress()){
 					  $(this).parent().find('.fieldset.step2').fadeIn();  
 				  }else{
 					  $(this).parent().find('.fieldset.step1').fadeIn();  
 				  }
+				  */
+				  $(this).parent().find('.fieldset.step2').fadeIn();  
 			  }else if(step == 'step4'){
+				  /*
 				  if(Order.isAddNewCC()){
 					  $(this).parent().find('.fieldset.step3').fadeIn();  
 				  }else if(Order.isAddNewDeliveryAddress()){
@@ -449,6 +453,7 @@ var Order = {
 				  }else{
 					  $(this).parent().find('.fieldset.step1').fadeIn();  
 				  }
+				  */
 			  }
 	    		
 	    		
@@ -459,10 +464,31 @@ var Order = {
 	  $('#checkout-modal .btn-next').on('click', function () {
 	     var parent_fieldset = $(this).parents('.fieldset');
 	     var next_step = true;
+	     var curButtonStep = $(this).data('step');
+	     
+	     if(curButtonStep == 'step1' ){
+	    	 if(Order.isAddNewDeliveryAddress()){
+	    		 $('.new-address').find('input[type="text"], select').removeClass('not-required');
+	    		 $('.new-address').find('input[type="text"], select').addClass('required');
+	    	 } else {
+	    		 $('.new-address').find('input[type="text"], select').removeClass('required');
+	    		 $('.new-address').find('input[type="text"], select').addClass('not-required');
+	    	 }
+    	 }else if(curButtonStep == 'step2' ){
+	    	 if(Order.isAddNewCC()){
+	    		 $('.new-card').find('input[type="text"], select').removeClass('not-required');
+	    		 $('.new-card').find('input[type="text"], select').addClass('required');
+	    	 } else {
+	    		 $('.new-card').find('input[type="text"], select').removeClass('required');
+	    		 $('.new-card').find('input[type="text"], select').addClass('not-required');
+	    	 }
+    	 }
 	     
 	     parent_fieldset.find('input[type="text"], select').each(function () {
+	    	
+	    	 
 	       //console.log($(this).attr('id'))
-	       if ($(this).hasClass('not-required')) {
+	    	if ($(this).hasClass('not-required')) {
 	         ;
 	       } else if ($(this).hasClass('advance-time-pickup')) {
 	    	   
@@ -483,12 +509,15 @@ var Order = {
 	     if (next_step) {
     	    
 	    	 if($(this).data('step') == 'step1'){
+	    		 
+	    		 parent_fieldset.fadeOut(400, function () {
+    				 
+	    	          $(this).parent().find('.fieldset.step2').fadeIn();
+	    	        });
+	    		 /*
 	    		 if(Order.isAddNewDeliveryAddress()){
 	    			 //move to step 2
-	    			 parent_fieldset.fadeOut(400, function () {
-	    				 
-		    	          $(this).parent().find('.fieldset.step2').fadeIn();
-		    	        });
+	    			 
 	    		 }else if(Order.isAddNewCC()){
 	    			 //move to step 3
 	    			 parent_fieldset.fadeOut(400, function () {
@@ -500,7 +529,21 @@ var Order = {
 	    	        });
 	    			// $('#main-order-summary').submit();
 	    		 }
+	    		 */
 	    	 }else if($(this).data('step') == 'step2'){
+	    		
+	    		 if(Order.isAddNewCC()){
+		    		 App.ccValidator({number: $('.card-number').val(),
+	 	    	        cvc: $('.card-cvv').val(),
+	 	    	        exp_month: $('.card-expiry-month').val(),
+	 	    	        exp_year: $('.card-expiry-year').val()},stripeResponseOrderHandler);
+	    		 }else{
+	    			 parent_fieldset.fadeOut(400, function () {
+	    				 $(this).parent().find('.fieldset.step3').fadeIn();
+		    	        });
+	    		 }
+	    		 
+	    		 /*
 	    		 if(Order.isAddNewCC()){
 	    			 //move to step 3
 	    			 parent_fieldset.fadeOut(400, function () {
@@ -512,8 +555,10 @@ var Order = {
 	    	        });
 	    			 //$('#main-order-summary').submit();
 	    		 }
+	    		 */
 	    	 }else if($(this).data('step') == 'step3'){
 	    		 $(this).attr('disabled', true);
+	    		 $('#main-order-summary').submit();
 	    		 /*
     	         Stripe.card.createToken({
     	           number: $('.card-number').val(),
@@ -522,13 +567,10 @@ var Order = {
     	           exp_year: $('.card-expiry-year').val()
     	         }, stripeResponseOrderHandler);
     	         */
-    	         App.ccValidator({number: $('.card-number').val(),
-    	    	        cvc: $('.card-cvv').val(),
-    	    	        exp_month: $('.card-expiry-month').val(),
-    	    	        exp_year: $('.card-expiry-year').val()},stripeResponseOrderHandler);
+    	        
     	         
 	    	 }else if($(this).data('step') == 'step4'){
-	    		 $('#main-order-summary').submit();
+	    		 
 	    	 }
 	    	 
 	       //$(this).parent().parent().removeClass('has-error');
@@ -537,6 +579,13 @@ var Order = {
 	     }
 
 	   });
+  },
+  changeDeliveryAddress : function(){
+	  if(Order.isAddNewDeliveryAddress()){
+		  $('.new-address').show();
+	  }else{
+		  $('.new-address').hide();
+	  }
   },
   changeCardToUse : function(){
 	  /*
@@ -550,6 +599,12 @@ var Order = {
 		  $('#checkout-modal .fieldset:eq(0) .btn-next').html('Continue');
 	  }
 	  */
+	  
+	  if(Order.isAddNewCC()){
+		  $('.new-card').show();
+	  }else{
+		  $('.new-card').hide();
+	  }
   },
   isAddNewDeliveryAddress : function(){
 	  if($('.has-delivery').length == 1 && $('.has-delivery').is(':checked') == true && 
@@ -579,7 +634,7 @@ var Order = {
 	  
 	  if($('select[name="deliveryAddressType"]').length == 1){
 		  $('select[name="deliveryAddressType"]').off('change');
-		  $('select[name="deliveryAddressType"]').on('change', Order.changeCardToUse);
+		  $('select[name="deliveryAddressType"]').on('change', Order.changeDeliveryAddress);
 	  }
 	  
 	  if($('.has-delivery').length == 1 && $('.has-delivery').is(':checked') == true &&  $('select[name="deliveryAddressType"]').length == 1 && $('select[name="deliveryAddressType"]').val() != 'current'){
