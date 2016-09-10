@@ -33,6 +33,8 @@ use net\authorize\api\controller as AnetController;
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
+    const MAGIC_PAYMENT_TYPE_START_ID = 1000;
+    
     const ROLE_ADMIN = 0; //superadmin
     const ROLE_VENDOR = 1;
     const ROLE_CUSTOMER= 2;
@@ -737,5 +739,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 		  $errorMessages = $response->getMessages()->getMessage();
 		  echo "Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText() . "\n";
 	  }
+    }
+    
+    public function getVendorPaymentTypeId(){
+        return 'VENDOR-'.($this->id + self::MAGIC_PAYMENT_TYPE_START_ID);   
     }
 }

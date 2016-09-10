@@ -71,6 +71,12 @@ function extraLinks($model)
             'businessName',
             'firstName',
             'lastName',
+            [
+                'label' => 'Payment Type ID',
+                'value' => function($model){
+                    return $model->getVendorPaymentTypeId();
+                }    
+            ],
             // 'streetAddress',
             //'phoneNumber',
             // 'billingName',
